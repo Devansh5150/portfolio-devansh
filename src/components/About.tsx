@@ -18,12 +18,12 @@ const About = () => {
       description: 'Developing AI-powered solutions and contributing to innovative tech projects.',
     },
     {
-      period: '2023 - Present',
+      period: '2024 - Present',
       title: 'B.Tech CSE at IILM University',
       description: 'Pursuing Computer Science Engineering with focus on AI/ML and software development.',
     },
     {
-      period: '2021 - 2023',
+      period: '2010 - 2024',
       title: 'Ryan International School',
       description: 'Completed higher secondary education with strong foundation in mathematics and science.',
     },
