@@ -37,12 +37,12 @@ const Hero = () => {
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-teal-400 to-blue-400 bg-clip-text text-transparent">
           AI DEVELOPER
           <br />
-          <span className="text-3xl md:text-5xl lg:text-6xl italic">& INNOVATOR</span>
+          <span className="text-3xl md:text-5xl lg:text-6xl italic">& CREATIVE WRITER</span>
         </h1>
         
         <p className="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">
-          Passionate AI developer and tech enthusiast pursuing B.Tech in CSE at IILM University. 
-          Transforming ideas into innovative solutions through AI/ML, web development, and creative problem-solving.
+          Passionate AI developer, tech enthusiast, and creative writer pursuing B.Tech in CSE at IILM University. 
+          Transforming ideas into innovative solutions through AI/ML, web development, and poetic expression.
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
@@ -78,8 +78,8 @@ const Hero = () => {
             <div className="text-sm text-gray-400">Specialization</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl md:text-3xl font-bold text-green-400">B.Tech</div>
-            <div className="text-sm text-gray-400">CSE Student</div>
+            <div className="text-2xl md:text-3xl font-bold text-green-400">Poetry</div>
+            <div className="text-sm text-gray-400">Creative Outlet</div>
           </div>
         </div>
       </div>

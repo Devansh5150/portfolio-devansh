@@ -7,6 +7,8 @@ const About = () => {
     { name: 'UI/UX Design', level: 75 },
     { name: 'C Programming', level: 85 },
     { name: 'Canva', level: 90 },
+    { name: 'Content Writing', level: 88 },
+    { name: 'Poetry', level: 85 },
   ];
 
   const timeline = [
@@ -33,13 +35,15 @@ const About = () => {
         <div className="text-center mb-16">
           <span className="text-cyan-400 text-sm font-semibold tracking-wide uppercase">About Me</span>
           <h2 className="text-4xl md:text-5xl font-bold mt-4 mb-6">
-            BEST AI/ML DEVELOPER
+            AI DEVELOPER, INNOVATOR
             <br />
-            <span className="italic text-3xl md:text-4xl text-purple-400">& INNOVATOR</span> IN MAKING
+            <span className="italic text-3xl md:text-4xl text-purple-400">& CREATIVE WRITER</span>
           </h2>
           <p className="text-gray-300 text-lg max-w-3xl mx-auto">
             As a dedicated Computer Science student with a passion for AI and innovation, I bring fresh perspectives 
             to technology challenges. My journey combines academic excellence with hands-on project experience.
+            Beyond technology, I express my creativity through poetry and content writing, bringing a unique blend
+            of technical and artistic abilities to everything I create.
           </p>
         </div>
 
@@ -84,6 +88,14 @@ const About = () => {
                 <h4 className="text-lg font-semibold text-purple-400 mb-2">UI/UX Design</h4>
                 <p className="text-gray-400">Creating interactive and attractive designs focused on user engagement and audience attraction.</p>
               </div>
+              
+              <div className="p-6 bg-slate-800/50 rounded-lg border border-blue-500/20 hover:border-blue-500/50 transition-all duration-300">
+                <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center mb-4">
+                  <span className="text-blue-400 text-xl">✒️</span>
+                </div>
+                <h4 className="text-lg font-semibold text-blue-400 mb-2">Creative Writing</h4>
+                <p className="text-gray-400">Crafting compelling poetry, engaging content, and creative copy that captivates and resonates with your audience.</p>
+              </div>
             </div>
           </div>
         </div>
@@ -106,6 +118,28 @@ const About = () => {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* Poetry Sample */}
+        <div className="mb-16 bg-slate-800/30 p-8 rounded-lg border border-blue-500/20">
+          <h3 className="text-2xl font-bold mb-6 text-center text-blue-400">My Creative Writing</h3>
+          <div className="italic text-gray-300 text-center max-w-2xl mx-auto mb-6 leading-relaxed">
+            <p className="mb-4">
+              "Through silicon valleys and digital realms,<br/>
+              Where algorithms dance and logic overwhelms,<br/>
+              I craft with code and write with heart,<br/>
+              Blending science and poetry, never apart."
+            </p>
+            <p className="text-sm text-blue-400 font-semibold">- Sample from my tech-inspired poetry collection</p>
+          </div>
+          <div className="text-center">
+            <button
+              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+              className="bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 font-semibold px-6 py-2 rounded-lg transition-all duration-300 transform hover:scale-105"
+            >
+              Request Writing Samples
+            </button>
           </div>
         </div>
 
