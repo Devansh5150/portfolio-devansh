@@ -31,7 +31,7 @@ const Hero = () => {
         </div>
         
         <div className="mb-6">
-          <span className="inline-block px-6 py-2.5 bg-blue-500/20 text-blue-400 rounded-full text-lg font-medium mb-4">
+          <span className="inline-block px-6 py-2.5 bg-blue-500/20 text-blue-400 rounded-full font-medium mb-4 text-3xl">
             👋 Hi, I'm Devansh Datta
           </span>
         </div>
