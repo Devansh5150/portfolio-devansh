@@ -14,27 +14,27 @@ const Hero = () => {
     <div className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
       {/* Animated Background Elements */}
       <div className="absolute inset-0">
-        <div className="absolute top-20 left-20 w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-20 left-20 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
         <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-500"></div>
       </div>
       
       <div className="relative z-10 text-center max-w-4xl mx-auto">
         {/* Profile Image Placeholder */}
-        <div className="relative mb-8 mx-auto w-32 h-32 rounded-full bg-gradient-to-r from-cyan-400 to-purple-500 p-1">
-          <div className="w-full h-full rounded-full bg-slate-800 flex items-center justify-center text-4xl font-bold text-cyan-400">
+        <div className="relative mb-8 mx-auto w-32 h-32 rounded-full bg-gradient-to-r from-blue-400 to-teal-500 p-1">
+          <div className="w-full h-full rounded-full bg-slate-800 flex items-center justify-center text-4xl font-bold text-blue-400">
             DD
           </div>
           <div className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-4 border-slate-900 animate-pulse"></div>
         </div>
         
         <div className="mb-6">
-          <span className="inline-block px-4 py-2 bg-cyan-500/20 text-cyan-400 rounded-full text-sm font-medium mb-4">
+          <span className="inline-block px-4 py-2 bg-blue-500/20 text-blue-400 rounded-full text-sm font-medium mb-4">
             👋 Hi, I'm Devansh Datta
           </span>
         </div>
         
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-cyan-400 via-purple-400 to-blue-400 bg-clip-text text-transparent">
+        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-teal-400 to-blue-400 bg-clip-text text-transparent">
           AI DEVELOPER
           <br />
           <span className="text-3xl md:text-5xl lg:text-6xl italic">& INNOVATOR</span>
@@ -48,7 +48,7 @@ const Hero = () => {
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
           <Button 
             size="lg" 
-            className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-black font-semibold px-8 py-3 transition-all duration-300 transform hover:scale-105"
+            className="bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-black font-semibold px-8 py-3 transition-all duration-300 transform hover:scale-105"
             onClick={() => window.open('mailto:work.devansh.datta@gmail.com')}
           >
             Get In Touch
@@ -56,7 +56,7 @@ const Hero = () => {
           <Button 
             variant="outline" 
             size="lg" 
-            className="border-cyan-500 text-cyan-400 hover:bg-cyan-500 hover:text-black px-8 py-3 transition-all duration-300 transform hover:scale-105"
+            className="border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-black px-8 py-3 transition-all duration-300 transform hover:scale-105"
             onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
           >
             View Projects
@@ -66,11 +66,11 @@ const Hero = () => {
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12 max-w-2xl mx-auto">
           <div className="text-center">
-            <div className="text-2xl md:text-3xl font-bold text-cyan-400">4+</div>
+            <div className="text-2xl md:text-3xl font-bold text-blue-400">4+</div>
             <div className="text-sm text-gray-400">Active Projects</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl md:text-3xl font-bold text-purple-400">2+</div>
+            <div className="text-2xl md:text-3xl font-bold text-teal-400">2+</div>
             <div className="text-sm text-gray-400">Years Experience</div>
           </div>
           <div className="text-center">
@@ -87,7 +87,7 @@ const Hero = () => {
       {/* Scroll Indicator */}
       <button
         onClick={scrollToAbout}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-cyan-400 animate-bounce cursor-pointer hover:text-cyan-300 transition-colors"
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-blue-400 animate-bounce cursor-pointer hover:text-blue-300 transition-colors"
       >
         <ArrowDown size={32} />
       </button>

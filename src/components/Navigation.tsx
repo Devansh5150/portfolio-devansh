@@ -26,10 +26,10 @@ const Navigation = ({ activeSection }: NavigationProps) => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-md border-b border-cyan-500/20">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-md border-b border-blue-500/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
-          <div className="text-2xl font-bold text-cyan-400">
+          <div className="text-2xl font-bold text-blue-400">
             Devansh Datta
           </div>
           
@@ -41,8 +41,8 @@ const Navigation = ({ activeSection }: NavigationProps) => {
                 onClick={() => scrollToSection(item.id)}
                 className={`px-4 py-2 rounded-lg transition-all duration-300 ${
                   activeSection === item.id
-                    ? 'bg-cyan-500 text-black'
-                    : 'text-white hover:text-cyan-400 hover:bg-cyan-500/10'
+                    ? 'bg-blue-500 text-black'
+                    : 'text-white hover:text-blue-400 hover:bg-blue-500/10'
                 }`}
               >
                 {item.label}
@@ -68,8 +68,8 @@ const Navigation = ({ activeSection }: NavigationProps) => {
                 onClick={() => scrollToSection(item.id)}
                 className={`block w-full text-left px-4 py-2 rounded-lg transition-all duration-300 ${
                   activeSection === item.id
-                    ? 'bg-cyan-500 text-black'
-                    : 'text-white hover:text-cyan-400 hover:bg-cyan-500/10'
+                    ? 'bg-blue-500 text-black'
+                    : 'text-white hover:text-blue-400 hover:bg-blue-500/10'
                 }`}
               >
                 {item.label}
