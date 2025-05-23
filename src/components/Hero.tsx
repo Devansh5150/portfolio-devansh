@@ -1,18 +1,16 @@
-
 import { ArrowDown } from 'lucide-react';
 import { Button } from './ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
-
 const Hero = () => {
   const scrollToAbout = () => {
     const aboutSection = document.getElementById('about');
     if (aboutSection) {
-      aboutSection.scrollIntoView({ behavior: 'smooth' });
+      aboutSection.scrollIntoView({
+        behavior: 'smooth'
+      });
     }
   };
-
-  return (
-    <div className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
+  return <div className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
       {/* Animated Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute top-20 left-20 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
@@ -20,7 +18,7 @@ const Hero = () => {
         <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-500"></div>
       </div>
       
-      <div className="relative z-10 text-center max-w-4xl mx-auto">
+      <div className="relative z-10 text-center max-w-4xl mx-auto my-[101px]">
         {/* Profile Image */}
         <div className="relative mb-8 mx-auto w-36 h-36 rounded-full bg-gradient-to-r from-blue-400 to-teal-500 p-1">
           <Avatar className="w-full h-full">
@@ -50,19 +48,12 @@ const Hero = () => {
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-          <Button 
-            size="lg" 
-            className="bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-black font-semibold px-8 py-3 transition-all duration-300 transform hover:scale-105"
-            onClick={() => window.open('mailto:work.devansh.datta@gmail.com')}
-          >
+          <Button size="lg" className="bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-black font-semibold px-8 py-3 transition-all duration-300 transform hover:scale-105" onClick={() => window.open('mailto:work.devansh.datta@gmail.com')}>
             Get In Touch
           </Button>
-          <Button 
-            variant="outline" 
-            size="lg" 
-            className="border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-black px-8 py-3 transition-all duration-300 transform hover:scale-105"
-            onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
-          >
+          <Button variant="outline" size="lg" className="border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-black px-8 py-3 transition-all duration-300 transform hover:scale-105" onClick={() => document.getElementById('projects')?.scrollIntoView({
+          behavior: 'smooth'
+        })}>
             View Projects
           </Button>
         </div>
@@ -89,14 +80,9 @@ const Hero = () => {
       </div>
       
       {/* Scroll Indicator */}
-      <button
-        onClick={scrollToAbout}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-blue-400 animate-bounce cursor-pointer hover:text-blue-300 transition-colors"
-      >
+      <button onClick={scrollToAbout} className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-blue-400 animate-bounce cursor-pointer hover:text-blue-300 transition-colors">
         <ArrowDown size={32} />
       </button>
-    </div>
-  );
+    </div>;
 };
-
 export default Hero;
