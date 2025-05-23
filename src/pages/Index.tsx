@@ -1,12 +1,62 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import { useState, useEffect } from 'react';
+import { ArrowDown } from 'lucide-react';
+import Hero from '../components/Hero';
+import About from '../components/About';
+import Projects from '../components/Projects';
+import Services from '../components/Services';
+import Contact from '../components/Contact';
+import Navigation from '../components/Navigation';
 
 const Index = () => {
+  const [activeSection, setActiveSection] = useState('home');
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = ['home', 'about', 'projects', 'services', 'contact'];
+      const scrollPosition = window.scrollY + 100;
+
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element) {
+          const offsetTop = element.offsetTop;
+          const offsetHeight = element.offsetHeight;
+          
+          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+            setActiveSection(section);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
+    <div className="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen text-white">
+      <Navigation activeSection={activeSection} />
+      
+      <section id="home" className="min-h-screen">
+        <Hero />
+      </section>
+      
+      <section id="about" className="min-h-screen">
+        <About />
+      </section>
+      
+      <section id="projects" className="min-h-screen">
+        <Projects />
+      </section>
+      
+      <section id="services" className="min-h-screen">
+        <Services />
+      </section>
+      
+      <section id="contact" className="min-h-screen">
+        <Contact />
+      </section>
     </div>
   );
 };
