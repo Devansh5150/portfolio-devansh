@@ -115,9 +115,9 @@ const Hero = () => {
               
               {/* Code snippet animation */}
               <div className="bg-black/30 rounded p-3 font-mono text-sm">
-                <div className="text-green-400 mb-1">$ npm run dev</div>
+                <div className="text-green-400 mb-1">import Devansh Portfolio Site</div>
                 <div className="text-gray-400 mb-1">Starting development server...</div>
-                <div className="text-cyan-400 mb-1">✓ Local: http://localhost:3000</div>
+                <div className="text-cyan-400 mb-1">✓ Local: http://Welcome to My World of Tech </div>
                 <div className="text-blue-400 flex items-center">
                   <Terminal className="w-4 h-4 mr-1" />
                   Ready in 1.2s
