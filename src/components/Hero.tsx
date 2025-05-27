@@ -87,7 +87,7 @@ const Hero = () => {
           </div>
 
           {/* Right Side - Tech Dashboard */}
-          <div className="flex flex-col items-center lg:items-end animate-slide-up delay-1000 py-0 my-[72px]">
+          <div className="flex flex-col items-center lg:items-end animate-slide-up delay-1000 py-0 my-[72px] rounded-lg">
             <div className="relative w-80 h-80 bg-slate-900/50 backdrop-blur-sm border border-cyan-500/20 rounded-lg p-6 hover:border-cyan-500/50 transition-all duration-300">
               {/* Terminal Header */}
               <div className="flex items-center gap-2 mb-4">
