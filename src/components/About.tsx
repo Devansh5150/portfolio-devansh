@@ -134,12 +134,14 @@ const About = () => {
             <p className="text-sm text-blue-400 font-semibold">- Sample from my tech-inspired poetry collection</p>
           </div>
           <div className="text-center">
-            <button
-              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-              className="bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 font-semibold px-6 py-2 rounded-lg transition-all duration-300 transform hover:scale-105"
+            <a
+              href="https://www.instagram.com/devansh_writez/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 font-semibold px-6 py-2 rounded-lg transition-all duration-300 transform hover:scale-105"
             >
-              Request Writing Samples
-            </button>
+              View My Writing Portfolio
+            </a>
           </div>
         </div>
 
