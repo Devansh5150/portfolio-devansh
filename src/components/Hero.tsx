@@ -1,12 +1,9 @@
-
 import { ArrowDown, Code, Terminal, Zap, Brain, Cpu } from 'lucide-react';
 import { Button } from './ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { useNavigate } from 'react-router-dom';
-
 const Hero = () => {
   const navigate = useNavigate();
-  
   const scrollToAbout = () => {
     const aboutSection = document.getElementById('about');
     if (aboutSection) {
@@ -15,13 +12,10 @@ const Hero = () => {
       });
     }
   };
-
   const handleAchievementsClick = () => {
     navigate('/achievements');
   };
-
-  return (
-    <div className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
+  return <div className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
       {/* Enhanced Animated Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute top-20 left-20 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
@@ -81,26 +75,19 @@ const Hero = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-12 animate-slide-up delay-700">
-              <Button 
-                size="lg" 
-                className="bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-black font-semibold px-8 py-3 transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-blue-500/25" 
-                onClick={() => window.open('mailto:work.devansh.datta@gmail.com')}
-              >
+              <Button size="lg" className="bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-black font-semibold px-8 py-3 transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-blue-500/25" onClick={() => window.open('mailto:work.devansh.datta@gmail.com')}>
                 Get In Touch
               </Button>
-              <Button 
-                variant="outline" 
-                size="lg" 
-                className="border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-black px-8 py-3 transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-blue-500/25" 
-                onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
-              >
+              <Button variant="outline" size="lg" className="border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-black px-8 py-3 transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-blue-500/25" onClick={() => document.getElementById('projects')?.scrollIntoView({
+              behavior: 'smooth'
+            })}>
                 View Projects
               </Button>
             </div>
           </div>
 
           {/* Right Side - Tech Dashboard */}
-          <div className="flex flex-col items-center lg:items-end animate-slide-up delay-1000">
+          <div className="flex flex-col items-center lg:items-end animate-slide-up delay-1000 py-0 my-[35px]">
             <div className="relative w-80 h-80 bg-slate-900/50 backdrop-blur-sm border border-cyan-500/20 rounded-lg p-6 hover:border-cyan-500/50 transition-all duration-300">
               {/* Terminal Header */}
               <div className="flex items-center gap-2 mb-4">
@@ -138,10 +125,7 @@ const Hero = () => {
               </div>
               
               {/* Achievement button */}
-              <button 
-                onClick={handleAchievementsClick}
-                className="mt-4 w-full bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 rounded-lg p-3 text-cyan-400 hover:from-cyan-500/30 hover:to-blue-500/30 hover:border-cyan-500/50 transition-all duration-300 flex items-center justify-center gap-2 group"
-              >
+              <button onClick={handleAchievementsClick} className="mt-4 w-full bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 rounded-lg p-3 text-cyan-400 hover:from-cyan-500/30 hover:to-blue-500/30 hover:border-cyan-500/50 transition-all duration-300 flex items-center justify-center gap-2 group">
                 <Zap className="w-4 h-4 group-hover:text-cyan-300 transition-colors" />
                 View Achievements
               </button>
@@ -171,17 +155,12 @@ const Hero = () => {
       </div>
       
       {/* Enhanced Scroll Indicator */}
-      <button 
-        onClick={scrollToAbout} 
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-blue-400 animate-bounce cursor-pointer hover:text-blue-300 transition-colors group"
-      >
+      <button onClick={scrollToAbout} className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-blue-400 animate-bounce cursor-pointer hover:text-blue-300 transition-colors group">
         <div className="relative">
           <ArrowDown size={32} className="group-hover:scale-110 transition-transform duration-300" />
           <div className="absolute inset-0 bg-blue-400/20 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         </div>
       </button>
-    </div>
-  );
+    </div>;
 };
-
 export default Hero;
