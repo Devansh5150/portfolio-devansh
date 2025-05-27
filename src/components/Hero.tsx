@@ -1,9 +1,12 @@
-
 import { ArrowDown } from 'lucide-react';
 import { Button } from './ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
+import { useNavigate } from 'react-router-dom';
+import Laptop3D from './Laptop3D';
 
 const Hero = () => {
+  const navigate = useNavigate();
+  
   const scrollToAbout = () => {
     const aboutSection = document.getElementById('about');
     if (aboutSection) {
@@ -11,6 +14,10 @@ const Hero = () => {
         behavior: 'smooth'
       });
     }
+  };
+
+  const handleLaptopClick = () => {
+    navigate('/achievements');
   };
 
   return (
@@ -32,56 +39,74 @@ const Hero = () => {
         <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-teal-400/40 rounded-full animate-bounce delay-700"></div>
       </div>
       
-      <div className="relative z-10 text-center max-w-4xl mx-auto my-[101px] animate-fade-in">
-        {/* Enhanced Profile Image with glow effect */}
-        <div className="relative mb-8 mx-auto w-36 h-36 rounded-full bg-gradient-to-r from-blue-400 to-teal-500 p-1 animate-scale-in hover:scale-110 transition-transform duration-300">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-teal-500 rounded-full blur-md opacity-50 animate-pulse"></div>
-          <Avatar className="w-full h-full relative z-10">
-            <AvatarImage src="https://i.postimg.cc/prctTy04/10aab1b0-d493-47cd-b02d-d5533b986e5d.png" alt="Devansh Datta" className="object-cover" />
-            <AvatarFallback className="w-full h-full rounded-full bg-slate-800 flex items-center justify-center text-4xl font-bold text-blue-400">
-              DD
-            </AvatarFallback>
-          </Avatar>
-          <div className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-4 border-slate-900 animate-pulse shadow-lg shadow-green-500/50"></div>
+      <div className="relative z-10 max-w-7xl mx-auto my-[101px] animate-fade-in">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          {/* Left Side - Content */}
+          <div className="text-center lg:text-left">
+            {/* Enhanced Profile Image with glow effect */}
+            <div className="relative mb-8 mx-auto lg:mx-0 w-36 h-36 rounded-full bg-gradient-to-r from-blue-400 to-teal-500 p-1 animate-scale-in hover:scale-110 transition-transform duration-300">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-teal-500 rounded-full blur-md opacity-50 animate-pulse"></div>
+              <Avatar className="w-full h-full relative z-10">
+                <AvatarImage src="https://i.postimg.cc/prctTy04/10aab1b0-d493-47cd-b02d-d5533b986e5d.png" alt="Devansh Datta" className="object-cover" />
+                <AvatarFallback className="w-full h-full rounded-full bg-slate-800 flex items-center justify-center text-4xl font-bold text-blue-400">
+                  DD
+                </AvatarFallback>
+              </Avatar>
+              <div className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-4 border-slate-900 animate-pulse shadow-lg shadow-green-500/50"></div>
+            </div>
+            
+            <div className="mb-6 animate-slide-up delay-200">
+              <span className="inline-block px-6 py-2.5 bg-blue-500/20 text-blue-400 rounded-full font-medium mb-4 text-3xl hover:bg-blue-500/30 transition-all duration-300 transform hover:scale-105">
+                👋 Hi, I'm Devansh Datta
+              </span>
+            </div>
+            
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-teal-400 to-blue-400 bg-clip-text text-transparent animate-slide-up delay-300 hover:from-purple-400 hover:via-cyan-400 hover:to-purple-400 transition-all duration-500">
+              AI DEVELOPER
+              <br />
+              <span className="text-3xl md:text-5xl lg:text-6xl italic">& CREATIVE WRITER</span>
+            </h1>
+            
+            <p className="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed animate-slide-up delay-500">
+              Passionate AI developer, tech enthusiast, and creative writer pursuing B.Tech in CSE at IILM University. 
+              Transforming ideas into innovative solutions through AI/ML, web development, and poetic expression.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-12 animate-slide-up delay-700">
+              <Button 
+                size="lg" 
+                className="bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-black font-semibold px-8 py-3 transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-blue-500/25" 
+                onClick={() => window.open('mailto:work.devansh.datta@gmail.com')}
+              >
+                Get In Touch
+              </Button>
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-black px-8 py-3 transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-blue-500/25" 
+                onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
+              >
+                View Projects
+              </Button>
+            </div>
+          </div>
+
+          {/* Right Side - 3D Laptop */}
+          <div className="flex flex-col items-center lg:items-end animate-slide-up delay-1000">
+            <div className="mb-4">
+              <h3 className="text-xl font-semibold text-cyan-400 mb-2 text-center">Click to view my achievements</h3>
+              <div className="animate-pulse">
+                <Laptop3D onLaptopClick={handleLaptopClick} />
+              </div>
+            </div>
+            <p className="text-sm text-gray-400 text-center max-w-xs">
+              Interactive 3D model - Click and drag to explore, then click to see my achievements!
+            </p>
+          </div>
         </div>
-        
-        <div className="mb-6 animate-slide-up delay-200">
-          <span className="inline-block px-6 py-2.5 bg-blue-500/20 text-blue-400 rounded-full font-medium mb-4 text-3xl hover:bg-blue-500/30 transition-all duration-300 transform hover:scale-105">
-            👋 Hi, I'm Devansh Datta
-          </span>
-        </div>
-        
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-teal-400 to-blue-400 bg-clip-text text-transparent animate-slide-up delay-300 hover:from-purple-400 hover:via-cyan-400 hover:to-purple-400 transition-all duration-500">
-          AI DEVELOPER
-          <br />
-          <span className="text-4xl md:text-6xl lg:text-7xl italic">& CREATIVE WRITER</span>
-        </h1>
-        
-        <p className="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed animate-slide-up delay-500">
-          Passionate AI developer, tech enthusiast, and creative writer pursuing B.Tech in CSE at IILM University. 
-          Transforming ideas into innovative solutions through AI/ML, web development, and poetic expression.
-        </p>
-        
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 animate-slide-up delay-700">
-          <Button 
-            size="lg" 
-            className="bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-black font-semibold px-8 py-3 transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-blue-500/25" 
-            onClick={() => window.open('mailto:work.devansh.datta@gmail.com')}
-          >
-            Get In Touch
-          </Button>
-          <Button 
-            variant="outline" 
-            size="lg" 
-            className="border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-black px-8 py-3 transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-blue-500/25" 
-            onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
-          >
-            View Projects
-          </Button>
-        </div>
-        
+
         {/* Enhanced Stats with animations */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12 max-w-2xl mx-auto animate-slide-up delay-1000">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12 max-w-2xl mx-auto animate-slide-up delay-1200">
           <div className="text-center p-4 rounded-lg bg-slate-800/20 backdrop-blur-sm border border-blue-500/20 hover:border-blue-500/50 transition-all duration-300 transform hover:scale-105 hover:bg-slate-800/30">
             <div className="text-2xl md:text-3xl font-bold text-blue-400 animate-pulse">4+</div>
             <div className="text-sm text-gray-400">Active Projects</div>
