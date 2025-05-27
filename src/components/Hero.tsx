@@ -1,8 +1,8 @@
-import { ArrowDown } from 'lucide-react';
+
+import { ArrowDown, Code, Terminal, Zap, Brain, Cpu } from 'lucide-react';
 import { Button } from './ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { useNavigate } from 'react-router-dom';
-import Laptop3D from './Laptop3D';
 
 const Hero = () => {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ const Hero = () => {
     }
   };
 
-  const handleLaptopClick = () => {
+  const handleAchievementsClick = () => {
     navigate('/achievements');
   };
 
@@ -29,6 +29,14 @@ const Hero = () => {
         <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-500"></div>
         <div className="absolute top-40 right-40 w-48 h-48 bg-cyan-500/10 rounded-full blur-2xl animate-pulse delay-700"></div>
         <div className="absolute bottom-40 left-40 w-56 h-56 bg-blue-400/10 rounded-full blur-2xl animate-pulse delay-300"></div>
+      </div>
+      
+      {/* Matrix-style background lines */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute w-px h-full bg-gradient-to-b from-transparent via-cyan-400 to-transparent left-1/4 animate-pulse"></div>
+        <div className="absolute w-px h-full bg-gradient-to-b from-transparent via-blue-400 to-transparent right-1/4 animate-pulse delay-500"></div>
+        <div className="absolute h-px w-full bg-gradient-to-r from-transparent via-purple-400 to-transparent top-1/3 animate-pulse delay-300"></div>
+        <div className="absolute h-px w-full bg-gradient-to-r from-transparent via-teal-400 to-transparent bottom-1/3 animate-pulse delay-700"></div>
       </div>
       
       {/* Floating particles */}
@@ -91,17 +99,53 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* Right Side - 3D Laptop */}
+          {/* Right Side - Tech Dashboard */}
           <div className="flex flex-col items-center lg:items-end animate-slide-up delay-1000">
-            <div className="mb-4">
-              <h3 className="text-xl font-semibold text-cyan-400 mb-2 text-center">Click to view my achievements</h3>
-              <div className="animate-pulse">
-                <Laptop3D onLaptopClick={handleLaptopClick} />
+            <div className="relative w-80 h-80 bg-slate-900/50 backdrop-blur-sm border border-cyan-500/20 rounded-lg p-6 hover:border-cyan-500/50 transition-all duration-300">
+              {/* Terminal Header */}
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                <div className="ml-2 text-gray-400 text-sm font-mono">~/devansh-portfolio</div>
               </div>
+              
+              {/* Tech Stack Icons */}
+              <div className="grid grid-cols-3 gap-4 mb-6">
+                <div className="flex flex-col items-center p-3 bg-blue-500/10 rounded-lg hover:bg-blue-500/20 transition-colors cursor-pointer group">
+                  <Brain className="w-8 h-8 text-blue-400 group-hover:text-blue-300 transition-colors" />
+                  <span className="text-xs text-gray-400 mt-1">AI/ML</span>
+                </div>
+                <div className="flex flex-col items-center p-3 bg-green-500/10 rounded-lg hover:bg-green-500/20 transition-colors cursor-pointer group">
+                  <Code className="w-8 h-8 text-green-400 group-hover:text-green-300 transition-colors" />
+                  <span className="text-xs text-gray-400 mt-1">Code</span>
+                </div>
+                <div className="flex flex-col items-center p-3 bg-purple-500/10 rounded-lg hover:bg-purple-500/20 transition-colors cursor-pointer group">
+                  <Cpu className="w-8 h-8 text-purple-400 group-hover:text-purple-300 transition-colors" />
+                  <span className="text-xs text-gray-400 mt-1">Systems</span>
+                </div>
+              </div>
+              
+              {/* Code snippet animation */}
+              <div className="bg-black/30 rounded p-3 font-mono text-sm">
+                <div className="text-green-400 mb-1">$ npm run dev</div>
+                <div className="text-gray-400 mb-1">Starting development server...</div>
+                <div className="text-cyan-400 mb-1">✓ Local: http://localhost:3000</div>
+                <div className="text-blue-400 flex items-center">
+                  <Terminal className="w-4 h-4 mr-1" />
+                  Ready in 1.2s
+                </div>
+              </div>
+              
+              {/* Achievement button */}
+              <button 
+                onClick={handleAchievementsClick}
+                className="mt-4 w-full bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 rounded-lg p-3 text-cyan-400 hover:from-cyan-500/30 hover:to-blue-500/30 hover:border-cyan-500/50 transition-all duration-300 flex items-center justify-center gap-2 group"
+              >
+                <Zap className="w-4 h-4 group-hover:text-cyan-300 transition-colors" />
+                View Achievements
+              </button>
             </div>
-            <p className="text-sm text-gray-400 text-center max-w-xs">
-              Interactive 3D model - Click and drag to explore, then click to see my achievements!
-            </p>
           </div>
         </div>
 
