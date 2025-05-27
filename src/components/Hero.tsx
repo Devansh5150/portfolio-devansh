@@ -1,9 +1,12 @@
+
 import { ArrowDown, Code, Terminal, Zap, Brain, Cpu } from 'lucide-react';
 import { Button } from './ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { useNavigate } from 'react-router-dom';
+
 const Hero = () => {
   const navigate = useNavigate();
+  
   const scrollToAbout = () => {
     const aboutSection = document.getElementById('about');
     if (aboutSection) {
@@ -12,10 +15,9 @@ const Hero = () => {
       });
     }
   };
-  const handleAchievementsClick = () => {
-    navigate('/achievements');
-  };
-  return <div className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
+
+  return (
+    <div className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
       {/* Enhanced Animated Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute top-20 left-20 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
@@ -86,49 +88,77 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* Right Side - Tech Dashboard */}
+          {/* Right Side - Coding Animation Dashboard */}
           <div className="flex flex-col items-center lg:items-end animate-slide-up delay-1000 my-[72px] rounded-lg py-[36px]">
-            <div className="relative w-80 h-80 bg-slate-900/50 backdrop-blur-sm border border-cyan-500/20 rounded-lg p-6 hover:border-cyan-500/50 transition-all duration-300">
+            <div className="relative w-80 h-80 bg-slate-900/50 backdrop-blur-sm border border-cyan-500/20 rounded-lg p-6 hover:border-cyan-500/50 transition-all duration-300 overflow-hidden">
               {/* Terminal Header */}
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-3 h-3 bg-red-500 rounded-full"></div>
                 <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
                 <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                <div className="ml-2 text-gray-400 text-sm font-mono">~/devansh-portfolio</div>
+                <div className="ml-2 text-gray-400 text-sm font-mono">~/coding-session</div>
+              </div>
+              
+              {/* Coding Person Animation */}
+              <div className="flex items-center justify-center mb-4">
+                <div className="relative">
+                  {/* Person silhouette */}
+                  <div className="w-12 h-12 bg-gradient-to-b from-blue-400 to-cyan-400 rounded-full relative">
+                    {/* Eyes */}
+                    <div className="absolute top-3 left-2 w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
+                    <div className="absolute top-3 right-2 w-1.5 h-1.5 bg-white rounded-full animate-pulse delay-200"></div>
+                  </div>
+                  {/* Body */}
+                  <div className="w-8 h-16 bg-gradient-to-b from-blue-400 to-cyan-400 mx-auto relative">
+                    {/* Arms typing */}
+                    <div className="absolute -left-2 top-2 w-6 h-1 bg-blue-400 rounded animate-pulse"></div>
+                    <div className="absolute -right-2 top-2 w-6 h-1 bg-blue-400 rounded animate-pulse delay-100"></div>
+                  </div>
+                  {/* Typing indicator */}
+                  <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
+                    <div className="flex space-x-1">
+                      <div className="w-1 h-1 bg-green-400 rounded-full animate-bounce"></div>
+                      <div className="w-1 h-1 bg-green-400 rounded-full animate-bounce delay-100"></div>
+                      <div className="w-1 h-1 bg-green-400 rounded-full animate-bounce delay-200"></div>
+                    </div>
+                  </div>
+                </div>
               </div>
               
               {/* Tech Stack Icons */}
-              <div className="grid grid-cols-3 gap-4 mb-6">
-                <div className="flex flex-col items-center p-3 bg-blue-500/10 rounded-lg hover:bg-blue-500/20 transition-colors cursor-pointer group">
-                  <Brain className="w-8 h-8 text-blue-400 group-hover:text-blue-300 transition-colors" />
+              <div className="grid grid-cols-3 gap-4 mb-4">
+                <div className="flex flex-col items-center p-2 bg-blue-500/10 rounded-lg hover:bg-blue-500/20 transition-colors cursor-pointer group">
+                  <Brain className="w-6 h-6 text-blue-400 group-hover:text-blue-300 transition-colors" />
                   <span className="text-xs text-gray-400 mt-1">AI/ML</span>
                 </div>
-                <div className="flex flex-col items-center p-3 bg-green-500/10 rounded-lg hover:bg-green-500/20 transition-colors cursor-pointer group">
-                  <Code className="w-8 h-8 text-green-400 group-hover:text-green-300 transition-colors" />
+                <div className="flex flex-col items-center p-2 bg-green-500/10 rounded-lg hover:bg-green-500/20 transition-colors cursor-pointer group">
+                  <Code className="w-6 h-6 text-green-400 group-hover:text-green-300 transition-colors" />
                   <span className="text-xs text-gray-400 mt-1">Code</span>
                 </div>
-                <div className="flex flex-col items-center p-3 bg-purple-500/10 rounded-lg hover:bg-purple-500/20 transition-colors cursor-pointer group">
-                  <Cpu className="w-8 h-8 text-purple-400 group-hover:text-purple-300 transition-colors" />
+                <div className="flex flex-col items-center p-2 bg-purple-500/10 rounded-lg hover:bg-purple-500/20 transition-colors cursor-pointer group">
+                  <Cpu className="w-6 h-6 text-purple-400 group-hover:text-purple-300 transition-colors" />
                   <span className="text-xs text-gray-400 mt-1">Systems</span>
                 </div>
               </div>
               
-              {/* Code snippet animation */}
-              <div className="bg-black/30 rounded p-3 font-mono text-sm">
-                <div className="text-green-400 mb-1">import Devansh Portfolio Site</div>
-                <div className="text-gray-400 mb-1">Starting development server...</div>
-                <div className="text-cyan-400 mb-1">✓ Local: http://Welcome to My World of Tech </div>
-                <div className="text-blue-400 flex items-center">
-                  <Terminal className="w-4 h-4 mr-1" />
-                  Ready in 1.2s
+              {/* Live coding animation */}
+              <div className="bg-black/30 rounded p-3 font-mono text-xs space-y-1">
+                <div className="text-green-400 flex items-center">
+                  <span className="animate-pulse mr-1">$</span> 
+                  <span className="animate-typing">Building the future...</span>
+                </div>
+                <div className="text-cyan-400 opacity-80">
+                  <span className="animate-pulse delay-500">▶</span> React + AI/ML + Poetry
+                </div>
+                <div className="text-blue-400 flex items-center opacity-60">
+                  <Terminal className="w-3 h-3 mr-1 animate-pulse delay-1000" />
+                  <span className="animate-pulse delay-700">Status: Coding...</span>
+                </div>
+                <div className="text-purple-400 text-right animate-pulse delay-1000">
+                  <Zap className="w-3 h-3 inline mr-1" />
+                  Innovation Mode: ON
                 </div>
               </div>
-              
-              {/* Achievement button */}
-              <button onClick={handleAchievementsClick} className="mt-4 w-full bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 rounded-lg p-3 text-cyan-400 hover:from-cyan-500/30 hover:to-blue-500/30 hover:border-cyan-500/50 transition-all duration-300 flex items-center justify-center gap-2 group">
-                <Zap className="w-4 h-4 group-hover:text-cyan-300 transition-colors" />
-                View Achievements
-              </button>
             </div>
           </div>
         </div>
@@ -161,6 +191,8 @@ const Hero = () => {
           <div className="absolute inset-0 bg-blue-400/20 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         </div>
       </button>
-    </div>;
+    </div>
+  );
 };
+
 export default Hero;
