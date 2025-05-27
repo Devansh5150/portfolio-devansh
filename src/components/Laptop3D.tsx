@@ -1,7 +1,7 @@
 
 import { useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Box, Plane, Text3D, OrbitControls } from '@react-three/drei';
+import { Box, Plane, OrbitControls } from '@react-three/drei';
 import { Mesh, Group } from 'three';
 
 const LaptopModel = ({ onClick }: { onClick: () => void }) => {
