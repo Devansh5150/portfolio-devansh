@@ -18,29 +18,43 @@ const Hero = () => {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
-      {/* Enhanced Animated Background Elements */}
+      {/* Enhanced Animated Background Elements with smoother animations */}
       <div className="absolute inset-0">
-        <div className="absolute top-20 left-20 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-500"></div>
-        <div className="absolute top-40 right-40 w-48 h-48 bg-cyan-500/10 rounded-full blur-2xl animate-pulse delay-700"></div>
-        <div className="absolute bottom-40 left-40 w-56 h-56 bg-blue-400/10 rounded-full blur-2xl animate-pulse delay-300"></div>
+        <div className="absolute top-20 left-20 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-pulse transition-all duration-1000"></div>
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl animate-pulse delay-1000 transition-all duration-1500"></div>
+        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-500 transition-all duration-1200"></div>
+        <div className="absolute top-40 right-40 w-48 h-48 bg-cyan-500/10 rounded-full blur-2xl animate-pulse delay-700 transition-all duration-800"></div>
+        <div className="absolute bottom-40 left-40 w-56 h-56 bg-blue-400/10 rounded-full blur-2xl animate-pulse delay-300 transition-all duration-1100"></div>
       </div>
       
-      {/* Matrix-style background lines */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute w-px h-full bg-gradient-to-b from-transparent via-cyan-400 to-transparent left-1/4 animate-pulse"></div>
-        <div className="absolute w-px h-full bg-gradient-to-b from-transparent via-blue-400 to-transparent right-1/4 animate-pulse delay-500"></div>
-        <div className="absolute h-px w-full bg-gradient-to-r from-transparent via-purple-400 to-transparent top-1/3 animate-pulse delay-300"></div>
-        <div className="absolute h-px w-full bg-gradient-to-r from-transparent via-teal-400 to-transparent bottom-1/3 animate-pulse delay-700"></div>
+      {/* Enhanced Matrix-style background lines with flowing animation */}
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute w-px h-full bg-gradient-to-b from-transparent via-cyan-400 to-transparent left-1/4 animate-pulse opacity-60"></div>
+        <div className="absolute w-px h-full bg-gradient-to-b from-transparent via-blue-400 to-transparent right-1/4 animate-pulse delay-500 opacity-60"></div>
+        <div className="absolute h-px w-full bg-gradient-to-r from-transparent via-purple-400 to-transparent top-1/3 animate-pulse delay-300 opacity-60"></div>
+        <div className="absolute h-px w-full bg-gradient-to-r from-transparent via-teal-400 to-transparent bottom-1/3 animate-pulse delay-700 opacity-60"></div>
+        {/* Additional flowing lines */}
+        <div className="absolute w-px h-full bg-gradient-to-b from-transparent via-green-400 to-transparent left-3/4 animate-pulse delay-200 opacity-40"></div>
+        <div className="absolute h-px w-full bg-gradient-to-r from-transparent via-pink-400 to-transparent top-2/3 animate-pulse delay-800 opacity-40"></div>
       </div>
       
-      {/* Floating particles */}
+      {/* Enhanced Floating particles with more variety */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-cyan-400/40 rounded-full animate-bounce delay-100"></div>
         <div className="absolute top-3/4 right-1/4 w-1 h-1 bg-purple-400/40 rounded-full animate-bounce delay-500"></div>
         <div className="absolute top-1/2 left-3/4 w-1.5 h-1.5 bg-blue-400/40 rounded-full animate-bounce delay-300"></div>
         <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-teal-400/40 rounded-full animate-bounce delay-700"></div>
+        <div className="absolute top-2/3 left-1/3 w-1.5 h-1.5 bg-green-400/40 rounded-full animate-bounce delay-900"></div>
+        <div className="absolute top-1/5 right-2/3 w-1 h-1 bg-pink-400/40 rounded-full animate-bounce delay-1100"></div>
+        <div className="absolute bottom-1/4 left-2/3 w-2 h-2 bg-yellow-400/40 rounded-full animate-bounce delay-1300"></div>
+      </div>
+      
+      {/* Animated code rain effect */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-10">
+        <div className="absolute top-0 left-10 text-green-400 text-xs font-mono animate-pulse transform translate-y-full opacity-30">01110100 01100101 01100011 01101000</div>
+        <div className="absolute top-0 right-20 text-cyan-400 text-xs font-mono animate-pulse delay-300 transform translate-y-full opacity-30">const code = &apos;beautiful&apos;;</div>
+        <div className="absolute top-0 left-1/3 text-blue-400 text-xs font-mono animate-pulse delay-600 transform translate-y-full opacity-30">function() return innovation</div>
+        <div className="absolute top-0 right-1/3 text-purple-400 text-xs font-mono animate-pulse delay-900 transform translate-y-full opacity-30">AI && ML = Future</div>
       </div>
       
       <div className="relative z-10 max-w-7xl mx-auto my-[101px] animate-fade-in">
@@ -141,22 +155,36 @@ const Hero = () => {
                 </div>
               </div>
               
-              {/* Live coding animation */}
-              <div className="bg-black/30 rounded p-3 font-mono text-xs space-y-1">
+              {/* Enhanced Live coding animation with dynamic typing */}
+              <div className="bg-black/40 rounded p-3 font-mono text-xs space-y-1 border border-green-400/20">
                 <div className="text-green-400 flex items-center">
-                  <span className="animate-pulse mr-1">$</span> 
-                  <span className="animate-typing">Building the future...</span>
+                  <span className="animate-pulse mr-1 text-green-300">$</span> 
+                  <span className="relative">
+                    Building the future
+                    <span className="animate-pulse">|</span>
+                  </span>
                 </div>
-                <div className="text-cyan-400 opacity-80">
-                  <span className="animate-pulse delay-500">▶</span> React + AI/ML + Poetry
+                <div className="text-cyan-400 opacity-80 transition-opacity duration-300 hover:opacity-100">
+                  <span className="animate-pulse delay-500 text-cyan-300">▶</span> React + AI/ML + Poetry
                 </div>
-                <div className="text-blue-400 flex items-center opacity-60">
+                <div className="text-blue-400 flex items-center opacity-60 transition-opacity duration-300 hover:opacity-100">
                   <Terminal className="w-3 h-3 mr-1 animate-pulse delay-1000" />
-                  <span className="animate-pulse delay-700">Status: Coding...</span>
+                  <span className="animate-pulse delay-700">Status: 
+                    <span className="text-green-400 ml-1 font-semibold">Active</span>
+                  </span>
                 </div>
-                <div className="text-purple-400 text-right animate-pulse delay-1000">
-                  <Zap className="w-3 h-3 inline mr-1" />
-                  Innovation Mode: ON
+                <div className="text-purple-400 text-right animate-pulse delay-1000 transition-all duration-300 hover:text-purple-300">
+                  <Zap className="w-3 h-3 inline mr-1 animate-bounce" />
+                  Innovation Mode: 
+                  <span className="text-green-400 ml-1 font-bold">ON</span>
+                </div>
+                <div className="text-yellow-400 opacity-70 animate-pulse delay-1500">
+                  <span className="mr-1">⚡</span>
+                  Lines coded: <span className="text-green-400 font-mono">∞</span>
+                </div>
+                <div className="text-pink-400 opacity-50 text-right animate-pulse delay-2000">
+                  <span className="mr-1">🚀</span>
+                  Dreams → Reality
                 </div>
               </div>
             </div>
