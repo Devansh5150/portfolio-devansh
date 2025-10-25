@@ -3,57 +3,57 @@ const Services = () => {
   const services = [
     {
       icon: '🧠',
-      title: 'AI/ML Solutions',
-      description: 'Custom AI and machine learning solutions tailored to your business needs. From concept to deployment, I help transform your ideas into intelligent systems.',
+      title: 'AI/ML Development',
+      description: 'Custom AI and machine learning solutions including recommendation models, CV analyzers, and emotion recognition systems. Expertise in OpenAI API integration and prompt engineering.',
       features: [
-        'AI Strategy & Consulting',
-        'Machine Learning Models',
+        'Recommendation Systems',
+        'Computer Vision (OpenCV, DeepFace)',
+        'OpenAI API Integration',
+        'Prompt Engineering',
         'Data Analysis & Insights',
-        'Predictive Analytics',
-        'Computer Vision',
-        'Natural Language Processing'
+        'Machine Learning Models'
       ],
       color: 'cyan'
     },
     {
-      icon: '🎨',
-      title: 'UI/UX Design',
-      description: 'Creating beautiful, intuitive, and user-focused designs that drive engagement and deliver exceptional user experiences across all platforms.',
-      features: [
-        'User Research & Analysis',
-        'Wireframing & Prototyping',
-        'Interactive Design',
-        'Mobile App Design',
-        'Web Interface Design',
-        'Brand Identity'
-      ],
-      color: 'purple'
-    },
-    {
       icon: '💻',
-      title: 'Web Development',
-      description: 'Full-stack web development services using modern technologies to build scalable, performant, and maintainable web applications.',
+      title: 'Full-Stack Development',
+      description: 'Complete web and mobile application development using modern technologies. From frontend React/Next.js to backend Node.js and database management.',
       features: [
-        'Frontend Development',
-        'Backend APIs',
-        'Database Design',
-        'Cloud Deployment',
-        'Performance Optimization',
-        'Maintenance & Support'
+        'React.js & Next.js',
+        'Node.js Backend',
+        'Mobile App Development',
+        'Database Design (SQL, MongoDB)',
+        'API Development',
+        'Cloud Deployment (AWS)'
       ],
       color: 'blue'
     },
     {
-      icon: '🚀',
-      title: 'Innovation Consulting',
-      description: 'Strategic guidance for startups and businesses looking to leverage cutting-edge technology to solve complex problems and drive growth.',
+      icon: '🎨',
+      title: 'UI/UX Design',
+      description: 'Creating beautiful, intuitive, and user-focused designs that drive engagement. Experience with Tailwind CSS and modern design principles.',
       features: [
-        'Technology Strategy',
-        'Digital Transformation',
-        'Startup Consulting',
-        'Product Development',
-        'Market Analysis',
-        'Growth Planning'
+        'Responsive Web Design',
+        'Mobile App UI/UX',
+        'Tailwind CSS',
+        'User Experience Design',
+        'Interactive Prototypes',
+        'Design System Creation'
+      ],
+      color: 'purple'
+    },
+    {
+      icon: '✒️',
+      title: 'Creative Writing & Content',
+      description: 'Professional content creation including poetry, technical writing, and creative copy. Published author with expertise in technology-themed creative writing.',
+      features: [
+        'Technical Writing',
+        'Creative Poetry',
+        'Content Strategy',
+        'Social Media Content',
+        'Blog Writing',
+        'Published Author'
       ],
       color: 'green'
     }

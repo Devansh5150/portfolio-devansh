@@ -3,9 +3,12 @@ import { ArrowDown, Code, Terminal, Zap, Brain, Cpu } from 'lucide-react';
 import { Button } from './ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { useNavigate } from 'react-router-dom';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 const Hero = () => {
   const navigate = useNavigate();
+  const { scrollYProgress } = useScroll();
+  const y = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
   
   const scrollToAbout = () => {
     const aboutSection = document.getElementById('about');
@@ -13,6 +16,40 @@ const Hero = () => {
       aboutSection.scrollIntoView({
         behavior: 'smooth'
       });
+    }
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.3
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut"
+      }
+    }
+  };
+
+  const floatingVariants = {
+    animate: {
+      y: [-10, 10, -10],
+      transition: {
+        duration: 4,
+        repeat: Infinity,
+        ease: "easeInOut"
+      }
     }
   };
 
@@ -55,56 +92,116 @@ const Hero = () => {
         <div className="absolute top-0 right-20 text-cyan-400 text-xs font-mono animate-pulse delay-300 transform translate-y-full opacity-30">const code = &apos;beautiful&apos;;</div>
         <div className="absolute top-0 left-1/3 text-blue-400 text-xs font-mono animate-pulse delay-600 transform translate-y-full opacity-30">function() return innovation</div>
         <div className="absolute top-0 right-1/3 text-purple-400 text-xs font-mono animate-pulse delay-900 transform translate-y-full opacity-30">AI && ML = Future</div>
+        {[...Array(6)].map((_, i) => (
+          <motion.div
+            key={i}
+            className={`absolute w-2 h-2 bg-cyan-400/40 rounded-full`}
+            style={{
+              top: `${20 + i * 15}%`,
+              left: `${15 + i * 20}%`,
+            }}
+            variants={floatingVariants}
+            animate="animate"
+            transition={{ delay: i * 0.5 }}
+          />
+        ))}
       </div>
       
-      <div className="relative z-10 max-w-7xl mx-auto my-[101px] animate-fade-in">
+      <motion.div 
+        className="relative z-10 max-w-7xl mx-auto my-[101px]"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Side - Content */}
-          <div className="text-center lg:text-left">
+          <motion.div 
+            className="text-center lg:text-left"
+            variants={itemVariants}
+          >
             {/* Enhanced Profile Image with glow effect */}
-            <div className="relative mb-8 mx-auto lg:mx-0 w-36 h-36 rounded-full bg-gradient-to-r from-blue-400 to-teal-500 p-1 animate-scale-in hover:scale-110 transition-transform duration-300">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-teal-500 rounded-full blur-md opacity-50 animate-pulse"></div>
+            <motion.div 
+              className="relative mb-8 mx-auto lg:mx-0 w-36 h-36 rounded-full bg-gradient-to-r from-blue-400 to-teal-500 p-1"
+              whileHover={{ scale: 1.1 }}
+              transition={{ duration: 0.3 }}
+            >
+              <motion.div 
+                className="absolute inset-0 bg-gradient-to-r from-blue-400 to-teal-500 rounded-full blur-md opacity-50"
+                animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
+                transition={{ duration: 3, repeat: Infinity }}
+              />
               <Avatar className="w-full h-full relative z-10">
                 <AvatarImage src="https://i.postimg.cc/prctTy04/10aab1b0-d493-47cd-b02d-d5533b986e5d.png" alt="Devansh Datta" className="object-cover" />
                 <AvatarFallback className="w-full h-full rounded-full bg-slate-800 flex items-center justify-center text-4xl font-bold text-blue-400">
                   DD
                 </AvatarFallback>
               </Avatar>
-              <div className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-4 border-slate-900 animate-pulse shadow-lg shadow-green-500/50"></div>
-            </div>
+              <motion.div 
+                className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-4 border-slate-900"
+                animate={{ scale: [1, 1.2, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              />
+            </motion.div>
             
-            <div className="mb-6 animate-slide-up delay-200">
-              <span className="inline-block px-6 py-2.5 bg-blue-500/20 text-blue-400 rounded-full font-medium mb-4 text-3xl hover:bg-blue-500/30 transition-all duration-300 transform hover:scale-105">
+            <motion.div 
+              className="mb-6"
+              variants={itemVariants}
+            >
+              <motion.span 
+                className="inline-block px-6 py-2.5 bg-blue-500/20 text-blue-400 rounded-full font-medium mb-4 text-3xl"
+                whileHover={{ scale: 1.05, backgroundColor: "rgba(59, 130, 246, 0.3)" }}
+                transition={{ duration: 0.3 }}
+              >
                 👋 Hi, I'm Devansh Datta
-              </span>
-            </div>
+              </motion.span>
+            </motion.div>
             
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-teal-400 to-blue-400 bg-clip-text text-transparent animate-slide-up delay-300 hover:from-purple-400 hover:via-cyan-400 hover:to-purple-400 transition-all duration-500">
+            <motion.h1 
+              className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-teal-400 to-blue-400 bg-clip-text text-transparent"
+              variants={itemVariants}
+            >
               AI DEVELOPER
               <br />
               <span className="text-3xl md:text-5xl lg:text-6xl italic">& CREATIVE WRITER</span>
-            </h1>
+            </motion.h1>
             
-            <p className="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed animate-slide-up delay-500">
+            <motion.p 
+              className="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed"
+              variants={itemVariants}
+            >
               Passionate AI developer, tech enthusiast, and creative writer pursuing B.Tech in CSE at IILM University. 
               Transforming ideas into innovative solutions through AI/ML, web development, and poetic expression.
-            </p>
+            </motion.p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-12 animate-slide-up delay-700">
-              <Button size="lg" className="bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-black font-semibold px-8 py-3 transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-blue-500/25" onClick={() => window.open('mailto:work.devansh.datta@gmail.com')}>
-                Get In Touch
-              </Button>
-              <Button variant="outline" size="lg" className="border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-black px-8 py-3 transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-blue-500/25" onClick={() => document.getElementById('projects')?.scrollIntoView({
-              behavior: 'smooth'
-            })}>
-                View Projects
-              </Button>
-            </div>
-          </div>
+            <motion.div 
+              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-12"
+              variants={itemVariants}
+            >
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button size="lg" className="bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-black font-semibold px-8 py-3 transition-all duration-300" onClick={() => window.open('mailto:work.devansh.datta@gmail.com')}>
+                  Get In Touch
+                </Button>
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button variant="outline" size="lg" className="border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-black px-8 py-3 transition-all duration-300" onClick={() => document.getElementById('projects')?.scrollIntoView({
+                behavior: 'smooth'
+              })}>
+                  View Projects
+                </Button>
+              </motion.div>
+            </motion.div>
+          </motion.div>
 
           {/* Right Side - Coding Animation Dashboard */}
-          <div className="flex flex-col items-center lg:items-end animate-slide-up delay-1000 my-[72px] rounded-lg py-[36px]">
-            <div className="relative w-80 h-80 bg-slate-900/50 backdrop-blur-sm border border-cyan-500/20 rounded-lg p-6 hover:border-cyan-500/50 transition-all duration-300 overflow-hidden">
+          <motion.div 
+            className="flex flex-col items-center lg:items-end my-[72px] rounded-lg py-[36px]"
+            variants={itemVariants}
+          >
+            <motion.div 
+              className="relative w-80 h-80 bg-slate-900/50 backdrop-blur-sm border border-cyan-500/20 rounded-lg p-6 overflow-hidden"
+              whileHover={{ scale: 1.02, borderColor: "rgba(6, 182, 212, 0.5)" }}
+              transition={{ duration: 0.3 }}
+            >
               {/* Terminal Header */}
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-3 h-3 bg-red-500 rounded-full"></div>
@@ -114,45 +211,73 @@ const Hero = () => {
               </div>
               
               {/* Coding Person Animation */}
-              <div className="flex items-center justify-center mb-4">
+              <motion.div 
+                className="flex items-center justify-center mb-4"
+                animate={{ y: [-5, 5, -5] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              >
                 <div className="relative">
                   {/* Person silhouette */}
                   <div className="w-12 h-12 bg-gradient-to-b from-blue-400 to-cyan-400 rounded-full relative">
                     {/* Eyes */}
-                    <div className="absolute top-3 left-2 w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
-                    <div className="absolute top-3 right-2 w-1.5 h-1.5 bg-white rounded-full animate-pulse delay-200"></div>
+                    <motion.div 
+                      className="absolute top-3 left-2 w-1.5 h-1.5 bg-white rounded-full"
+                      animate={{ opacity: [1, 0.3, 1] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    />
+                    <motion.div 
+                      className="absolute top-3 right-2 w-1.5 h-1.5 bg-white rounded-full"
+                      animate={{ opacity: [0.3, 1, 0.3] }}
+                      transition={{ duration: 2, repeat: Infinity, delay: 0.2 }}
+                    />
                   </div>
                   {/* Body */}
                   <div className="w-8 h-16 bg-gradient-to-b from-blue-400 to-cyan-400 mx-auto relative">
                     {/* Arms typing */}
-                    <div className="absolute -left-2 top-2 w-6 h-1 bg-blue-400 rounded animate-pulse"></div>
-                    <div className="absolute -right-2 top-2 w-6 h-1 bg-blue-400 rounded animate-pulse delay-100"></div>
+                    <motion.div 
+                      className="absolute -left-2 top-2 w-6 h-1 bg-blue-400 rounded"
+                      animate={{ rotate: [-10, 10, -10] }}
+                      transition={{ duration: 1, repeat: Infinity }}
+                    />
+                    <motion.div 
+                      className="absolute -right-2 top-2 w-6 h-1 bg-blue-400 rounded"
+                      animate={{ rotate: [10, -10, 10] }}
+                      transition={{ duration: 1, repeat: Infinity, delay: 0.1 }}
+                    />
                   </div>
                   {/* Typing indicator */}
                   <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
                     <div className="flex space-x-1">
-                      <div className="w-1 h-1 bg-green-400 rounded-full animate-bounce"></div>
-                      <div className="w-1 h-1 bg-green-400 rounded-full animate-bounce delay-100"></div>
-                      <div className="w-1 h-1 bg-green-400 rounded-full animate-bounce delay-200"></div>
+                      {[...Array(3)].map((_, i) => (
+                        <motion.div
+                          key={i}
+                          className="w-1 h-1 bg-green-400 rounded-full"
+                          animate={{ y: [0, -5, 0] }}
+                          transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.2 }}
+                        />
+                      ))}
                     </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
               
               {/* Tech Stack Icons */}
               <div className="grid grid-cols-3 gap-4 mb-4">
-                <div className="flex flex-col items-center p-2 bg-blue-500/10 rounded-lg hover:bg-blue-500/20 transition-colors cursor-pointer group">
-                  <Brain className="w-6 h-6 text-blue-400 group-hover:text-blue-300 transition-colors" />
-                  <span className="text-xs text-gray-400 mt-1">AI/ML</span>
-                </div>
-                <div className="flex flex-col items-center p-2 bg-green-500/10 rounded-lg hover:bg-green-500/20 transition-colors cursor-pointer group">
-                  <Code className="w-6 h-6 text-green-400 group-hover:text-green-300 transition-colors" />
-                  <span className="text-xs text-gray-400 mt-1">Code</span>
-                </div>
-                <div className="flex flex-col items-center p-2 bg-purple-500/10 rounded-lg hover:bg-purple-500/20 transition-colors cursor-pointer group">
-                  <Cpu className="w-6 h-6 text-purple-400 group-hover:text-purple-300 transition-colors" />
-                  <span className="text-xs text-gray-400 mt-1">Systems</span>
-                </div>
+                {[
+                  { icon: Brain, label: 'AI/ML', color: 'blue' },
+                  { icon: Code, label: 'Code', color: 'green' },
+                  { icon: Cpu, label: 'Systems', color: 'purple' }
+                ].map((tech, index) => (
+                  <motion.div
+                    key={index}
+                    className="flex flex-col items-center p-2 bg-blue-500/10 rounded-lg cursor-pointer group"
+                    whileHover={{ scale: 1.1, backgroundColor: "rgba(59, 130, 246, 0.2)" }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <tech.icon className="w-6 h-6 text-blue-400 group-hover:text-blue-300 transition-colors" />
+                    <span className="text-xs text-gray-400 mt-1">{tech.label}</span>
+                  </motion.div>
+                ))}
               </div>
               
               {/* Enhanced Live coding animation with dynamic typing */}
@@ -186,39 +311,106 @@ const Hero = () => {
                   <span className="mr-1">🚀</span>
                   Dreams → Reality
                 </div>
+              {/* Live coding animation */}
+              <div className="bg-black/30 rounded p-3 font-mono text-xs space-y-1">
+                <motion.div 
+                  className="text-green-400 flex items-center"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 1 }}
+                >
+                  <motion.span 
+                    className="mr-1"
+                    animate={{ opacity: [1, 0, 1] }}
+                    transition={{ duration: 1, repeat: Infinity }}
+                  >
+                    $
+                  </motion.span> 
+                  <span>Building the future...</span>
+                </motion.div>
+                <motion.div 
+                  className="text-cyan-400 opacity-80"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.8 }}
+                  transition={{ delay: 1.5 }}
+                >
+                  <motion.span 
+                    animate={{ opacity: [1, 0, 1] }}
+                    transition={{ duration: 1, repeat: Infinity, delay: 0.5 }}
+                  >
+                    ▶
+                  </motion.span> React + AI/ML + Poetry
+                </motion.div>
+                <motion.div 
+                  className="text-blue-400 flex items-center opacity-60"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.6 }}
+                  transition={{ delay: 2 }}
+                >
+                  <Terminal className="w-3 h-3 mr-1" />
+                  <span>Status: Coding...</span>
+                </motion.div>
+                <motion.div 
+                  className="text-purple-400 text-right"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 2.5 }}
+                >
+                  <Zap className="w-3 h-3 inline mr-1" />
+                  Innovation Mode: ON
+                </motion.div>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
 
         {/* Enhanced Stats with animations */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12 max-w-2xl mx-auto animate-slide-up delay-1200">
-          <div className="text-center p-4 rounded-lg bg-slate-800/20 backdrop-blur-sm border border-blue-500/20 hover:border-blue-500/50 transition-all duration-300 transform hover:scale-105 hover:bg-slate-800/30">
-            <div className="text-2xl md:text-3xl font-bold text-blue-400 animate-pulse">4+</div>
-            <div className="text-sm text-gray-400">Active Projects</div>
-          </div>
-          <div className="text-center p-4 rounded-lg bg-slate-800/20 backdrop-blur-sm border border-teal-500/20 hover:border-teal-500/50 transition-all duration-300 transform hover:scale-105 hover:bg-slate-800/30">
-            <div className="text-2xl md:text-3xl font-bold text-teal-400 animate-pulse delay-200">2+</div>
-            <div className="text-sm text-gray-400">Years Experience</div>
-          </div>
-          <div className="text-center p-4 rounded-lg bg-slate-800/20 backdrop-blur-sm border border-blue-500/20 hover:border-blue-500/50 transition-all duration-300 transform hover:scale-105 hover:bg-slate-800/30">
-            <div className="text-2xl md:text-3xl font-bold text-blue-400 animate-pulse delay-400">AI/ML</div>
-            <div className="text-sm text-gray-400">Specialization</div>
-          </div>
-          <div className="text-center p-4 rounded-lg bg-slate-800/20 backdrop-blur-sm border border-green-500/20 hover:border-green-500/50 transition-all duration-300 transform hover:scale-105 hover:bg-slate-800/30">
-            <div className="text-2xl md:text-3xl font-bold text-green-400 animate-pulse delay-600">Poetry</div>
-            <div className="text-sm text-gray-400">Creative Outlet</div>
-          </div>
-        </div>
-      </div>
+        <motion.div 
+          className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12 max-w-2xl mx-auto"
+          variants={containerVariants}
+        >
+          {[
+            { value: '4+', label: 'Active Projects', color: 'blue' },
+            { value: '2+', label: 'Years Experience', color: 'teal' },
+            { value: 'AI/ML', label: 'Specialization', color: 'blue' },
+            { value: 'Poetry', label: 'Creative Outlet', color: 'green' }
+          ].map((stat, index) => (
+            <motion.div
+              key={index}
+              className="text-center p-4 rounded-lg bg-slate-800/20 backdrop-blur-sm border border-blue-500/20 hover:border-blue-500/50 transition-all duration-300"
+              variants={itemVariants}
+              whileHover={{ scale: 1.05, backgroundColor: "rgba(30, 41, 59, 0.3)" }}
+            >
+              <motion.div 
+                className="text-2xl md:text-3xl font-bold text-blue-400"
+                animate={{ scale: [1, 1.1, 1] }}
+                transition={{ duration: 2, repeat: Infinity, delay: index * 0.2 }}
+              >
+                {stat.value}
+              </motion.div>
+              <div className="text-sm text-gray-400">{stat.label}</div>
+            </motion.div>
+          ))}
+        </motion.div>
+      </motion.div>
       
       {/* Enhanced Scroll Indicator */}
-      <button onClick={scrollToAbout} className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-blue-400 animate-bounce cursor-pointer hover:text-blue-300 transition-colors group">
+      <motion.button 
+        onClick={scrollToAbout} 
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-blue-400 cursor-pointer group"
+        animate={{ y: [0, 10, 0] }}
+        transition={{ duration: 2, repeat: Infinity }}
+        whileHover={{ scale: 1.1 }}
+      >
         <div className="relative">
           <ArrowDown size={32} className="group-hover:scale-110 transition-transform duration-300" />
-          <div className="absolute inset-0 bg-blue-400/20 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <motion.div 
+            className="absolute inset-0 bg-blue-400/20 rounded-full blur-lg"
+            animate={{ opacity: [0, 1, 0] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          />
         </div>
-      </button>
+      </motion.button>
     </div>
   );
 };

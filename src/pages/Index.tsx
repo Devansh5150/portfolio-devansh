@@ -5,15 +5,20 @@ import Hero from '../components/Hero';
 import About from '../components/About';
 import Projects from '../components/Projects';
 import Services from '../components/Services';
+import Leadership from '../components/Leadership';
+import PersonalityQuiz from '../components/PersonalityQuiz';
+import CodingChallenge from '../components/CodingChallenge';
+import AchievementsGallery from '../components/AchievementsGallery';
 import Contact from '../components/Contact';
 import Navigation from '../components/Navigation';
+import InteractiveBackground from '../components/InteractiveBackground';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('home');
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['home', 'about', 'projects', 'services', 'contact'];
+        const sections = ['home', 'about', 'projects', 'services', 'leadership', 'quiz', 'coding', 'achievements', 'contact'];
       const scrollPosition = window.scrollY + 100;
 
       for (const section of sections) {
@@ -35,7 +40,11 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 min-h-screen text-white">
+    <div className="relative min-h-screen text-white">
+      {/* Interactive background */}
+      <div className="fixed inset-0 -z-10">
+        <InteractiveBackground />
+      </div>
       <Navigation activeSection={activeSection} />
       
       <section id="home" className="min-h-screen">
@@ -52,6 +61,22 @@ const Index = () => {
       
       <section id="services" className="min-h-screen">
         <Services />
+      </section>
+      
+      <section id="leadership" className="min-h-screen">
+        <Leadership />
+      </section>
+      
+      <section id="quiz" className="min-h-screen">
+        <PersonalityQuiz />
+      </section>
+      
+      <section id="coding" className="min-h-screen">
+        <CodingChallenge />
+      </section>
+      
+      <section id="achievements" className="min-h-screen">
+        <AchievementsGallery />
       </section>
       
       <section id="contact" className="min-h-screen">

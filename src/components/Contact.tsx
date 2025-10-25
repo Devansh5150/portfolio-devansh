@@ -71,6 +71,11 @@ const Contact = () => {
       name: 'Twitter',
       url: 'https://x.com/DattaDevan76120',
       icon: '🐦'
+    },
+    {
+      name: 'Writing Portfolio',
+      url: 'https://linktr.ee/devansh.datta',
+      icon: '✒️'
     }
   ];
 
