@@ -141,12 +141,6 @@ const About = () => {
 
   return (
     <div className="min-h-screen py-20 px-4 relative overflow-hidden">
-      {/* Animated background elements */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-10 right-10 w-64 h-64 bg-gradient-to-br from-cyan-500/10 to-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-10 left-10 w-80 h-80 bg-gradient-to-tr from-blue-500/10 to-teal-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-      </div>
-
       <div className="max-w-6xl mx-auto relative z-10">
         <div className="text-center mb-16 animate-fade-in">
           <span className="text-cyan-400 text-sm font-semibold tracking-wide uppercase animate-slide-up">About Me</span>
