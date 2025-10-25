@@ -55,11 +55,11 @@ const Hero = () => {
     <div className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
       {/* Enhanced Animated Background Elements with smoother animations */}
       <div className="absolute inset-0">
-        <div className="absolute top-20 left-20 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-pulse transition-all duration-1000"></div>
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl animate-pulse delay-1000 transition-all duration-1500"></div>
-        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-500 transition-all duration-1200"></div>
-        <div className="absolute top-40 right-40 w-48 h-48 bg-cyan-500/10 rounded-full blur-2xl animate-pulse delay-700 transition-all duration-800"></div>
-        <div className="absolute bottom-40 left-40 w-56 h-56 bg-blue-400/10 rounded-full blur-2xl animate-pulse delay-300 transition-all duration-1100"></div>
+        <div className="absolute top-20 left-20 w-72 h-72 bg-fuchsia-500/10 rounded-full blur-3xl animate-pulse transition-all duration-1000"></div>
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse delay-1000 transition-all duration-1500"></div>
+        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-fuchsia-400/10 rounded-full blur-3xl animate-pulse delay-500 transition-all duration-1200"></div>
+        <div className="absolute top-40 right-40 w-48 h-48 bg-cyan-400/10 rounded-full blur-2xl animate-pulse delay-700 transition-all duration-800"></div>
+        <div className="absolute bottom-40 left-40 w-56 h-56 bg-fuchsia-400/10 rounded-full blur-2xl animate-pulse delay-300 transition-all duration-1100"></div>
       </div>
       
       {/* Enhanced Matrix-style background lines with flowing animation */}
@@ -73,23 +73,23 @@ const Hero = () => {
         <div className="absolute h-px w-full bg-gradient-to-r from-transparent via-pink-400 to-transparent top-2/3 animate-pulse delay-800 opacity-40"></div>
       </div>
       
-      {/* Enhanced Floating particles with more variety */}
+      {/* Enhanced Floating particles with more variety (rethemed) */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-cyan-400/40 rounded-full animate-bounce delay-100"></div>
-        <div className="absolute top-3/4 right-1/4 w-1 h-1 bg-purple-400/40 rounded-full animate-bounce delay-500"></div>
-        <div className="absolute top-1/2 left-3/4 w-1.5 h-1.5 bg-blue-400/40 rounded-full animate-bounce delay-300"></div>
-        <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-teal-400/40 rounded-full animate-bounce delay-700"></div>
-        <div className="absolute top-2/3 left-1/3 w-1.5 h-1.5 bg-green-400/40 rounded-full animate-bounce delay-900"></div>
-        <div className="absolute top-1/5 right-2/3 w-1 h-1 bg-pink-400/40 rounded-full animate-bounce delay-1100"></div>
-        <div className="absolute bottom-1/4 left-2/3 w-2 h-2 bg-yellow-400/40 rounded-full animate-bounce delay-1300"></div>
+        <div className="absolute top-3/4 right-1/4 w-1 h-1 bg-fuchsia-400/40 rounded-full animate-bounce delay-500"></div>
+        <div className="absolute top-1/2 left-3/4 w-1.5 h-1.5 bg-cyan-300/40 rounded-full animate-bounce delay-300"></div>
+        <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-fuchsia-300/40 rounded-full animate-bounce delay-700"></div>
+        <div className="absolute top-2/3 left-1/3 w-1.5 h-1.5 bg-cyan-200/40 rounded-full animate-bounce delay-900"></div>
+        <div className="absolute top-1/5 right-2/3 w-1 h-1 bg-fuchsia-300/40 rounded-full animate-bounce delay-1100"></div>
+        <div className="absolute bottom-1/4 left-2/3 w-2 h-2 bg-cyan-200/40 rounded-full animate-bounce delay-1300"></div>
       </div>
       
       {/* Animated code rain effect */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-10">
-        <div className="absolute top-0 left-10 text-green-400 text-xs font-mono animate-pulse transform translate-y-full opacity-30">01110100 01100101 01100011 01101000</div>
-        <div className="absolute top-0 right-20 text-cyan-400 text-xs font-mono animate-pulse delay-300 transform translate-y-full opacity-30">const code = &apos;beautiful&apos;;</div>
-        <div className="absolute top-0 left-1/3 text-blue-400 text-xs font-mono animate-pulse delay-600 transform translate-y-full opacity-30">function() return innovation</div>
-        <div className="absolute top-0 right-1/3 text-purple-400 text-xs font-mono animate-pulse delay-900 transform translate-y-full opacity-30">AI && ML = Future</div>
+        <div className="absolute top-0 left-10 text-cyan-400 text-xs font-mono animate-pulse transform translate-y-full opacity-30">01110100 01100101 01100011 01101000</div>
+        <div className="absolute top-0 right-20 text-fuchsia-400 text-xs font-mono animate-pulse delay-300 transform translate-y-full opacity-30">const code = &apos;beautiful&apos;;</div>
+        <div className="absolute top-0 left-1/3 text-cyan-300 text-xs font-mono animate-pulse delay-600 transform translate-y-full opacity-30">function() return innovation</div>
+        <div className="absolute top-0 right-1/3 text-fuchsia-300 text-xs font-mono animate-pulse delay-900 transform translate-y-full opacity-30">AI && ML = Future</div>
         {[...Array(6)].map((_, i) => (
           <motion.div
             key={i}
@@ -119,12 +119,12 @@ const Hero = () => {
           >
             {/* Enhanced Profile Image with glow effect */}
             <motion.div 
-              className="relative mb-8 mx-auto lg:mx-0 w-36 h-36 rounded-full bg-gradient-to-r from-blue-400 to-teal-500 p-1"
+              className="relative mb-8 mx-auto lg:mx-0 w-36 h-36 rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-400 p-1"
               whileHover={{ scale: 1.1 }}
               transition={{ duration: 0.3 }}
             >
               <motion.div 
-                className="absolute inset-0 bg-gradient-to-r from-blue-400 to-teal-500 rounded-full blur-md opacity-50"
+                className="absolute inset-0 bg-gradient-to-r from-fuchsia-500 to-cyan-400 rounded-full blur-md opacity-50"
                 animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
                 transition={{ duration: 3, repeat: Infinity }}
               />
@@ -135,7 +135,7 @@ const Hero = () => {
                 </AvatarFallback>
               </Avatar>
               <motion.div 
-                className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-4 border-slate-900"
+                className="absolute -top-2 -right-2 w-8 h-8 bg-fuchsia-500 rounded-full border-4 border-slate-900"
                 animate={{ scale: [1, 1.2, 1] }}
                 transition={{ duration: 2, repeat: Infinity }}
               />
@@ -146,7 +146,7 @@ const Hero = () => {
               variants={itemVariants}
             >
               <motion.span 
-                className="inline-block px-6 py-2.5 bg-blue-500/20 text-blue-400 rounded-full font-medium mb-4 text-3xl"
+                className="inline-block px-6 py-2.5 bg-fuchsia-500/20 text-fuchsia-400 rounded-full font-medium mb-4 text-3xl"
                 whileHover={{ scale: 1.05, backgroundColor: "rgba(59, 130, 246, 0.3)" }}
                 transition={{ duration: 0.3 }}
               >
@@ -155,7 +155,7 @@ const Hero = () => {
             </motion.div>
             
             <motion.h1 
-              className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-teal-400 to-blue-400 bg-clip-text text-transparent"
+              className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-fuchsia-400 via-cyan-300 to-fuchsia-400 bg-clip-text text-transparent"
               variants={itemVariants}
             >
               AI DEVELOPER
@@ -176,12 +176,12 @@ const Hero = () => {
               variants={itemVariants}
             >
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button size="lg" className="bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-black font-semibold px-8 py-3 transition-all duration-300" onClick={() => window.open('mailto:work.devansh.datta@gmail.com')}>
+                <Button size="lg" className="bg-gradient-to-r from-fuchsia-500 to-cyan-500 hover:from-fuchsia-600 hover:to-cyan-600 text-black font-semibold px-8 py-3 transition-all duration-300" onClick={() => window.open('mailto:work.devansh.datta@gmail.com')}>
                   Get In Touch
                 </Button>
               </motion.div>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button variant="outline" size="lg" className="border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-black px-8 py-3 transition-all duration-300" onClick={() => document.getElementById('projects')?.scrollIntoView({
+                <Button variant="outline" size="lg" className="border-fuchsia-500 text-fuchsia-400 hover:bg-fuchsia-500 hover:text-black px-8 py-3 transition-all duration-300" onClick={() => document.getElementById('projects')?.scrollIntoView({
                 behavior: 'smooth'
               })}>
                   View Projects
@@ -196,8 +196,8 @@ const Hero = () => {
             variants={itemVariants}
           >
             <motion.div 
-              className="relative w-80 h-80 bg-slate-900/50 backdrop-blur-sm border border-cyan-500/20 rounded-lg p-6 overflow-hidden"
-              whileHover={{ scale: 1.02, borderColor: "rgba(6, 182, 212, 0.5)" }}
+              className="relative w-80 h-80 bg-slate-900/50 backdrop-blur-sm border border-fuchsia-500/30 rounded-lg p-6 overflow-hidden"
+              whileHover={{ scale: 1.02, borderColor: "rgba(217, 70, 239, 0.5)" }}
               transition={{ duration: 0.3 }}
             >
               {/* Terminal Header */}
@@ -216,7 +216,7 @@ const Hero = () => {
               >
                 <div className="relative">
                   {/* Person silhouette */}
-                  <div className="w-12 h-12 bg-gradient-to-b from-blue-400 to-cyan-400 rounded-full relative">
+                  <div className="w-12 h-12 bg-gradient-to-b from-fuchsia-400 to-cyan-400 rounded-full relative">
                     {/* Eyes */}
                     <motion.div 
                       className="absolute top-3 left-2 w-1.5 h-1.5 bg-white rounded-full"
@@ -230,7 +230,7 @@ const Hero = () => {
                     />
                   </div>
                   {/* Body */}
-                  <div className="w-8 h-16 bg-gradient-to-b from-blue-400 to-cyan-400 mx-auto relative">
+                  <div className="w-8 h-16 bg-gradient-to-b from-fuchsia-400 to-cyan-400 mx-auto relative">
                     {/* Arms typing */}
                     <motion.div 
                       className="absolute -left-2 top-2 w-6 h-1 bg-blue-400 rounded"
@@ -249,7 +249,7 @@ const Hero = () => {
                       {[...Array(3)].map((_, i) => (
                         <motion.div
                           key={i}
-                          className="w-1 h-1 bg-green-400 rounded-full"
+                          className="w-1 h-1 bg-cyan-400 rounded-full"
                           animate={{ y: [0, -5, 0] }}
                           transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.2 }}
                         />
@@ -268,44 +268,44 @@ const Hero = () => {
                 ].map((tech, index) => (
                   <motion.div
                     key={index}
-                    className="flex flex-col items-center p-2 bg-blue-500/10 rounded-lg cursor-pointer group"
-                    whileHover={{ scale: 1.1, backgroundColor: "rgba(59, 130, 246, 0.2)" }}
+                    className="flex flex-col items-center p-2 bg-fuchsia-500/10 rounded-lg cursor-pointer group"
+                    whileHover={{ scale: 1.1, backgroundColor: "rgba(217, 70, 239, 0.2)" }}
                     transition={{ duration: 0.2 }}
                   >
-                    <tech.icon className="w-6 h-6 text-blue-400 group-hover:text-blue-300 transition-colors" />
+                    <tech.icon className="w-6 h-6 text-fuchsia-400 group-hover:text-fuchsia-300 transition-colors" />
                     <span className="text-xs text-gray-400 mt-1">{tech.label}</span>
                   </motion.div>
                 ))}
               </div>
               
               {/* Enhanced Live coding animation with dynamic typing */}
-              <div className="bg-black/40 rounded p-3 font-mono text-xs space-y-1 border border-green-400/20">
-                <div className="text-green-400 flex items-center">
-                  <span className="animate-pulse mr-1 text-green-300">$</span> 
+              <div className="bg-black/40 rounded p-3 font-mono text-xs space-y-1 border border-fuchsia-400/20">
+                <div className="text-fuchsia-400 flex items-center">
+                  <span className="animate-pulse mr-1 text-fuchsia-300">$</span> 
                   <span className="relative">
                     Building the future
                     <span className="animate-pulse">|</span>
                   </span>
                 </div>
-                <div className="text-cyan-400 opacity-80 transition-opacity duration-300 hover:opacity-100">
-                  <span className="animate-pulse delay-500 text-cyan-300">▶</span> React + AI/ML + Poetry
+                <div className="text-cyan-300 opacity-80 transition-opacity duration-300 hover:opacity-100">
+                  <span className="animate-pulse delay-500 text-cyan-200">▶</span> React + AI/ML + Poetry
                 </div>
-                <div className="text-blue-400 flex items-center opacity-60 transition-opacity duration-300 hover:opacity-100">
+                <div className="text-cyan-400 flex items-center opacity-60 transition-opacity duration-300 hover:opacity-100">
                   <Terminal className="w-3 h-3 mr-1 animate-pulse delay-1000" />
                   <span className="animate-pulse delay-700">Status: 
-                    <span className="text-green-400 ml-1 font-semibold">Active</span>
+                    <span className="text-cyan-300 ml-1 font-semibold">Active</span>
                   </span>
                 </div>
-                <div className="text-purple-400 text-right animate-pulse delay-1000 transition-all duration-300 hover:text-purple-300">
+                <div className="text-fuchsia-400 text-right animate-pulse delay-1000 transition-all duration-300 hover:text-fuchsia-300">
                   <Zap className="w-3 h-3 inline mr-1 animate-bounce" />
                   Innovation Mode: 
-                  <span className="text-green-400 ml-1 font-bold">ON</span>
+                  <span className="text-cyan-300 ml-1 font-bold">ON</span>
                 </div>
-                <div className="text-yellow-400 opacity-70 animate-pulse delay-1500">
+                <div className="text-cyan-200 opacity-70 animate-pulse delay-1500">
                   <span className="mr-1">⚡</span>
-                  Lines coded: <span className="text-green-400 font-mono">∞</span>
+                  Lines coded: <span className="text-cyan-300 font-mono">∞</span>
                 </div>
-                <div className="text-pink-400 opacity-50 text-right animate-pulse delay-2000">
+                <div className="text-fuchsia-300 opacity-50 text-right animate-pulse delay-2000">
                   <span className="mr-1">🚀</span>
                   Dreams → Reality
                 </div>
@@ -396,7 +396,7 @@ const Hero = () => {
       {/* Enhanced Scroll Indicator */}
       <motion.button 
         onClick={scrollToAbout} 
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-blue-400 cursor-pointer group"
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-fuchsia-400 cursor-pointer group"
         animate={{ y: [0, 10, 0] }}
         transition={{ duration: 2, repeat: Infinity }}
         whileHover={{ scale: 1.1 }}
@@ -404,7 +404,7 @@ const Hero = () => {
         <div className="relative">
           <ArrowDown size={32} className="group-hover:scale-110 transition-transform duration-300" />
           <motion.div 
-            className="absolute inset-0 bg-blue-400/20 rounded-full blur-lg"
+            className="absolute inset-0 bg-fuchsia-400/20 rounded-full blur-lg"
             animate={{ opacity: [0, 1, 0] }}
             transition={{ duration: 2, repeat: Infinity }}
           />
