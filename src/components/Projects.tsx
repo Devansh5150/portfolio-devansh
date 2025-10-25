@@ -129,7 +129,7 @@ const Projects = () => {
     {
       title: 'Mentor-Mentee App',
       status: 'Completed',
-      description: 'Designed and developed a digital platform connecting students and faculty for mentorship scheduling, goal tracking, and progress evaluation. Enhanced student-faculty communication and academic guidance efficiency.',
+      description: 'Designed and developed a digital platform connecting students and faculty for mentorship scheduling, goal tracking, and progress evaluation. Enhanced student-faculty communication and academic guidance efficiency. Built the entire frontend.',
       tech: ['Mobile Development', 'Database Management', 'UI/UX'],
       image: '👥',
       category: 'Educational Platform',
@@ -152,7 +152,7 @@ const Projects = () => {
       github: 'https://github.com/Devansh5150',
       demo: '#',
       timeline: '3 months',
-      team: 'Solo Project',
+      team: 'Frontend (solo)',
       awards: ['Best Educational Innovation']
     }
   ];
