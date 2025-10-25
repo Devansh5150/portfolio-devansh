@@ -36,8 +36,7 @@ const Hero = () => {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.6,
-        ease: "easeOut"
+        duration: 0.6
       }
     }
   };
@@ -47,8 +46,7 @@ const Hero = () => {
       y: [-10, 10, -10],
       transition: {
         duration: 4,
-        repeat: Infinity,
-        ease: "easeInOut"
+        repeat: Infinity
       }
     }
   };
@@ -214,7 +212,7 @@ const Hero = () => {
               <motion.div 
                 className="flex items-center justify-center mb-4"
                 animate={{ y: [-5, 5, -5] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                transition={{ duration: 3, repeat: Infinity, ease: [0.42, 0, 0.58, 1] }}
               >
                 <div className="relative">
                   {/* Person silhouette */}
@@ -311,6 +309,7 @@ const Hero = () => {
                   <span className="mr-1">🚀</span>
                   Dreams → Reality
                 </div>
+              </div>
               {/* Live coding animation */}
               <div className="bg-black/30 rounded p-3 font-mono text-xs space-y-1">
                 <motion.div 
