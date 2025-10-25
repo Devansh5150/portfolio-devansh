@@ -190,7 +190,7 @@ const Projects = () => {
           {projects.map((project, index) => (
             <motion.div
               key={index}
-              className="group bg-slate-800/50 rounded-xl border border-slate-700 hover:border-cyan-500/50 transition-all duration-300 overflow-hidden cursor-pointer"
+              className="group bg-slate-800/50 rounded-xl border border-slate-700 hover:border-fuchsia-500/50 transition-all duration-300 overflow-hidden cursor-pointer"
               whileHover={{ scale: 1.02, y: -5 }}
               onHoverStart={() => setHoveredProject(index)}
               onHoverEnd={() => setHoveredProject(null)}
@@ -239,7 +239,7 @@ const Projects = () => {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="border-cyan-500 text-cyan-400 hover:bg-cyan-500 hover:text-black flex-1 transition-all duration-300"
+                    className="border-fuchsia-500 text-fuchsia-400 hover:bg-fuchsia-500 hover:text-black flex-1 transition-all duration-300"
                     onClick={(e) => {
                       e.stopPropagation();
                       setSelectedProject(index);
@@ -305,7 +305,7 @@ const Projects = () => {
         <div className="text-center">
           <Button
             size="lg"
-            className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-black font-semibold px-8 py-3 transition-all duration-300 transform hover:scale-105"
+            className="bg-gradient-to-r from-fuchsia-500 to-cyan-500 hover:from-fuchsia-600 hover:to-cyan-600 text-black font-semibold px-8 py-3 transition-all duration-300 transform hover:scale-105"
             onClick={() => window.open('https://github.com/Devansh5150', '_blank')}
           >
             <Github className="w-5 h-5 mr-2" />

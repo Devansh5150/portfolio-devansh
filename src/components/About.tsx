@@ -237,7 +237,6 @@ const About = () => {
                 >
                   <div className="flex justify-between items-start mb-4">
                     <h4 className="text-xl font-bold text-white">{skill.name}</h4>
-                    <span className="text-sm text-gray-400">{skill.years}</span>
                   </div>
                   
                   <div className="mb-4">
