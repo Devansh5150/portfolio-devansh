@@ -248,19 +248,6 @@ const Projects = () => {
                     <Code className="w-4 h-4 mr-2" />
                     View Details
                   </Button>
-                  {project.status === 'Completed' && (
-                    <Button
-                      size="sm"
-                      className="bg-gradient-to-r from-cyan-500 to-purple-500 text-black hover:from-cyan-600 hover:to-purple-600 flex-1 transition-all duration-300"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        window.open(project.demo, '_blank');
-                      }}
-                    >
-                      <Play className="w-4 h-4 mr-2" />
-                      Live Demo
-                    </Button>
-                  )}
                 </div>
 
                 <AnimatePresence>
