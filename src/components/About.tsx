@@ -139,15 +139,36 @@ const About = () => {
 
   const categories = Object.keys(skillCategories);
 
+  // Helpers to map skill name to its category and derive accent classes
+  const getCategoryForSkill = (skillName: string): 'AI/ML' | 'Frontend' | 'Backend' | 'Creative' | null => {
+    for (const key of Object.keys(skillCategories) as Array<'AI/ML' | 'Frontend' | 'Backend' | 'Creative'>) {
+      const found = skillCategories[key].skills.find((s) => s.name === skillName);
+      if (found) return key;
+    }
+    return null;
+  };
+
+  const getAccentTextClass = (cat: string | null) => (
+    cat === 'AI/ML' ? 'text-pink-400' :
+    cat === 'Frontend' ? 'text-blue-400' :
+    cat === 'Backend' ? 'text-green-400' :
+    cat === 'Creative' ? 'text-orange-400' : 'text-white'
+  );
+
+  const getAccentBgClass = (cat: string | null) => (
+    cat === 'AI/ML' ? 'bg-pink-400' :
+    cat === 'Frontend' ? 'bg-blue-400' :
+    cat === 'Backend' ? 'bg-green-400' :
+    cat === 'Creative' ? 'bg-orange-400' : 'bg-white'
+  );
+
   return (
     <div className="min-h-screen py-20 px-4 relative overflow-hidden">
       <div className="max-w-6xl mx-auto relative z-10">
-        <div className="text-center mb-16 animate-fade-in">
-          <span className="text-cyan-400 text-sm font-semibold tracking-wide uppercase animate-slide-up">About Me</span>
-          <h2 className="text-4xl md:text-5xl font-bold mt-4 mb-6 animate-slide-up delay-200">
-            AI DEVELOPER, INNOVATOR
-            <br />
-            <span className="italic text-3xl md:text-4xl text-purple-400 hover:text-cyan-400 transition-colors duration-500">& CREATIVE WRITER</span>
+        <div className="text-center mb-12 md:mb-16 animate-fade-in px-2">
+          <span className="text-white/70 text-sm font-semibold tracking-wide uppercase animate-slide-up">About Me</span>
+          <h2 className="text-3xl md:text-5xl font-bold mt-3 md:mt-4 mb-4 md:mb-6 text-white animate-slide-up delay-200">
+            AI Developer, Innovator & Creative Writer
           </h2>
           <p className="text-gray-300 text-lg max-w-3xl mx-auto animate-slide-up delay-300">
             As a dedicated Computer Science student specializing in AI/ML at IILM University, I bring fresh perspectives 
@@ -171,8 +192,8 @@ const About = () => {
               onClick={() => setSelectedCategory('all')}
               className={`px-6 py-3 rounded-full font-semibold transition-all duration-300 ${
                 selectedCategory === 'all' 
-                  ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-black' 
-                  : 'bg-slate-800/50 text-gray-300 hover:bg-slate-700/50'
+                  ? 'bg-white text-black' 
+                  : 'bg-black/60 border border-white/15 text-gray-300 hover:border-white/30'
               }`}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -188,8 +209,8 @@ const About = () => {
                   onClick={() => setSelectedCategory(category)}
                   className={`px-6 py-3 rounded-full font-semibold transition-all duration-300 flex items-center gap-2 ${
                     selectedCategory === category 
-                      ? `bg-gradient-to-r ${cat.color} text-black` 
-                      : `${cat.bgColor} ${cat.borderColor} border text-gray-300 hover:bg-slate-700/50`
+                      ? 'bg-white text-black' 
+                      : 'bg-black/60 border border-white/15 text-gray-300 hover:border-white/30'
                   }`}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -209,7 +230,7 @@ const About = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
-              className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
             >
               {(selectedCategory === 'all' 
                 ? Object.values(skillCategories).flatMap(cat => cat.skills)
@@ -217,11 +238,7 @@ const About = () => {
               ).map((skill, index) => (
                 <motion.div
                   key={skill.name}
-                  className={`p-6 rounded-xl border transition-all duration-300 cursor-pointer ${
-                    selectedCategory === 'all' 
-                      ? 'bg-slate-800/50 border-slate-700 hover:border-cyan-500/50' 
-                      : `${skillCategories[selectedCategory as keyof typeof skillCategories].bgColor} ${skillCategories[selectedCategory as keyof typeof skillCategories].borderColor} border hover:border-opacity-50`
-                  }`}
+                  className={`p-5 md:p-6 rounded-xl border transition-all duration-300 cursor-pointer bg-black/60 border-white/15 hover:border-white/30`}
                   whileHover={{ scale: 1.02, y: -5 }}
                   onHoverStart={() => setHoveredSkill(skill.name)}
                   onHoverEnd={() => setHoveredSkill(null)}
@@ -236,11 +253,11 @@ const About = () => {
                   <div className="mb-4">
                     <div className="flex justify-between mb-2">
                       <span className="text-sm text-gray-400">Proficiency</span>
-                      <span className="text-sm font-semibold text-cyan-400">{skill.level}%</span>
+                      <span className={`text-sm font-semibold ${getAccentTextClass(selectedCategory === 'all' ? getCategoryForSkill(skill.name) : selectedCategory)}`}>{skill.level}%</span>
                     </div>
-                    <div className="w-full bg-slate-700 rounded-full h-2">
+                    <div className="w-full bg-white/10 rounded-full h-2">
                       <motion.div
-                        className="bg-gradient-to-r from-cyan-500 to-purple-500 h-2 rounded-full"
+                        className={`${getAccentBgClass(selectedCategory === 'all' ? getCategoryForSkill(skill.name) : selectedCategory)} h-2 rounded-full`}
                         initial={{ width: 0 }}
                         animate={{ width: `${skill.level}%` }}
                         transition={{ duration: 1, delay: index * 0.1 }}
@@ -254,12 +271,12 @@ const About = () => {
                     <p className="text-xs text-gray-400 font-semibold">Key Projects:</p>
                     <div className="flex flex-wrap gap-1">
                       {skill.projects.map((project, i) => (
-                        <span key={i} className="px-2 py-1 bg-slate-700 text-xs text-cyan-400 rounded">
+                        <span key={i} className="px-2 py-1 text-xs rounded border border-white/30 text-white">
                           {project}
                         </span>
-              ))}
-            </div>
-          </div>
+                      ))}
+                    </div>
+                  </div>
 
                   <AnimatePresence>
                     {hoveredSkill === skill.name && (
@@ -267,7 +284,7 @@ const About = () => {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="mt-4 p-3 bg-slate-900/50 rounded-lg"
+                        className="mt-4 p-3 bg-black/60 rounded-lg border border-white/10"
                       >
                         <p className="text-xs text-gray-300">
                           💡 <strong>Fun Fact:</strong> {skill.name === 'Python' ? 'I wrote my first ML model at 16!' : 
@@ -286,10 +303,10 @@ const About = () => {
 
         {/* Interactive Timeline */}
         <div className="mb-16">
-          <h3 className="text-2xl font-bold mb-8 text-center text-purple-400 flex items-center justify-center gap-2">
-            <span className="w-2 h-2 bg-purple-400 rounded-full animate-pulse delay-500"></span>
+          <h3 className="text-2xl font-bold mb-8 text-center text-white flex items-center justify-center gap-2">
+            <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse delay-500"></span>
             Interactive Journey Timeline
-            <span className="w-2 h-2 bg-purple-400 rounded-full animate-pulse delay-500"></span>
+            <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse delay-500"></span>
           </h3>
           
           <div className="space-y-8">
@@ -298,8 +315,8 @@ const About = () => {
                 key={index}
                 className={`flex flex-col md:flex-row gap-6 p-6 rounded-xl border transition-all duration-300 cursor-pointer ${
                   activeTimelineItem === index 
-                    ? 'bg-slate-800/70 border-purple-500/50' 
-                    : 'bg-slate-800/30 border-slate-700 hover:border-purple-500/30'
+                    ? 'bg-black/70 border-white/30' 
+                    : 'bg-black/50 border-white/15 hover:border-white/30'
                 }`}
                 whileHover={{ scale: 1.01 }}
                 onClick={() => setActiveTimelineItem(activeTimelineItem === index ? null : index)}
@@ -310,7 +327,7 @@ const About = () => {
                 <div className="md:w-32 flex-shrink-0">
                   <div className="flex items-center gap-3 mb-2">
                     <item.icon className={`w-6 h-6 ${item.color}`} />
-                    <span className="inline-block px-3 py-1 bg-gradient-to-r from-cyan-500 to-purple-500 text-black text-sm font-semibold rounded-full">
+                    <span className="inline-block px-3 py-1 border border-white/30 text-white text-sm font-semibold rounded-full">
                     {item.period}
                   </span>
                   </div>
@@ -329,17 +346,17 @@ const About = () => {
                         className="space-y-4"
                       >
                         <div>
-                          <h5 className="text-sm font-semibold text-purple-400 mb-2">Key Achievements:</h5>
+                          <h5 className="text-sm font-semibold text-white mb-2">Key Achievements:</h5>
                           <div className="flex flex-wrap gap-2">
                             {item.achievements.map((achievement, i) => (
-                              <span key={i} className="px-3 py-1 bg-purple-500/20 text-purple-300 text-xs rounded-full">
+                              <span key={i} className="px-3 py-1 text-xs rounded-full border border-white/30 text-white">
                                 {achievement}
                               </span>
                             ))}
                           </div>
                         </div>
                         
-                        <div className="p-3 bg-green-500/10 border border-green-500/30 rounded-lg">
+                        <div className="p-3 bg-black/60 border border-white/15 rounded-lg">
                           <p className="text-sm text-green-400">
                             <strong>Impact:</strong> {item.impact}
                           </p>
@@ -353,35 +370,35 @@ const About = () => {
           </div>
         </div>
 
-        {/* Enhanced Poetry Sample */}
-        <div className="mb-16 bg-slate-800/30 p-8 rounded-lg border border-blue-500/20 hover:border-blue-500/50 transition-all duration-500 group hover:bg-slate-800/50 hover:shadow-2xl hover:shadow-blue-500/10 animate-slide-up delay-1200">
-          <h3 className="text-2xl font-bold mb-6 text-center text-blue-400 group-hover:text-blue-300 transition-colors duration-300">My Creative Writing</h3>
-          <div className="italic text-gray-300 text-center max-w-2xl mx-auto mb-6 leading-relaxed group-hover:text-gray-200 transition-colors duration-300">
+        {/* Creative Writing Sample (rethemed) */}
+        <div className="mb-16 bg-black/60 p-6 md:p-8 rounded-lg border border-white/15 hover:border-white/30 transition-all duration-300 group animate-slide-up delay-1200">
+          <h3 className="text-2xl font-bold mb-6 text-center text-white">My Creative Writing</h3>
+          <div className="italic text-gray-300 text-center max-w-2xl mx-auto mb-6 leading-relaxed">
             <p className="mb-4 hover:scale-105 transition-transform duration-300">
               "Through silicon valleys and digital realms,<br/>
               Where algorithms dance and logic overwhelms,<br/>
               I craft with code and write with heart,<br/>
               Blending science and poetry, never apart."
             </p>
-            <p className="text-sm text-blue-400 font-semibold group-hover:text-blue-300 transition-colors duration-300">- Sample from my tech-inspired poetry collection</p>
+            <p className="text-sm text-white/70">- Sample from my tech-inspired poetry collection</p>
           </div>
           <div className="text-center">
             <a
               href="https://linktr.ee/devansh.datta"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 font-semibold px-6 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-blue-500/25 hover:text-blue-300"
+              className="inline-block w-full sm:w-auto border border-white/30 text-white hover:bg-white hover:text-black font-semibold px-6 py-2 rounded-lg transition-all duration-300"
             >
               View My Writing Portfolio
             </a>
           </div>
         </div>
 
-        {/* Enhanced CTA */}
+        {/* CTA */}
         <div className="text-center animate-slide-up delay-1400">
           <button
             onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-            className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-purple-500 hover:to-cyan-500 text-black font-semibold px-8 py-3 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:shadow-purple-500/25 animate-pulse"
+            className="bg-white hover:bg-neutral-200 text-black font-semibold px-8 py-3 rounded-lg transition-all duration-300 w-full sm:w-auto"
           >
             Get In Touch Now
           </button>

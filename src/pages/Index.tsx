@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { ArrowDown } from 'lucide-react';
 import Hero from '../components/Hero';
@@ -6,19 +5,15 @@ import About from '../components/About';
 import Projects from '../components/Projects';
 import Services from '../components/Services';
 import Leadership from '../components/Leadership';
-import PersonalityQuiz from '../components/PersonalityQuiz';
-import CodingChallenge from '../components/CodingChallenge';
-import AchievementsGallery from '../components/AchievementsGallery';
 import Contact from '../components/Contact';
 import Navigation from '../components/Navigation';
-import InteractiveBackground from '../components/InteractiveBackground';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('home');
 
   useEffect(() => {
     const handleScroll = () => {
-        const sections = ['home', 'about', 'projects', 'services', 'leadership', 'quiz', 'coding', 'achievements', 'contact'];
+      const sections = ['home', 'about', 'projects', 'services', 'leadership', 'contact'];
       const scrollPosition = window.scrollY + 100;
 
       for (const section of sections) {
@@ -41,10 +36,16 @@ const Index = () => {
 
   return (
     <div className="relative min-h-screen text-white">
-      {/* Interactive background */}
-      <div className="fixed inset-0 -z-10">
-        <InteractiveBackground />
-      </div>
+      {/* Site-wide grid background */}
+      <div
+        className="fixed inset-0 -z-10 pointer-events-none"
+        style={{
+          backgroundImage:
+            "repeating-linear-gradient(0deg, rgba(255,255,255,0.2) 0, rgba(255,255,255,0.2) 2px, transparent 2px, transparent 56px), repeating-linear-gradient(90deg, rgba(255,255,255,0.2) 0, rgba(255,255,255,0.2) 2px, transparent 2px, transparent 56px)",
+          backgroundPosition: 'top left',
+          backgroundSize: '56px 56px, 56px 56px'
+        }}
+      />
       <Navigation activeSection={activeSection} />
       
       <section id="home" className="min-h-screen">
@@ -67,17 +68,6 @@ const Index = () => {
         <Leadership />
       </section>
       
-      <section id="quiz" className="min-h-screen">
-        <PersonalityQuiz />
-      </section>
-      
-      <section id="coding" className="min-h-screen">
-        <CodingChallenge />
-      </section>
-      
-      <section id="achievements" className="min-h-screen">
-        <AchievementsGallery />
-      </section>
       
       <section id="contact" className="min-h-screen">
         <Contact />

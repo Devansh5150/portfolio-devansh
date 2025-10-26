@@ -16,9 +16,6 @@ const Navigation = ({ activeSection }: NavigationProps) => {
     { id: 'projects', label: 'Projects' },
     { id: 'services', label: 'Services' },
     { id: 'leadership', label: 'Leadership' },
-    { id: 'quiz', label: 'Quiz' },
-    { id: 'coding', label: 'Code' },
-    { id: 'achievements', label: 'Achievements' },
     { id: 'contact', label: 'Contact' },
   ];
 
@@ -35,12 +32,12 @@ const Navigation = ({ activeSection }: NavigationProps) => {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-md border-b border-blue-500/20"
+      className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-md border-b border-white/15"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
           <motion.div 
-            className="text-2xl font-bold text-blue-400"
+            className="text-2xl font-bold text-white"
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.2 }}
           >
@@ -61,13 +58,13 @@ const Navigation = ({ activeSection }: NavigationProps) => {
                 className={`relative px-4 py-2 rounded-lg transition-all duration-300 ${
                   activeSection === item.id
                     ? 'text-black'
-                    : 'text-white hover:text-blue-400 hover:bg-blue-500/10'
+                    : 'text-white hover:text-green-300 hover:bg-white/10'
                 }`}
               >
                 {activeSection === item.id && (
                   <motion.div
                     layoutId="activeIndicator"
-                    className="absolute inset-0 bg-blue-500 rounded-lg"
+                    className="absolute inset-0 bg-white rounded-lg"
                     transition={{ duration: 0.3, ease: "easeInOut" }}
                   />
                 )}
@@ -128,8 +125,8 @@ const Navigation = ({ activeSection }: NavigationProps) => {
                   whileHover={{ x: 10 }}
                   className={`block w-full text-left px-4 py-2 rounded-lg transition-all duration-300 ${
                     activeSection === item.id
-                      ? 'bg-blue-500 text-black'
-                      : 'text-white hover:text-blue-400 hover:bg-blue-500/10'
+                      ? 'bg-white text-black'
+                      : 'text-white hover:text-green-300 hover:bg-white/10'
                   }`}
                 >
                   {item.label}

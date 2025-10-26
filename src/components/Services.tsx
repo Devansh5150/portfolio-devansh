@@ -83,10 +83,8 @@ const Services = () => {
     <div className="min-h-screen py-20 px-4">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
-          <span className="text-cyan-400 text-sm font-semibold tracking-wide uppercase">My Services</span>
-          <h2 className="text-4xl md:text-5xl font-bold mt-4 mb-6">
-            MY BEST QUALITY <span className="italic text-purple-400">SERVICES</span>
-          </h2>
+          <span className="text-white/70 text-sm font-semibold tracking-wide uppercase">My Services</span>
+          <h2 className="text-3xl md:text-5xl font-bold mt-4 mb-6 text-white">What I Offer</h2>
           <p className="text-gray-300 text-lg max-w-3xl mx-auto">
             Comprehensive technology services designed to transform your ideas into reality. 
             From AI solutions to beautiful designs, I deliver excellence in every project.
@@ -97,13 +95,13 @@ const Services = () => {
           {services.map((service, index) => (
             <div
               key={index}
-              className={`group p-8 bg-slate-800/50 rounded-xl border transition-all duration-300 hover:transform hover:scale-105 ${getColorClasses(service.color)}`}
+              className={`group p-6 md:p-8 bg-black/60 rounded-xl border border-white/15 hover:border-white/30 transition-all duration-300 hover:transform hover:scale-105`}
             >
-              <div className={`w-16 h-16 ${getIconBgClasses(service.color)} rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
+              <div className={`w-14 h-14 md:w-16 md:h-16 bg-white/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
                 <span className="text-3xl">{service.icon}</span>
               </div>
               
-              <h3 className={`text-2xl font-bold mb-4 ${service.color === 'cyan' ? 'text-cyan-400' : service.color === 'purple' ? 'text-purple-400' : service.color === 'blue' ? 'text-blue-400' : 'text-green-400'}`}>
+              <h3 className={`text-xl md:text-2xl font-bold mb-3 md:mb-4 text-white`}>
                 {service.title}
               </h3>
               
@@ -116,7 +114,15 @@ const Services = () => {
                 <ul className="space-y-2">
                   {service.features.map((feature, featureIndex) => (
                     <li key={featureIndex} className="flex items-center text-gray-400 text-sm">
-                      <span className={`w-2 h-2 ${service.color === 'cyan' ? 'bg-cyan-400' : service.color === 'purple' ? 'bg-purple-400' : service.color === 'blue' ? 'bg-blue-400' : 'bg-green-400'} rounded-full mr-3 flex-shrink-0`}></span>
+                      <span className={
+                        `w-2 h-2 rounded-full mr-3 flex-shrink-0 ` +
+                        (
+                          service.title === 'AI/ML Development' ? 'bg-pink-400' :
+                          service.title === 'Full-Stack Development' ? 'bg-blue-400' :
+                          service.title === 'UI/UX Design' ? 'bg-orange-400' :
+                          'bg-green-400'
+                        )
+                      }></span>
                       {feature}
                     </li>
                   ))}
@@ -128,7 +134,7 @@ const Services = () => {
 
         {/* Process Section */}
         <div className="mb-16">
-          <h3 className="text-2xl font-bold text-center mb-12">My Work Process</h3>
+          <h3 className="text-2xl font-bold text-center mb-12 text-white">My Work Process</h3>
           <div className="grid md:grid-cols-4 gap-8">
             {[
               { step: '01', title: 'Discovery', desc: 'Understanding your needs and requirements' },
@@ -137,8 +143,8 @@ const Services = () => {
               { step: '04', title: 'Delivery', desc: 'Testing, deployment, and support' }
             ].map((item, index) => (
               <div key={index} className="text-center group">
-                <div className="w-16 h-16 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <span className="text-black font-bold">{item.step}</span>
+                <div className="w-16 h-16 rounded-full border border-white/30 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <span className="text-white font-bold">{item.step}</span>
                 </div>
                 <h4 className="text-lg font-semibold text-white mb-2">{item.title}</h4>
                 <p className="text-gray-400 text-sm">{item.desc}</p>
@@ -150,7 +156,7 @@ const Services = () => {
         <div className="text-center">
           <button
             onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-            className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-black font-semibold px-8 py-3 rounded-lg transition-all duration-300 transform hover:scale-105"
+            className="bg-white hover:bg-neutral-200 text-black font-semibold px-8 py-3 rounded-lg transition-all duration-300 w-full sm:w-auto"
           >
             Start Your Project
           </button>

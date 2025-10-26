@@ -1,364 +1,242 @@
-
-import { ArrowDown, Code, Terminal, Zap, Brain, Cpu } from 'lucide-react';
 import { Button } from './ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
-import { useNavigate } from 'react-router-dom';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
+import { Github, Linkedin, Mail, Instagram, Phone, Youtube } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 
 const Hero = () => {
-  const navigate = useNavigate();
-  const { scrollYProgress } = useScroll();
-  const y = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
-  
   const scrollToAbout = () => {
     const aboutSection = document.getElementById('about');
-    if (aboutSection) {
-      aboutSection.scrollIntoView({
-        behavior: 'smooth'
-      });
-    }
+    if (aboutSection) aboutSection.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const containerVariants = {
+  const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1 } };
+  const itemVariants = { hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0 } };
+
+  // Typing animation for terminal
+  const fullCommand = "print('Hello and welcome to Devansh world')";
+  const [typed, setTyped] = useState('');
+  const [doneTyping, setDoneTyping] = useState(false);
+  const intervalRef = useRef<number | null>(null);
+  const termRef = useRef<HTMLDivElement | null>(null);
+  const outputContainerVariants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3
+    visible: { opacity: 1, transition: { staggerChildren: 0.15 } }
+  } as const;
+  const lineVariants = { hidden: { opacity: 0, y: 4 }, visible: { opacity: 1, y: 0 } } as const;
+
+  const startTyping = () => {
+    // reset and (re)start typing
+    if (intervalRef.current) window.clearInterval(intervalRef.current);
+    setTyped('');
+    setDoneTyping(false);
+    let i = 0;
+    intervalRef.current = window.setInterval(() => {
+      i += 1;
+      setTyped(fullCommand.slice(0, i));
+      if (i >= fullCommand.length) {
+        if (intervalRef.current) window.clearInterval(intervalRef.current);
+        intervalRef.current = null;
+        setDoneTyping(true);
       }
-    }
+    }, 35);
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6
-      }
-    }
-  };
+  useEffect(() => {
+    startTyping();
+    return () => {
+      if (intervalRef.current) window.clearInterval(intervalRef.current);
+    };
+  }, []);
 
-  const floatingVariants = {
-    animate: {
-      y: [-10, 10, -10],
-      transition: {
-        duration: 4,
-        repeat: Infinity
-      }
-    }
-  };
+  // Restart typing when terminal enters viewport
+  useEffect(() => {
+    if (!termRef.current) return;
+    const el = termRef.current;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            startTyping();
+          }
+        }
+      },
+      { threshold: 0.5 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
+    <div className="relative min-h-[80vh] flex items-center justify-center px-6">
       
-      <motion.div 
-        className="relative z-10 max-w-7xl mx-auto my-[101px]"
+
+      {/* Social icons (top-right quick access) */}
+      <div className="absolute top-6 right-6 hidden sm:flex items-center gap-5 text-gray-300">
+        <a href="https://github.com/Devansh5150" target="_blank" rel="noreferrer" className="hover:text-white transition-colors" aria-label="GitHub">
+          <Github className="w-5 h-5" />
+        </a>
+        <a href="https://www.linkedin.com/in/devansh-datta06" target="_blank" rel="noreferrer" className="hover:text-white transition-colors" aria-label="LinkedIn">
+          <Linkedin className="w-5 h-5" />
+        </a>
+        <a href="https://www.instagram.com/devansh.datta/" target="_blank" rel="noreferrer" className="hover:text-white transition-colors" aria-label="Instagram">
+          <Instagram className="w-5 h-5" />
+        </a>
+        <a href="https://www.youtube.com/@devanshdatta" target="_blank" rel="noreferrer" className="hover:text-white transition-colors" aria-label="YouTube">
+          <Youtube className="w-5 h-5" />
+        </a>
+      </div>
+
+      <motion.div
+        className="relative z-10 w-full max-w-5xl mx-auto text-left mt-16 md:mt-24 lg:mt-28"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left Side - Content */}
-          <motion.div 
-            className="text-center lg:text-left"
-            variants={itemVariants}
-          >
-            {/* Enhanced Profile Image with glow effect */}
-            <motion.div 
-              className="relative mb-8 mx-auto lg:mx-0 w-36 h-36 rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-400 p-1"
-              whileHover={{ scale: 1.1 }}
-              transition={{ duration: 0.3 }}
-            >
-              <motion.div 
-                className="absolute inset-0 bg-gradient-to-r from-fuchsia-500 to-cyan-400 rounded-full blur-md opacity-50"
-                animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
-                transition={{ duration: 3, repeat: Infinity }}
-              />
-              <Avatar className="w-full h-full relative z-10">
-                <AvatarImage src="https://i.postimg.cc/prctTy04/10aab1b0-d493-47cd-b02d-d5533b986e5d.png" alt="Devansh Datta" className="object-cover" />
-                <AvatarFallback className="w-full h-full rounded-full bg-slate-800 flex items-center justify-center text-4xl font-bold text-blue-400">
-                  DD
-                </AvatarFallback>
-              </Avatar>
-              <motion.div 
-                className="absolute -top-2 -right-2 w-8 h-8 bg-fuchsia-500 rounded-full border-4 border-slate-900"
-                animate={{ scale: [1, 1.2, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              />
-            </motion.div>
-            
-            <motion.div 
-              className="mb-6"
-              variants={itemVariants}
-            >
-              <motion.span 
-                className="inline-block px-6 py-2.5 bg-fuchsia-500/20 text-fuchsia-400 rounded-full font-medium mb-4 text-3xl"
-                whileHover={{ scale: 1.05, backgroundColor: "rgba(59, 130, 246, 0.3)" }}
-                transition={{ duration: 0.3 }}
-              >
-                👋 Hi, I'm Devansh Datta
-              </motion.span>
-            </motion.div>
-            
-            <motion.h1 
-              className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-fuchsia-400 via-cyan-300 to-fuchsia-400 bg-clip-text text-transparent"
-              variants={itemVariants}
-            >
-              AI DEVELOPER
-              <br />
-              <span className="text-3xl md:text-5xl lg:text-6xl italic">& CREATIVE WRITER</span>
-            </motion.h1>
-            
-            <motion.p 
-              className="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed"
-              variants={itemVariants}
-            >
-              Passionate AI developer, tech enthusiast, and creative writer pursuing B.Tech in CSE at IILM University. 
-              Transforming ideas into innovative solutions through AI/ML, web development, and poetic expression.
-            </motion.p>
-            
-            <motion.div 
-              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-12"
-              variants={itemVariants}
-            >
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button size="lg" className="bg-gradient-to-r from-fuchsia-500 to-cyan-500 hover:from-fuchsia-600 hover:to-cyan-600 text-black font-semibold px-8 py-3 transition-all duration-300" onClick={() => window.open('mailto:work.devansh.datta@gmail.com')}>
-                  Get In Touch
-                </Button>
-              </motion.div>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button variant="outline" size="lg" className="border-fuchsia-500 text-fuchsia-400 hover:bg-fuchsia-500 hover:text-black px-8 py-3 transition-all duration-300" onClick={() => document.getElementById('projects')?.scrollIntoView({
-                behavior: 'smooth'
-              })}>
-                  View Projects
-                </Button>
-              </motion.div>
-            </motion.div>
-          </motion.div>
-
-          {/* Right Side - Coding Animation Dashboard */}
-          <motion.div 
-            className="flex flex-col items-center lg:items-end my-[72px] rounded-lg py-[36px]"
-            variants={itemVariants}
-          >
-            <motion.div 
-              className="relative w-80 h-80 bg-slate-900/50 backdrop-blur-sm border border-fuchsia-500/30 rounded-lg p-6 overflow-hidden"
-              whileHover={{ scale: 1.02, borderColor: "rgba(217, 70, 239, 0.5)" }}
-              transition={{ duration: 0.3 }}
-            >
-              {/* Terminal Header */}
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                <div className="ml-2 text-gray-400 text-sm font-mono">~/coding-session</div>
-              </div>
-              
-              {/* Coding Person Animation */}
-              <motion.div 
-                className="flex items-center justify-center mb-4"
-                animate={{ y: [-5, 5, -5] }}
-                transition={{ duration: 3, repeat: Infinity, ease: [0.42, 0, 0.58, 1] }}
-              >
-                <div className="relative">
-                  {/* Person silhouette */}
-                  <div className="w-12 h-12 bg-gradient-to-b from-fuchsia-400 to-cyan-400 rounded-full relative">
-                    {/* Eyes */}
-                    <motion.div 
-                      className="absolute top-3 left-2 w-1.5 h-1.5 bg-white rounded-full"
-                      animate={{ opacity: [1, 0.3, 1] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    />
-                    <motion.div 
-                      className="absolute top-3 right-2 w-1.5 h-1.5 bg-white rounded-full"
-                      animate={{ opacity: [0.3, 1, 0.3] }}
-                      transition={{ duration: 2, repeat: Infinity, delay: 0.2 }}
-                    />
-                  </div>
-                  {/* Body */}
-                  <div className="w-8 h-16 bg-gradient-to-b from-fuchsia-400 to-cyan-400 mx-auto relative">
-                    {/* Arms typing */}
-                    <motion.div 
-                      className="absolute -left-2 top-2 w-6 h-1 bg-blue-400 rounded"
-                      animate={{ rotate: [-10, 10, -10] }}
-                      transition={{ duration: 1, repeat: Infinity }}
-                    />
-                    <motion.div 
-                      className="absolute -right-2 top-2 w-6 h-1 bg-blue-400 rounded"
-                      animate={{ rotate: [10, -10, 10] }}
-                      transition={{ duration: 1, repeat: Infinity, delay: 0.1 }}
-                    />
-                  </div>
-                  {/* Typing indicator */}
-                  <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
-                    <div className="flex space-x-1">
-                      {[...Array(3)].map((_, i) => (
-                        <motion.div
-                          key={i}
-                          className="w-1 h-1 bg-cyan-400 rounded-full"
-                          animate={{ y: [0, -5, 0] }}
-                          transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.2 }}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-              
-              {/* Tech Stack Icons */}
-              <div className="grid grid-cols-3 gap-4 mb-4">
-                {[
-                  { icon: Brain, label: 'AI/ML', color: 'blue' },
-                  { icon: Code, label: 'Code', color: 'green' },
-                  { icon: Cpu, label: 'Systems', color: 'purple' }
-                ].map((tech, index) => (
-                  <motion.div
-                    key={index}
-                    className="flex flex-col items-center p-2 bg-fuchsia-500/10 rounded-lg cursor-pointer group"
-                    whileHover={{ scale: 1.1, backgroundColor: "rgba(217, 70, 239, 0.2)" }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <tech.icon className="w-6 h-6 text-fuchsia-400 group-hover:text-fuchsia-300 transition-colors" />
-                    <span className="text-xs text-gray-400 mt-1">{tech.label}</span>
-                  </motion.div>
-                ))}
-              </div>
-              
-              {/* Enhanced Live coding animation with dynamic typing */}
-              <div className="bg-black/40 rounded p-3 font-mono text-xs space-y-1 border border-fuchsia-400/20">
-                <div className="text-fuchsia-400 flex items-center">
-                  <span className="animate-pulse mr-1 text-fuchsia-300">$</span> 
-                  <span className="relative">
-                    Building the future
-                    <span className="animate-pulse">|</span>
-                  </span>
-                </div>
-                <div className="text-cyan-300 opacity-80 transition-opacity duration-300 hover:opacity-100">
-                  <span className="animate-pulse delay-500 text-cyan-200">▶</span> React + AI/ML + Poetry
-                </div>
-                <div className="text-cyan-400 flex items-center opacity-60 transition-opacity duration-300 hover:opacity-100">
-                  <Terminal className="w-3 h-3 mr-1 animate-pulse delay-1000" />
-                  <span className="animate-pulse delay-700">Status: 
-                    <span className="text-cyan-300 ml-1 font-semibold">Active</span>
-                  </span>
-                </div>
-                <div className="text-fuchsia-400 text-right animate-pulse delay-1000 transition-all duration-300 hover:text-fuchsia-300">
-                  <Zap className="w-3 h-3 inline mr-1 animate-bounce" />
-                  Innovation Mode: 
-                  <span className="text-cyan-300 ml-1 font-bold">ON</span>
-                </div>
-                <div className="text-cyan-200 opacity-70 animate-pulse delay-1500">
-                  <span className="mr-1">⚡</span>
-                  Lines coded: <span className="text-cyan-300 font-mono">∞</span>
-                </div>
-                <div className="text-fuchsia-300 opacity-50 text-right animate-pulse delay-2000">
-                  <span className="mr-1">🚀</span>
-                  Dreams → Reality
-                </div>
-              </div>
-              {/* Live coding animation */}
-              <div className="bg-black/30 rounded p-3 font-mono text-xs space-y-1">
-                <motion.div 
-                  className="text-green-400 flex items-center"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 1 }}
-                >
-                  <motion.span 
-                    className="mr-1"
-                    animate={{ opacity: [1, 0, 1] }}
-                    transition={{ duration: 1, repeat: Infinity }}
-                  >
-                    $
-                  </motion.span> 
-                  <span>Building the future...</span>
-                </motion.div>
-                <motion.div 
-                  className="text-cyan-400 opacity-80"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.8 }}
-                  transition={{ delay: 1.5 }}
-                >
-                  <motion.span 
-                    animate={{ opacity: [1, 0, 1] }}
-                    transition={{ duration: 1, repeat: Infinity, delay: 0.5 }}
-                  >
-                    ▶
-                  </motion.span> React + AI/ML + Poetry
-                </motion.div>
-                <motion.div 
-                  className="text-blue-400 flex items-center opacity-60"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.6 }}
-                  transition={{ delay: 2 }}
-                >
-                  <Terminal className="w-3 h-3 mr-1" />
-                  <span>Status: Coding...</span>
-                </motion.div>
-                <motion.div 
-                  className="text-purple-400 text-right"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 2.5 }}
-                >
-                  <Zap className="w-3 h-3 inline mr-1" />
-                  Innovation Mode: ON
-                </motion.div>
-              </div>
-            </motion.div>
-          </motion.div>
-        </div>
-
-        {/* Enhanced Stats with animations */}
-        <motion.div 
-          className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12 max-w-2xl mx-auto"
-          variants={containerVariants}
-        >
-          {[
-            { value: '4+', label: 'Active Projects', color: 'blue' },
-            { value: '2+', label: 'Years Experience', color: 'teal' },
-            { value: 'AI/ML', label: 'Specialization', color: 'blue' },
-            { value: 'Poetry', label: 'Creative Outlet', color: 'green' }
-          ].map((stat, index) => (
+        <motion.div className="mb-6" variants={itemVariants}>
+          <div className="relative inline-block mb-4">
+            {/* Rotating gradient ring */}
             <motion.div
-              key={index}
-              className="text-center p-4 rounded-lg bg-slate-800/20 backdrop-blur-sm border border-blue-500/20 hover:border-blue-500/50 transition-all duration-300"
-              variants={itemVariants}
-              whileHover={{ scale: 1.05, backgroundColor: "rgba(30, 41, 59, 0.3)" }}
-            >
-              <motion.div 
-                className="text-2xl md:text-3xl font-bold text-blue-400"
-                animate={{ scale: [1, 1.1, 1] }}
-                transition={{ duration: 2, repeat: Infinity, delay: index * 0.2 }}
-              >
-                {stat.value}
-              </motion.div>
-              <div className="text-sm text-gray-400">{stat.label}</div>
-            </motion.div>
-          ))}
+              aria-hidden
+              className="absolute -inset-1 rounded-2xl"
+              style={{
+                background:
+                  'conic-gradient(from 0deg, rgba(255,255,255,0.35), rgba(255,255,255,0.05), rgba(255,255,255,0.35))'
+              }}
+              animate={{ rotate: 360 }}
+              transition={{ duration: 12, repeat: Infinity, ease: 'linear' }}
+            />
+            {/* Inner border and glow */}
+            <div className="relative rounded-2xl p-[3px] bg-white/10">
+              <div className="absolute inset-0 rounded-2xl blur-lg bg-white/10" aria-hidden />
+              <Avatar className="w-28 h-28 lg:w-32 lg:h-32 rounded-xl border border-white/15">
+                <AvatarImage src="https://i.postimg.cc/prctTy04/10aab1b0-d493-47cd-b02d-d5533b986e5d.png" alt="Devansh Datta" />
+                <AvatarFallback className="bg-neutral-900 text-white rounded-xl">DD</AvatarFallback>
+              </Avatar>
+            </div>
+          </div>
+          <div className="text-base md:text-lg text-gray-300">B.Tech CSE | AI Developer</div>
         </motion.div>
-      </motion.div>
-      
-      {/* Enhanced Scroll Indicator */}
-      <motion.button 
-        onClick={scrollToAbout} 
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-fuchsia-400 cursor-pointer group"
-        animate={{ y: [0, 10, 0] }}
-        transition={{ duration: 2, repeat: Infinity }}
-        whileHover={{ scale: 1.1 }}
-      >
-        <div className="relative">
-          <ArrowDown size={32} className="group-hover:scale-110 transition-transform duration-300" />
-          <motion.div 
-            className="absolute inset-0 bg-fuchsia-400/20 rounded-full blur-lg"
-            animate={{ opacity: [0, 1, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          />
+
+        <div className="w-full grid lg:grid-cols-2 gap-10 items-start">
+          <div>
+        <motion.h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-2" variants={itemVariants}>
+          Hi, I'm Devansh
+        </motion.h1>
+        <motion.p className="text-gray-300 max-w-3xl mb-8 text-lg md:text-xl" variants={itemVariants}>
+          I’m a Computer Science student and AI developer passionate about building systems where logic meets emotion.
+          <br className="hidden md:block" />
+          From emotion-based music recommenders to smart logistics and face recognition tools, I craft AI-driven experiences that connect and inspire.
+        </motion.p>
+
+        <motion.div className="flex flex-col sm:flex-row items-center gap-4" variants={itemVariants}>
+          <Button size="lg" className="bg-white hover:bg-neutral-200 text-black font-semibold px-8" onClick={() => window.open('mailto:work.devansh.datta@gmail.com')}>
+            Get in touch
+          </Button>
+          <Button
+            variant="outline"
+            size="lg"
+            className="border-white text-white hover:bg-white hover:text-black px-8"
+            onClick={scrollToAbout}
+          >
+            Learn more
+          </Button>
+        </motion.div>
+        
+        {/* Social buttons row */}
+        <motion.div className="mt-6 flex flex-wrap items-center gap-3" variants={itemVariants}>
+          <a
+            href="https://www.linkedin.com/in/devansh-datta06"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="LinkedIn"
+            className="inline-flex items-center justify-center w-11 h-11 rounded-full border border-white/30 text-white hover:bg-white hover:text-black transition-colors"
+            title="LinkedIn"
+          >
+            <Linkedin className="w-5 h-5" />
+          </a>
+          <a
+            href="https://github.com/Devansh5150"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="GitHub"
+            className="inline-flex items-center justify-center w-11 h-11 rounded-full border border-white/30 text-white hover:bg-white hover:text-black transition-colors"
+            title="GitHub"
+          >
+            <Github className="w-5 h-5" />
+          </a>
+          <a
+            href="mailto:work.devansh.datta@gmail.com"
+            aria-label="Email"
+            className="inline-flex items-center justify-center w-11 h-11 rounded-full border border-white/30 text-white hover:bg-white hover:text-black transition-colors"
+            title="Email"
+          >
+            <Mail className="w-5 h-5" />
+          </a>
+          <a
+            href="https://www.instagram.com/devansh.datta/"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Instagram"
+            className="inline-flex items-center justify-center w-11 h-11 rounded-full border border-white/30 text-white hover:bg-white hover:text-black transition-colors"
+            title="Instagram"
+          >
+            <Instagram className="w-5 h-5" />
+          </a>
+          <a
+            href="https://www.youtube.com/@devanshdatta"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="YouTube"
+            className="inline-flex items-center justify-center w-11 h-11 rounded-full border border-white/30 text-white hover:bg-white hover:text-black transition-colors"
+            title="YouTube"
+          >
+            <Youtube className="w-5 h-5" />
+          </a>
+          <a
+            href="tel:9871993246"
+            aria-label="Phone"
+            className="inline-flex items-center justify-center w-11 h-11 rounded-full border border-white/30 text-white hover:bg-white hover:text-black transition-colors"
+            title="Phone"
+          >
+            <Phone className="w-5 h-5" />
+          </a>
+        </motion.div>
+          </div>
+          {/* Right side: square terminal */}
+          <motion.div className="hidden lg:block justify-self-end" variants={itemVariants}>
+            <div ref={termRef} onMouseEnter={startTyping} className="w-80 h-80 rounded-2xl border border-white/15 bg-black/60 backdrop-blur-sm overflow-hidden">
+              <div className="flex items-center gap-2 px-4 py-2 border-b border-white/10">
+                <span className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
+                <span className="w-2.5 h-2.5 rounded-full bg-yellow-400/80" />
+                <span className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
+                <span className="ml-3 text-xs text-gray-400 font-mono select-none">python3</span>
+              </div>
+              <div className="p-4 font-mono text-sm leading-6">
+                <div className="text-gray-300">
+                  <span className="text-green-400">{'>'}{'>'}{'>'} </span>
+                  <span className="whitespace-pre-wrap">
+                    {typed}
+                    {!doneTyping && <span className="opacity-70 animate-pulse">|</span>}
+                  </span>
+                </div>
+                {doneTyping && (
+                  <motion.div
+                    className="mt-2 space-y-1"
+                    variants={outputContainerVariants}
+                    initial="hidden"
+                    animate="visible"
+                  >
+                    <motion.div variants={lineVariants} className="text-green-400">Hello and welcome to Devansh world</motion.div>
+                    <motion.div variants={lineVariants} className="text-green-300">Glad you're here — make yourself at home.</motion.div>
+                    <motion.div variants={lineVariants} className="text-green-300">Explore projects, read about my work, and say hi anytime.</motion.div>
+                  </motion.div>
+                )}
+              </div>
+            </div>
+          </motion.div>
         </div>
-      </motion.button>
+      </motion.div>
     </div>
   );
 };

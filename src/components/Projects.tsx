@@ -176,10 +176,8 @@ const Projects = () => {
     <div className="min-h-screen py-20 px-4">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
-          <span className="text-cyan-400 text-sm font-semibold tracking-wide uppercase">Portfolio</span>
-          <h2 className="text-4xl md:text-5xl font-bold mt-4 mb-6">
-            MY FEATURED <span className="italic text-purple-400">PROJECTS</span>
-          </h2>
+          <span className="text-white/70 text-sm font-semibold tracking-wide uppercase">Portfolio</span>
+          <h2 className="text-4xl md:text-5xl font-bold mt-4 mb-6 text-white">Featured Projects</h2>
           <p className="text-gray-300 text-lg max-w-3xl mx-auto">
             Explore my innovative projects that showcase expertise in AI/ML, web development, 
             and creative problem-solving. Click on any project to dive deeper into the details!
@@ -190,7 +188,7 @@ const Projects = () => {
           {projects.map((project, index) => (
             <motion.div
               key={index}
-              className="group bg-slate-800/50 rounded-xl border border-slate-700 hover:border-fuchsia-500/50 transition-all duration-300 overflow-hidden cursor-pointer"
+              className="group bg-black/60 rounded-xl border border-white/15 hover:border-white/30 transition-all duration-300 overflow-hidden cursor-pointer"
               whileHover={{ scale: 1.02, y: -5 }}
               onHoverStart={() => setHoveredProject(index)}
               onHoverEnd={() => setHoveredProject(null)}
@@ -199,7 +197,7 @@ const Projects = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
             >
-              <div className="p-8">
+              <div className="p-6 md:p-8">
                 <div className="flex items-center justify-between mb-6">
                   <div className="text-4xl">{project.image}</div>
                   <div className="flex items-center gap-2">
@@ -213,10 +211,20 @@ const Projects = () => {
                 </div>
                 
                 <div className="mb-4">
-                  <span className={`text-xs font-medium uppercase tracking-wide bg-gradient-to-r ${getCategoryColor(project.category)} bg-clip-text text-transparent`}>
+                  <span className={`text-xs font-medium uppercase tracking-wide ${
+                    project.category === 'AI/Computer Vision' ? 'text-pink-300' :
+                    project.category === 'Mobile App' ? 'text-blue-300' :
+                    project.category === 'Web Platform' ? 'text-green-300' :
+                    'text-orange-300'
+                  }`}>
                     {project.category}
                   </span>
-                  <h3 className="text-xl font-bold text-white mt-1 mb-3 group-hover:text-cyan-400 transition-colors">
+                  <h3 className={`text-xl font-bold text-white mt-1 mb-3 transition-colors ${
+                    project.category === 'AI/Computer Vision' ? 'group-hover:text-pink-300' :
+                    project.category === 'Mobile App' ? 'group-hover:text-blue-300' :
+                    project.category === 'Web Platform' ? 'group-hover:text-green-300' :
+                    'group-hover:text-orange-300'
+                  }`}>
                     {project.title}
                   </h3>
                   <p className="text-gray-400 text-sm leading-relaxed">
@@ -228,7 +236,7 @@ const Projects = () => {
                   {project.tech.map((tech, techIndex) => (
                     <span
                       key={techIndex}
-                      className="px-3 py-1 bg-slate-700 text-cyan-400 text-xs rounded-full border border-cyan-500/30"
+                      className="px-3 py-1 text-xs rounded-full border border-white/30 text-white hover:bg-white hover:text-black transition"
                     >
                       {tech}
                     </span>
@@ -239,7 +247,7 @@ const Projects = () => {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="border-fuchsia-500 text-fuchsia-400 hover:bg-fuchsia-500 hover:text-black flex-1 transition-all duration-300"
+                    className="border-white text-white hover:bg-white hover:text-black flex-1 transition-all duration-300 w-full sm:w-auto"
                     onClick={(e) => {
                       e.stopPropagation();
                       setSelectedProject(index);
@@ -305,7 +313,7 @@ const Projects = () => {
         <div className="text-center">
           <Button
             size="lg"
-            className="bg-gradient-to-r from-fuchsia-500 to-cyan-500 hover:from-fuchsia-600 hover:to-cyan-600 text-black font-semibold px-8 py-3 transition-all duration-300 transform hover:scale-105"
+            className="bg-gradient-to-r from-fuchsia-500 to-cyan-500 hover:from-fuchsia-600 hover:to-cyan-600 text-black font-semibold px-8 py-3 transition-all duration-300 transform hover:scale-105 w-full sm:w-auto"
             onClick={() => window.open('https://github.com/Devansh5150', '_blank')}
           >
             <Github className="w-5 h-5 mr-2" />

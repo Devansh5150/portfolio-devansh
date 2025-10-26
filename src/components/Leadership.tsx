@@ -92,17 +92,12 @@ const Leadership = () => {
 
   return (
     <div className="min-h-screen py-20 px-4 relative overflow-hidden">
-      {/* Animated background elements */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-10 right-10 w-64 h-64 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-10 left-10 w-80 h-80 bg-gradient-to-tr from-green-500/10 to-cyan-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-      </div>
-
+      
       <div className="max-w-6xl mx-auto relative z-10">
         <div className="text-center mb-16 animate-fade-in">
-          <span className="text-blue-400 text-sm font-semibold tracking-wide uppercase animate-slide-up">Leadership</span>
-          <h2 className="text-4xl md:text-5xl font-bold mt-4 mb-6 animate-slide-up delay-200">
-            LEADERSHIP & <span className="italic text-purple-400">ACHIEVEMENTS</span>
+          <span className="text-white/70 text-sm font-semibold tracking-wide uppercase animate-slide-up">Leadership</span>
+          <h2 className="text-4xl md:text-5xl font-bold mt-4 mb-6 text-white animate-slide-up delay-200">
+            Leadership
           </h2>
           <p className="text-gray-300 text-lg max-w-3xl mx-auto animate-slide-up delay-300">
             Beyond technical expertise, I lead with vision and drive positive change through active participation 
@@ -113,7 +108,7 @@ const Leadership = () => {
 
         {/* Leadership Roles */}
         <div className="mb-16">
-          <h3 className="text-2xl font-bold mb-8 text-center text-blue-400 flex items-center justify-center gap-2">
+          <h3 className="text-2xl font-bold mb-8 text-center text-white flex items-center justify-center gap-2">
             <span className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span>
             Leadership Roles
             <span className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span>
@@ -123,19 +118,19 @@ const Leadership = () => {
             {leadershipRoles.map((role, index) => (
               <div
                 key={index}
-                className={`p-8 bg-slate-800/50 rounded-xl border transition-all duration-300 hover:transform hover:scale-105 ${getColorClasses(role.color)} animate-slide-up`}
+                className={`p-6 md:p-8 bg-black/60 rounded-xl border border-white/15 hover:border-white/30 transition-all duration-300 hover:transform hover:scale-105 animate-slide-up`}
                 style={{ animationDelay: `${index * 200}ms` }}
               >
                 <div className="flex flex-col md:flex-row gap-6">
                   <div className="flex-shrink-0">
-                    <div className={`w-16 h-16 ${role.color === 'blue' ? 'bg-blue-500/20' : role.color === 'purple' ? 'bg-purple-500/20' : 'bg-green-500/20'} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                    <div className={`w-16 h-16 bg-white/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
                       <span className="text-3xl">{role.icon}</span>
                     </div>
                   </div>
                   
                   <div className="flex-1">
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
-                      <h4 className={`text-xl font-bold ${getTextColor(role.color)} mb-2 md:mb-0`}>
+                      <h4 className={`text-xl font-bold text-white mb-2 md:mb-0`}>
                         {role.title}
                       </h4>
                       <span className="text-sm text-gray-400 font-medium">
@@ -157,7 +152,7 @@ const Leadership = () => {
                       <ul className="space-y-1">
                         {role.achievements.map((achievement, achievementIndex) => (
                           <li key={achievementIndex} className="flex items-start text-gray-400 text-sm">
-                            <span className={`w-2 h-2 ${role.color === 'blue' ? 'bg-blue-400' : role.color === 'purple' ? 'bg-purple-400' : 'bg-green-400'} rounded-full mr-3 mt-1.5 flex-shrink-0`}></span>
+                            <span className={`w-2 h-2 bg-blue-400 rounded-full mr-3 mt-1.5 flex-shrink-0`}></span>
                             {achievement}
                           </li>
                         ))}
@@ -170,48 +165,11 @@ const Leadership = () => {
           </div>
         </div>
 
-        {/* Achievements */}
-        <div className="mb-16">
-          <h3 className="text-2xl font-bold mb-8 text-center text-purple-400 flex items-center justify-center gap-2">
-            <span className="w-2 h-2 bg-purple-400 rounded-full animate-pulse delay-500"></span>
-            Notable Achievements
-            <span className="w-2 h-2 bg-purple-400 rounded-full animate-pulse delay-500"></span>
-          </h3>
-          
-          <div className="grid md:grid-cols-3 gap-6">
-            {achievements.map((achievement, index) => (
-              <div
-                key={index}
-                className={`p-6 bg-slate-800/50 rounded-xl border transition-all duration-300 hover:transform hover:scale-105 ${getColorClasses(achievement.color)} animate-slide-up`}
-                style={{ animationDelay: `${index * 200}ms` }}
-              >
-                <div className="text-center">
-                  <div className={`w-16 h-16 ${achievement.color === 'yellow' ? 'bg-yellow-500/20' : achievement.color === 'cyan' ? 'bg-cyan-500/20' : 'bg-purple-500/20'} rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                    <span className="text-3xl">{achievement.icon}</span>
-                  </div>
-                  
-                  <h4 className={`text-lg font-bold ${getTextColor(achievement.color)} mb-2`}>
-                    {achievement.title}
-                  </h4>
-                  
-                  <div className={`text-sm font-semibold ${getTextColor(achievement.color)} mb-3`}>
-                    {achievement.achievement}
-                  </div>
-                  
-                  <p className="text-gray-400 text-sm leading-relaxed">
-                    {achievement.description}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* Call to Action */}
         <div className="text-center animate-slide-up delay-1000">
           <button
             onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-            className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-purple-500 hover:to-blue-500 text-black font-semibold px-8 py-3 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:shadow-purple-500/25"
+            className="bg-white hover:bg-neutral-200 text-black font-semibold px-8 py-3 rounded-lg transition-all duration-300 w-full sm:w-auto"
           >
             Let's Collaborate
           </button>
