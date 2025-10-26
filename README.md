@@ -1,22 +1,16 @@
-# Welcome to your Lovable project
+# Devansh Datta Portfolio
 
 ## Project info
 
-**URL**: https://lovable.dev/projects/bb0f678f-cf37-4dfd-8de9-bcd8cdb5112b
+Personal portfolio built with Vite, React, TypeScript, Tailwind, and shadcn-ui.
 
 ## How can I edit this code?
 
 There are several ways of editing your application.
 
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/bb0f678f-cf37-4dfd-8de9-bcd8cdb5112b) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
 **Use your preferred IDE**
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+If you want to work locally using your own IDE, you can clone this repo and push changes.
 
 The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
@@ -62,12 +56,15 @@ This project is built with:
 
 ## How can I deploy this project?
 
-Simply open [Lovable](https://lovable.dev/projects/bb0f678f-cf37-4dfd-8de9-bcd8cdb5112b) and click on Share -> Publish.
+Recommended: Vercel Git integration
 
-## Can I connect a custom domain to my Lovable project?
+1. Push to GitHub (main branch).
+2. On vercel.com: New Project → Import the repo.
+3. Framework preset: Vite
+4. Build command: `vite build`
+5. Output directory: `dist`
+6. Deploy.
 
-Yes, you can!
+## Custom domain
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+After the first deploy, go to Project → Settings → Domains in Vercel and connect your domain.
