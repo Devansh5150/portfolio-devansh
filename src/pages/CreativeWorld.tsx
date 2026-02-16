@@ -1,124 +1,159 @@
-import { useRef, useState, useEffect, useCallback, useMemo } from 'react';
+import { useRef, useState, useEffect, useCallback, useMemo, Suspense } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Text, Stars, Float } from '@react-three/drei';
+import { Text, Stars } from '@react-three/drei';
 import { useNavigate } from 'react-router-dom';
 import * as THREE from 'three';
 
-/* ───────────────────── DATA ───────────────────── */
+/* ───────────────────── PROJECT DATA ───────────────────── */
 
-const ISLANDS = [
+const TOWERS = [
     {
         id: 'torq',
         label: 'Torq',
         emoji: '🚗',
         color: '#60a5fa',
-        description: 'AI Emergency Vehicle Support — On-demand roadside assistance with intelligent matching.',
-        tech: 'React Native · Node.js · Firebase · OpenAI',
-        position: [0, 1, -12] as [number, number, number],
+        height: 14,
+        summary: 'AI Emergency Vehicle Support',
+        description: 'On-demand roadside assistance platform connecting stranded drivers with service providers through AI matching and real-time tracking. Built as a startup, served 500+ users.',
+        problem: 'No unified real-time platform for emergency roadside service in remote areas.',
+        role: 'Founded and led product development end-to-end — architecture, AI chatbot, payment flow.',
+        impact: 'Served 500+ users · Modular microservice backend · Razorpay escrow integration',
+        tech: ['React Native', 'Node.js', 'Firebase', 'PostgreSQL', 'OpenAI API', 'Razorpay'],
+        features: ['Real-time GPS tracking', 'AI chatbot (OpenAI)', 'Razorpay escrow payments', 'Multi-vendor marketplace', 'Emergency SOS routing', 'Firebase push notifications'],
+        position: [0, 0, -18] as [number, number, number],
     },
     {
         id: 'tatvam',
         label: 'Tatvam',
         emoji: '🧘',
         color: '#a78bfa',
-        description: 'LLM Contextual Mapping Engine — Ancient philosophy meets modern AI through RAG pipelines.',
-        tech: 'Next.js · LangChain · OpenAI · AWS',
-        position: [10.4, 1, -6] as [number, number, number],
+        height: 12,
+        summary: 'LLM Contextual Mapping Engine',
+        description: 'LLM-powered platform connecting ancient philosophical texts with modern AI through RAG pipelines, ethical guardrails, and tiered subscription access.',
+        problem: 'Ancient philosophical knowledge is scattered and existing AI lacks cultural sensitivity.',
+        role: 'Designed the RAG pipeline, ethical guardrail system, and AWS deployment architecture.',
+        impact: 'Novel AI application bridging philosophy and technology · Stripe 3-tier access · Serverless AWS',
+        tech: ['Next.js', 'Python', 'LangChain', 'OpenAI API', 'Supabase', 'Stripe', 'AWS'],
+        features: ['RAG pipeline with LangChain', 'Ethical guardrails', 'Subscription tiers (Stripe)', 'Vector DB semantic search', 'Personalized guidance', 'Serverless AWS deployment'],
+        position: [15.6, 0, -9] as [number, number, number],
     },
     {
         id: 'minto',
         label: 'Minto',
         emoji: '📦',
         color: '#34d399',
-        description: 'Last-Mile Delivery Platform — Empowering Tier-2/3 city vendors. Built in 48 hours.',
-        tech: 'Next.js · Supabase · Google Maps API',
-        position: [10.4, 1, 6] as [number, number, number],
+        height: 10,
+        summary: 'Last-Mile Delivery Platform',
+        description: 'Delivery platform empowering Tier-2/3 city vendors by eliminating dark-store dependency. Built proximity-based delivery matching in 48 hours.',
+        problem: 'Small vendors in smaller cities can\'t afford dark-store logistics.',
+        role: 'Built real-time order mapping, vendor analytics dashboard, and delivery assignment algorithm.',
+        impact: '50+ vendors onboarded · 40% delivery efficiency improvement · Best Social Impact Project',
+        tech: ['Next.js', 'Node.js', 'Supabase', 'Google Maps API'],
+        features: ['Vendor onboarding system', 'Real-time order mapping', 'Analytics dashboard', 'Proximity-based matching', 'Customer tracking', 'Inventory management'],
+        position: [15.6, 0, 9] as [number, number, number],
     },
     {
         id: 'mood',
         label: 'Mood Player',
         emoji: '🎵',
         color: '#f472b6',
-        description: 'Emotion-to-Music — Real-time facial emotion detection drives Spotify playlists.',
-        tech: 'Python · OpenCV · DeepFace · Spotify API',
-        position: [0, 1, 12] as [number, number, number],
+        height: 11,
+        summary: 'Emotion-Based Spotify Player',
+        description: 'Real-time emotion detection via webcam → dynamic Spotify playlist generation. Detects 7 emotions through DeepFace and maps them to music genres.',
+        problem: 'Music recommendation relies on history, not real-time emotional state.',
+        role: 'Built the entire CV pipeline — face detection, emotion classification, Spotify OAuth, playlist generation.',
+        impact: 'Real-time emotion-to-music at 30fps · 7-emotion classification · Best AI Innovation Award',
+        tech: ['Python', 'OpenCV', 'DeepFace', 'Spotify API', 'pyttsx3'],
+        features: ['Real-time facial emotion detection', 'Dynamic Spotify playlist generation', 'Voice feedback (pyttsx3)', 'Multi-language support', 'Emotion history tracking', 'Cross-platform app'],
+        position: [0, 0, 18] as [number, number, number],
     },
     {
         id: 'skillsync',
         label: 'SkillSync',
         emoji: '🧠',
         color: '#c084fc',
-        description: 'AI-powered student opportunity matching — recommendation engine serving 1,000+ students.',
-        tech: 'Python · NLP · Web Scraping · Collaborative Filtering',
-        position: [-10.4, 1, 6] as [number, number, number],
+        height: 13,
+        summary: 'AI Opportunity Matching Engine',
+        description: 'AI-powered student opportunity matching — recommendation engine serving 1,000+ students with personalized results.',
+        problem: 'Students struggle to find relevant opportunities across fragmented platforms.',
+        role: 'Lead AI development — built recommendation engine, web scraping pipeline, CV parsing system.',
+        impact: '1,000+ students served · 85% relevance accuracy · 50+ sources aggregated',
+        tech: ['Python', 'NLP', 'Web Scraping', 'Collaborative Filtering'],
+        features: ['Recommendation engine', 'CV parsing & job-fit scoring', 'Web scraping (50+ sources)', 'Collaborative filtering', 'Content-based scoring', 'NLP resume analysis'],
+        position: [-15.6, 0, 9] as [number, number, number],
     },
     {
         id: 'research',
         label: 'Research',
         emoji: '📚',
         color: '#22d3ee',
-        description: 'Published author — "AI and the Soul" — exploring AI, creativity, and consciousness.',
-        tech: 'Book Chapter · Philosophy of Mind',
-        position: [-10.4, 1, -6] as [number, number, number],
+        height: 9,
+        summary: 'Published Work — AI and the Soul',
+        description: 'Exploring the intersections of artificial intelligence, creativity, and consciousness. Examines how generative AI challenges authorship.',
+        problem: 'The philosophical implications of AI creativity remain underexplored in technical communities.',
+        role: 'Author — researched and wrote a book chapter on AI, consciousness, and creative expression.',
+        impact: 'Published book chapter · Framework for AI augmenting human expression',
+        tech: ['AI', 'Consciousness', 'Creativity', 'Philosophy of Mind'],
+        features: ['AI vs human creativity analysis', 'Authorship in generative AI', 'Framework for AI augmentation', 'Philosophy of Mind perspective', 'Cross-disciplinary research', 'Published chapter'],
+        position: [-15.6, 0, -9] as [number, number, number],
     },
 ];
 
-/* ───────────────────── GROUND GRID ───────────────────── */
+/* ───────────────────── END STONE GROUND ───────────────────── */
 
-function Ground() {
-    const gridRef = useRef<THREE.GridHelper>(null);
-
-    useFrame(({ clock }) => {
-        if (gridRef.current) {
-            const mat = gridRef.current.material as THREE.Material;
-            if ('opacity' in mat) {
-                (mat as THREE.MeshBasicMaterial).opacity = 0.15 + Math.sin(clock.getElapsedTime() * 0.3) * 0.05;
-            }
-        }
-    });
-
+function EndGround() {
     return (
-        <gridHelper
-            ref={gridRef}
-            args={[60, 60, '#444466', '#222244']}
-            position={[0, -0.01, 0]}
-        />
+        <group>
+            {/* Main platform — circular end stone island */}
+            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.1, 0]} receiveShadow>
+                <circleGeometry args={[30, 64]} />
+                <meshStandardMaterial color="#d4c98a" roughness={0.95} metalness={0} />
+            </mesh>
+            {/* End stone texture overlay — darker spots */}
+            {Array.from({ length: 80 }).map((_, i) => {
+                const angle = Math.random() * Math.PI * 2;
+                const r = Math.random() * 28;
+                return (
+                    <mesh
+                        key={i}
+                        rotation={[-Math.PI / 2, 0, 0]}
+                        position={[Math.cos(angle) * r, -0.08, Math.sin(angle) * r]}
+                    >
+                        <circleGeometry args={[0.3 + Math.random() * 0.6, 6]} />
+                        <meshStandardMaterial
+                            color={Math.random() > 0.5 ? '#c4b97a' : '#b8a960'}
+                            roughness={1}
+                        />
+                    </mesh>
+                );
+            })}
+        </group>
     );
 }
 
-/* ───────────────────── FLOATING ISLAND ───────────────────── */
+/* ───────────────────── OBSIDIAN TOWER ───────────────────── */
 
-interface IslandData {
-    id: string;
-    label: string;
-    emoji: string;
-    color: string;
-    description: string;
-    tech: string;
-    position: [number, number, number];
-}
-
-function Island({ data, onApproach }: { data: IslandData; onApproach: (id: string | null) => void }) {
-    const meshRef = useRef<THREE.Mesh>(null);
-    const glowRef = useRef<THREE.Mesh>(null);
+function ObsidianTower({
+    data,
+    onApproach,
+}: {
+    data: (typeof TOWERS)[0];
+    onApproach: (id: string | null) => void;
+}) {
+    const groupRef = useRef<THREE.Group>(null);
+    const crystalRef = useRef<THREE.Mesh>(null);
     const wasNear = useRef(false);
 
     useFrame(({ clock, camera }) => {
-        if (!meshRef.current) return;
-
-        // bob
-        meshRef.current.position.y = data.position[1] + Math.sin(clock.getElapsedTime() * 0.6 + data.position[0]) * 0.25;
-
-        // slow rotation
-        meshRef.current.rotation.y += 0.003;
-
-        // glow pulse
-        if (glowRef.current) {
-            const s = 1 + Math.sin(clock.getElapsedTime() * 1.5) * 0.08;
-            glowRef.current.scale.set(s, s, s);
+        // End crystal rotation + bob
+        if (crystalRef.current) {
+            crystalRef.current.rotation.y += 0.02;
+            crystalRef.current.rotation.x = Math.sin(clock.getElapsedTime() * 0.8) * 0.15;
+            crystalRef.current.position.y =
+                data.height + 2 + Math.sin(clock.getElapsedTime() * 1.2) * 0.3;
         }
 
-        // proximity check
+        // Proximity check
         const dist = camera.position.distanceTo(
             new THREE.Vector3(data.position[0], 0, data.position[2])
         );
@@ -129,204 +164,285 @@ function Island({ data, onApproach }: { data: IslandData; onApproach: (id: strin
         }
     });
 
-    const col = new THREE.Color(data.color);
+    const crystalColor = new THREE.Color(data.color);
 
     return (
-        <group position={data.position}>
-            {/* Platform base */}
-            <Float speed={1.2} rotationIntensity={0} floatIntensity={0.3}>
-                <mesh ref={meshRef} castShadow>
-                    <cylinderGeometry args={[2.2, 2.8, 0.5, 6]} />
+        <group ref={groupRef} position={data.position}>
+            {/* Obsidian pillar — stacked blocks for Minecraft look */}
+            {Array.from({ length: Math.ceil(data.height / 1) }).map((_, i) => (
+                <mesh key={i} position={[0, i + 0.5, 0]} castShadow>
+                    <boxGeometry args={[2.5, 1.02, 2.5]} />
                     <meshStandardMaterial
-                        color={col}
-                        transparent
-                        opacity={0.55}
-                        roughness={0.4}
-                        metalness={0.6}
+                        color={i % 3 === 0 ? '#1a0a2e' : i % 3 === 1 ? '#120826' : '#0d0520'}
+                        roughness={0.3}
+                        metalness={0.8}
                     />
                 </mesh>
-            </Float>
+            ))}
 
-            {/* Glow ring */}
-            <mesh ref={glowRef} position={[0, 0.3, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-                <ringGeometry args={[2.3, 2.8, 6]} />
-                <meshBasicMaterial color={col} transparent opacity={0.2} side={THREE.DoubleSide} />
+            {/* Bedrock cage around crystal */}
+            {[
+                [1.3, data.height + 0.5, 0],
+                [-1.3, data.height + 0.5, 0],
+                [0, data.height + 0.5, 1.3],
+                [0, data.height + 0.5, -1.3],
+            ].map((pos, i) => (
+                <mesh key={`cage-${i}`} position={pos as [number, number, number]}>
+                    <boxGeometry args={[0.4, 1, 0.4]} />
+                    <meshStandardMaterial color="#333333" roughness={0.9} />
+                </mesh>
+            ))}
+
+            {/* End Crystal — rotating diamond */}
+            <mesh ref={crystalRef} position={[0, data.height + 2, 0]}>
+                <octahedronGeometry args={[0.6, 0]} />
+                <meshStandardMaterial
+                    color={crystalColor}
+                    emissive={crystalColor}
+                    emissiveIntensity={1.5}
+                    transparent
+                    opacity={0.9}
+                    roughness={0.1}
+                    metalness={0.5}
+                />
             </mesh>
 
-            {/* Label */}
-            <Text
-                position={[0, 3.2, 0]}
-                fontSize={0.7}
-                color="white"
-                anchorX="center"
-                anchorY="middle"
-                outlineWidth={0.04}
-                outlineColor="black"
-            >
-                {data.label}
-            </Text>
+            {/* Crystal glow light */}
+            <pointLight
+                position={[0, data.height + 2, 0]}
+                color={data.color}
+                intensity={2}
+                distance={8}
+            />
 
-            {/* Pillar of light */}
-            <mesh position={[0, 6, 0]}>
-                <cylinderGeometry args={[0.03, 0.15, 12, 8]} />
-                <meshBasicMaterial color={col} transparent opacity={0.12} />
+            {/* Beam of light from crystal to sky */}
+            <mesh position={[0, data.height + 10, 0]}>
+                <cylinderGeometry args={[0.02, 0.08, 16, 6]} />
+                <meshBasicMaterial color={data.color} transparent opacity={0.15} />
+            </mesh>
+
+            {/* Label floating above tower */}
+            <Suspense fallback={null}>
+                <Text
+                    position={[0, data.height + 4, 0]}
+                    fontSize={0.6}
+                    color="white"
+                    anchorX="center"
+                    anchorY="middle"
+                    outlineWidth={0.03}
+                    outlineColor="#1a0a2e"
+                >
+                    {data.label}
+                </Text>
+                <Text
+                    position={[0, data.height + 3.3, 0]}
+                    fontSize={0.3}
+                    color={data.color}
+                    anchorX="center"
+                    anchorY="middle"
+                >
+                    {data.summary}
+                </Text>
+            </Suspense>
+
+            {/* Entrance glow on ground */}
+            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 3]}>
+                <circleGeometry args={[1, 16]} />
+                <meshBasicMaterial
+                    color={data.color}
+                    transparent
+                    opacity={0.25}
+                />
             </mesh>
         </group>
     );
 }
 
+/* ───────────────────── END PARTICLES (purple) ───────────────────── */
+
+function EndParticles() {
+    const ref = useRef<THREE.Points>(null);
+
+    const geom = useMemo(() => {
+        const g = new THREE.BufferGeometry();
+        const count = 500;
+        const pos = new Float32Array(count * 3);
+        const colors = new Float32Array(count * 3);
+        for (let i = 0; i < count; i++) {
+            pos[i * 3] = (Math.random() - 0.5) * 60;
+            pos[i * 3 + 1] = Math.random() * 20 + 0.5;
+            pos[i * 3 + 2] = (Math.random() - 0.5) * 60;
+            // Purple to magenta palette
+            colors[i * 3] = 0.5 + Math.random() * 0.3;
+            colors[i * 3 + 1] = 0.1 + Math.random() * 0.2;
+            colors[i * 3 + 2] = 0.7 + Math.random() * 0.3;
+        }
+        g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+        g.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        return g;
+    }, []);
+
+    useFrame(({ clock }) => {
+        if (!ref.current) return;
+        // Slow upward drift
+        const positions = ref.current.geometry.attributes.position;
+        for (let i = 0; i < positions.count; i++) {
+            const y = positions.getY(i);
+            positions.setY(i, y > 20 ? 0.5 : y + 0.005);
+        }
+        positions.needsUpdate = true;
+        ref.current.rotation.y = clock.getElapsedTime() * 0.01;
+    });
+
+    return (
+        <points ref={ref} geometry={geom}>
+            <pointsMaterial
+                size={0.12}
+                vertexColors
+                transparent
+                opacity={0.7}
+                sizeAttenuation
+            />
+        </points>
+    );
+}
+
 /* ───────────────────── PLAYER CONTROLLER ───────────────────── */
 
-function PlayerController({ keys, joystick }: { keys: Record<string, boolean>; joystick: { x: number; y: number } }) {
+function PlayerController({
+    keys,
+    joystick,
+}: {
+    keys: Record<string, boolean>;
+    joystick: { x: number; y: number };
+}) {
     const { camera } = useThree();
     const velocity = useRef(new THREE.Vector3());
-    const direction = useRef(new THREE.Vector3());
+    const facing = useRef(new THREE.Vector3(0, 0, -1));
 
-    // Set initial camera
     useEffect(() => {
-        camera.position.set(0, 2.2, 0);
-        camera.lookAt(0, 2, -5);
+        camera.position.set(0, 2.5, 8);
+        camera.lookAt(0, 2, 0);
     }, [camera]);
 
     useFrame((_, delta) => {
-        const speed = 8;
-        const dampening = 0.88;
+        const speed = 7;
+        const damp = 0.85;
+        const dir = new THREE.Vector3(0, 0, 0);
 
-        direction.current.set(0, 0, 0);
+        if (keys['w'] || keys['arrowup']) dir.z -= 1;
+        if (keys['s'] || keys['arrowdown']) dir.z += 1;
+        if (keys['a'] || keys['arrowleft']) dir.x -= 1;
+        if (keys['d'] || keys['arrowright']) dir.x += 1;
 
-        // Keyboard input
-        if (keys['w'] || keys['arrowup']) direction.current.z -= 1;
-        if (keys['s'] || keys['arrowdown']) direction.current.z += 1;
-        if (keys['a'] || keys['arrowleft']) direction.current.x -= 1;
-        if (keys['d'] || keys['arrowright']) direction.current.x += 1;
-
-        // Joystick input (mobile)
         if (Math.abs(joystick.x) > 0.1 || Math.abs(joystick.y) > 0.1) {
-            direction.current.x += joystick.x;
-            direction.current.z -= joystick.y;
+            dir.x += joystick.x;
+            dir.z -= joystick.y;
         }
 
-        if (direction.current.length() > 0) {
-            direction.current.normalize();
+        if (dir.length() > 0) {
+            dir.normalize();
+            const camDir = new THREE.Vector3();
+            camera.getWorldDirection(camDir);
+            camDir.y = 0;
+            camDir.normalize();
+            const camRight = new THREE.Vector3().crossVectors(
+                camDir,
+                new THREE.Vector3(0, 1, 0)
+            ).normalize();
 
-            // Get camera forward/right in world space (flat on XZ plane)
-            const cameraDir = new THREE.Vector3();
-            camera.getWorldDirection(cameraDir);
-            cameraDir.y = 0;
-            cameraDir.normalize();
+            const move = new THREE.Vector3()
+                .addScaledVector(camRight, dir.x)
+                .addScaledVector(camDir, -dir.z);
 
-            const cameraRight = new THREE.Vector3();
-            cameraRight.crossVectors(cameraDir, new THREE.Vector3(0, 1, 0)).normalize();
-
-            const moveDir = new THREE.Vector3()
-                .addScaledVector(cameraRight, direction.current.x)
-                .addScaledVector(cameraDir, -direction.current.z);
-
-            velocity.current.addScaledVector(moveDir, speed * delta);
+            velocity.current.addScaledVector(move, speed * delta);
+            facing.current.copy(move).normalize();
         }
 
-        velocity.current.multiplyScalar(dampening);
+        velocity.current.multiplyScalar(damp);
 
-        // Clamp to world bounds
-        const newPos = camera.position.clone().add(velocity.current.clone().multiplyScalar(delta * 60));
-        newPos.x = THREE.MathUtils.clamp(newPos.x, -28, 28);
-        newPos.z = THREE.MathUtils.clamp(newPos.z, -28, 28);
-        newPos.y = 2.2;
-
+        const newPos = camera.position
+            .clone()
+            .add(velocity.current.clone().multiplyScalar(delta * 60));
+        // Keep inside the end island
+        const dist = Math.sqrt(newPos.x * newPos.x + newPos.z * newPos.z);
+        if (dist > 28) {
+            newPos.x *= 28 / dist;
+            newPos.z *= 28 / dist;
+        }
+        newPos.y = 2.5;
         camera.position.copy(newPos);
 
-        // Camera slowly looks toward movement direction
         if (velocity.current.length() > 0.01) {
-            const lookTarget = camera.position.clone().add(
-                new THREE.Vector3(velocity.current.x, 0, velocity.current.z).normalize().multiplyScalar(10)
-            );
-            lookTarget.y = 2;
-            camera.lookAt(lookTarget);
+            const lookAt = camera.position
+                .clone()
+                .add(facing.current.clone().multiplyScalar(10));
+            lookAt.y = 2;
+            camera.lookAt(lookAt);
         }
     });
 
     return null;
 }
 
-/* ───────────────────── FLOATING PARTICLES ───────────────────── */
-
-function Particles() {
-    const count = 200;
-    const ref = useRef<THREE.Points>(null);
-
-    const geom = useMemo(() => {
-        const g = new THREE.BufferGeometry();
-        const arr = new Float32Array(count * 3);
-        for (let i = 0; i < count; i++) {
-            arr[i * 3] = (Math.random() - 0.5) * 50;
-            arr[i * 3 + 1] = Math.random() * 12 + 1;
-            arr[i * 3 + 2] = (Math.random() - 0.5) * 50;
-        }
-        g.setAttribute('position', new THREE.BufferAttribute(arr, 3));
-        return g;
-    }, []);
-
-    useFrame(({ clock }) => {
-        if (ref.current) {
-            ref.current.rotation.y = clock.getElapsedTime() * 0.02;
-        }
-    });
-
-    return (
-        <points ref={ref} geometry={geom}>
-            <pointsMaterial size={0.08} color="#88aaff" transparent opacity={0.6} sizeAttenuation />
-        </points>
-    );
-}
-
 /* ───────────────────── MOBILE JOYSTICK ───────────────────── */
 
-function MobileJoystick({ onMove }: { onMove: (x: number, y: number) => void }) {
+function MobileJoystick({
+    onMove,
+}: {
+    onMove: (x: number, y: number) => void;
+}) {
     const baseRef = useRef<HTMLDivElement>(null);
     const knobRef = useRef<HTMLDivElement>(null);
     const touchId = useRef<number | null>(null);
     const origin = useRef({ x: 0, y: 0 });
 
-    const handleStart = useCallback((e: React.TouchEvent) => {
-        const touch = e.changedTouches[0];
-        if (!touch || !baseRef.current) return;
-        touchId.current = touch.identifier;
-        const rect = baseRef.current.getBoundingClientRect();
-        origin.current = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
-    }, []);
+    const handleStart = useCallback(
+        (e: React.TouchEvent) => {
+            const touch = e.changedTouches[0];
+            if (!touch || !baseRef.current) return;
+            touchId.current = touch.identifier;
+            const rect = baseRef.current.getBoundingClientRect();
+            origin.current = {
+                x: rect.left + rect.width / 2,
+                y: rect.top + rect.height / 2,
+            };
+        },
+        []
+    );
 
-    const handleMove = useCallback((e: React.TouchEvent) => {
-        for (let i = 0; i < e.changedTouches.length; i++) {
-            const touch = e.changedTouches[i];
-            if (touch.identifier !== touchId.current) continue;
-
-            const dx = touch.clientX - origin.current.x;
-            const dy = touch.clientY - origin.current.y;
-            const maxR = 40;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            const clampedDist = Math.min(dist, maxR);
-            const angle = Math.atan2(dy, dx);
-            const nx = (Math.cos(angle) * clampedDist) / maxR;
-            const ny = -(Math.sin(angle) * clampedDist) / maxR;
-
-            if (knobRef.current) {
-                knobRef.current.style.transform = `translate(${Math.cos(angle) * clampedDist}px, ${Math.sin(angle) * clampedDist}px)`;
+    const handleMove = useCallback(
+        (e: React.TouchEvent) => {
+            for (let i = 0; i < e.changedTouches.length; i++) {
+                const touch = e.changedTouches[i];
+                if (touch.identifier !== touchId.current) continue;
+                const dx = touch.clientX - origin.current.x;
+                const dy = touch.clientY - origin.current.y;
+                const maxR = 40;
+                const dist = Math.min(Math.sqrt(dx * dx + dy * dy), maxR);
+                const angle = Math.atan2(dy, dx);
+                const nx = (Math.cos(angle) * dist) / maxR;
+                const ny = -(Math.sin(angle) * dist) / maxR;
+                if (knobRef.current) {
+                    knobRef.current.style.transform = `translate(${Math.cos(angle) * dist}px, ${Math.sin(angle) * dist}px)`;
+                }
+                onMove(nx, ny);
             }
-
-            onMove(nx, ny);
-        }
-    }, [onMove]);
+        },
+        [onMove]
+    );
 
     const handleEnd = useCallback(() => {
         touchId.current = null;
-        if (knobRef.current) knobRef.current.style.transform = 'translate(0px, 0px)';
+        if (knobRef.current)
+            knobRef.current.style.transform = 'translate(0px, 0px)';
         onMove(0, 0);
     }, [onMove]);
 
     return (
         <div
             ref={baseRef}
-            className="absolute bottom-8 left-8 w-28 h-28 rounded-full border-2 border-white/20 bg-white/5 backdrop-blur-md flex items-center justify-center touch-none select-none z-50"
+            className="absolute bottom-8 left-8 w-28 h-28 rounded-full border-2 border-purple-500/30 bg-purple-900/20 backdrop-blur-md flex items-center justify-center touch-none select-none z-50"
             onTouchStart={handleStart}
             onTouchMove={handleMove}
             onTouchEnd={handleEnd}
@@ -334,8 +450,98 @@ function MobileJoystick({ onMove }: { onMove: (x: number, y: number) => void }) 
         >
             <div
                 ref={knobRef}
-                className="w-12 h-12 rounded-full bg-white/30 border border-white/40 transition-none"
+                className="w-12 h-12 rounded-full bg-purple-400/30 border border-purple-400/50 transition-none"
             />
+        </div>
+    );
+}
+
+/* ───────────────────── PROJECT DETAIL OVERLAY ───────────────────── */
+
+function ProjectDetail({
+    data,
+    onClose,
+}: {
+    data: (typeof TOWERS)[0];
+    onClose: () => void;
+}) {
+    return (
+        <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/80 backdrop-blur-sm animate-in fade-in duration-300">
+            <div
+                className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto mx-4 rounded-2xl border p-6 md:p-8"
+                style={{
+                    backgroundColor: '#0d0520ee',
+                    borderColor: `${data.color}40`,
+                    boxShadow: `0 0 60px ${data.color}20`,
+                }}
+            >
+                {/* Close */}
+                <button
+                    onClick={onClose}
+                    className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white text-sm transition"
+                >
+                    ✕
+                </button>
+
+                {/* Header */}
+                <div className="flex items-center gap-3 mb-6">
+                    <span className="text-4xl">{data.emoji}</span>
+                    <div>
+                        <h2 className="text-2xl font-extrabold text-white">{data.label}</h2>
+                        <p className="text-sm" style={{ color: data.color }}>
+                            {data.summary}
+                        </p>
+                    </div>
+                </div>
+
+                {/* Description */}
+                <p className="text-gray-300 leading-relaxed mb-6">{data.description}</p>
+
+                {/* Problem / Role / Impact */}
+                <div className="space-y-4 mb-6">
+                    <div className="p-4 rounded-lg bg-red-500/10 border border-red-500/20">
+                        <h4 className="text-red-400 font-semibold text-sm mb-1">⚡ Problem</h4>
+                        <p className="text-gray-300 text-sm">{data.problem}</p>
+                    </div>
+                    <div className="p-4 rounded-lg bg-cyan-500/10 border border-cyan-500/20">
+                        <h4 className="text-cyan-400 font-semibold text-sm mb-1">🎯 My Role</h4>
+                        <p className="text-gray-300 text-sm">{data.role}</p>
+                    </div>
+                    <div className="p-4 rounded-lg bg-green-500/10 border border-green-500/20">
+                        <h4 className="text-green-400 font-semibold text-sm mb-1">📈 Impact</h4>
+                        <p className="text-gray-300 text-sm">{data.impact}</p>
+                    </div>
+                </div>
+
+                {/* Features */}
+                <div className="mb-6">
+                    <h4 className="text-white font-semibold mb-3">Key Features</h4>
+                    <div className="grid grid-cols-2 gap-2">
+                        {data.features.map((f) => (
+                            <div key={f} className="flex items-center gap-2 text-gray-400 text-sm">
+                                <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: data.color }} />
+                                {f}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Tech stack */}
+                <div>
+                    <h4 className="text-white font-semibold mb-3">Tech Stack</h4>
+                    <div className="flex flex-wrap gap-2">
+                        {data.tech.map((t) => (
+                            <span
+                                key={t}
+                                className="px-3 py-1 text-xs rounded-full border text-white"
+                                style={{ borderColor: `${data.color}50` }}
+                            >
+                                {t}
+                            </span>
+                        ))}
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }
@@ -344,21 +550,20 @@ function MobileJoystick({ onMove }: { onMove: (x: number, y: number) => void }) 
 
 export default function CreativeWorld() {
     const navigate = useNavigate();
-    const [nearIsland, setNearIsland] = useState<string | null>(null);
+    const [nearTower, setNearTower] = useState<string | null>(null);
+    const [openTower, setOpenTower] = useState<string | null>(null);
     const [isMobile, setIsMobile] = useState(false);
     const keysRef = useRef<Record<string, boolean>>({});
-    const joystickRef = useRef({ x: 0, y: 0 });
     const [joystick, setJoystick] = useState({ x: 0, y: 0 });
 
-    // Detect mobile
     useEffect(() => {
-        const check = () => setIsMobile(window.innerWidth < 768 || 'ontouchstart' in window);
+        const check = () =>
+            setIsMobile(window.innerWidth < 768 || 'ontouchstart' in window);
         check();
         window.addEventListener('resize', check);
         return () => window.removeEventListener('resize', check);
     }, []);
 
-    // Keyboard listeners
     useEffect(() => {
         const onDown = (e: KeyboardEvent) => {
             keysRef.current[e.key.toLowerCase()] = true;
@@ -375,83 +580,109 @@ export default function CreativeWorld() {
     }, []);
 
     const handleJoystick = useCallback((x: number, y: number) => {
-        joystickRef.current = { x, y };
         setJoystick({ x, y });
     }, []);
 
-    const nearData = nearIsland ? ISLANDS.find((i) => i.id === nearIsland) : null;
+    const nearData = nearTower
+        ? TOWERS.find((t) => t.id === nearTower)
+        : null;
+
+    const openData = openTower
+        ? TOWERS.find((t) => t.id === openTower)
+        : null;
 
     return (
         <div className="fixed inset-0 bg-black w-full h-full z-[9999]">
             {/* 3D Canvas */}
             <Canvas
-                camera={{ fov: 65, near: 0.1, far: 200 }}
+                camera={{ fov: 60, near: 0.1, far: 300 }}
                 style={{ width: '100%', height: '100%' }}
                 gl={{ antialias: true, alpha: false }}
             >
-                <color attach="background" args={['#050510']} />
-                <fog attach="fog" args={['#050510', 20, 80]} />
+                {/* End-dimension purple-black sky */}
+                <color attach="background" args={['#0a0015']} />
+                <fog attach="fog" args={['#0a0015', 30, 90]} />
 
-                {/* Lighting */}
-                <ambientLight intensity={0.3} />
-                <directionalLight position={[10, 15, 10]} intensity={0.5} color="#aaccff" />
-                <pointLight position={[0, 8, 0]} intensity={0.4} color="#6666ff" />
+                {/* Lighting — eerie End ambience */}
+                <ambientLight intensity={0.25} color="#9966cc" />
+                <directionalLight
+                    position={[5, 20, 5]}
+                    intensity={0.3}
+                    color="#cc99ff"
+                />
+                <pointLight position={[0, 15, 0]} intensity={0.5} color="#7722aa" />
 
-                {/* Stars */}
-                <Stars radius={80} depth={60} count={3000} factor={3} saturation={0.2} fade speed={0.5} />
+                {/* Stars — sparse, cold */}
+                <Stars
+                    radius={120}
+                    depth={80}
+                    count={2000}
+                    factor={2.5}
+                    saturation={0.1}
+                    fade
+                    speed={0.3}
+                />
 
-                {/* Ground */}
-                <Ground />
+                {/* End stone ground */}
+                <EndGround />
 
-                {/* Ground "floor" */}
-                <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.02, 0]} receiveShadow>
-                    <planeGeometry args={[60, 60]} />
-                    <meshStandardMaterial color="#080818" transparent opacity={0.9} />
-                </mesh>
-
-                {/* Islands */}
-                {ISLANDS.map((island) => (
-                    <Island key={island.id} data={island} onApproach={setNearIsland} />
+                {/* Obsidian Towers */}
+                {TOWERS.map((tower) => (
+                    <ObsidianTower
+                        key={tower.id}
+                        data={tower}
+                        onApproach={setNearTower}
+                    />
                 ))}
 
-                {/* Particles */}
-                <Particles />
+                {/* Purple floating particles */}
+                <EndParticles />
 
-                {/* Player controller */}
+                {/* Player */}
                 <PlayerController keys={keysRef.current} joystick={joystick} />
             </Canvas>
 
-            {/* ─── HUD Overlay ─── */}
+            {/* ─── HUD ─── */}
 
             {/* Back button */}
             <button
                 onClick={() => navigate('/')}
-                className="absolute top-6 left-6 z-50 flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 backdrop-blur-md border border-white/20 text-white text-sm font-medium hover:bg-white/20 transition-all"
+                className="absolute top-5 left-5 z-50 flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-900/40 backdrop-blur-md border border-purple-500/30 text-white text-sm font-medium hover:bg-purple-800/50 transition-all"
             >
                 ← Back to Portfolio
             </button>
 
             {/* Title */}
-            <div className="absolute top-6 left-1/2 -translate-x-1/2 z-50 text-center pointer-events-none">
-                <h1 className="text-white text-lg md:text-2xl font-bold tracking-wide">
-                    🌍 Devansh's World
+            <div className="absolute top-5 left-1/2 -translate-x-1/2 z-50 text-center pointer-events-none">
+                <h1 className="text-white text-lg md:text-2xl font-bold tracking-wider" style={{ textShadow: '0 0 20px #7722aa88' }}>
+                    🐉 The End — Devansh's World
                 </h1>
-                <p className="text-gray-400 text-xs mt-1">Walk around and explore my projects</p>
+                <p className="text-purple-300/60 text-xs mt-1">
+                    Walk to a tower. Step inside to explore.
+                </p>
             </div>
 
             {/* Controls hint */}
             {!isMobile && (
                 <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-50 pointer-events-none">
-                    <div className="px-5 py-3 rounded-xl bg-white/10 backdrop-blur-md border border-white/15 text-white text-sm flex items-center gap-4">
+                    <div className="px-5 py-3 rounded-xl bg-purple-900/40 backdrop-blur-md border border-purple-500/20 text-white text-sm flex items-center gap-4">
                         <div className="flex flex-col items-center gap-1">
-                            <kbd className="px-2 py-0.5 rounded bg-white/20 text-xs font-mono">W</kbd>
+                            <kbd className="px-2 py-0.5 rounded bg-purple-800/60 text-xs font-mono">
+                                W
+                            </kbd>
                             <div className="flex gap-1">
-                                <kbd className="px-2 py-0.5 rounded bg-white/20 text-xs font-mono">A</kbd>
-                                <kbd className="px-2 py-0.5 rounded bg-white/20 text-xs font-mono">S</kbd>
-                                <kbd className="px-2 py-0.5 rounded bg-white/20 text-xs font-mono">D</kbd>
+                                <kbd className="px-2 py-0.5 rounded bg-purple-800/60 text-xs font-mono">
+                                    A
+                                </kbd>
+                                <kbd className="px-2 py-0.5 rounded bg-purple-800/60 text-xs font-mono">
+                                    S
+                                </kbd>
+                                <kbd className="px-2 py-0.5 rounded bg-purple-800/60 text-xs font-mono">
+                                    D
+                                </kbd>
                             </div>
                         </div>
-                        <span className="text-gray-400">to move</span>
+                        <span className="text-purple-300/70">to move</span>
                     </div>
                 </div>
             )}
@@ -459,32 +690,46 @@ export default function CreativeWorld() {
             {/* Mobile joystick */}
             {isMobile && <MobileJoystick onMove={handleJoystick} />}
 
-            {/* Island info panel */}
-            {nearData && (
+            {/* Tower approach prompt */}
+            {nearData && !openTower && (
                 <div className="absolute bottom-8 right-6 z-50 max-w-xs animate-in fade-in slide-in-from-bottom-4 duration-300">
                     <div
                         className="p-5 rounded-xl backdrop-blur-md border text-white"
                         style={{
-                            backgroundColor: `${nearData.color}15`,
+                            backgroundColor: '#0d052099',
                             borderColor: `${nearData.color}40`,
                         }}
                     >
                         <div className="flex items-center gap-2 mb-2">
                             <span className="text-2xl">{nearData.emoji}</span>
-                            <h3 className="text-lg font-bold" style={{ color: nearData.color }}>
+                            <h3
+                                className="text-lg font-bold"
+                                style={{ color: nearData.color }}
+                            >
                                 {nearData.label}
                             </h3>
                         </div>
-                        <p className="text-gray-300 text-sm leading-relaxed mb-3">{nearData.description}</p>
-                        <div className="flex flex-wrap gap-1">
-                            {nearData.tech.split(' · ').map((t) => (
-                                <span key={t} className="px-2 py-0.5 text-xs rounded-full border border-white/20 text-gray-300">
-                                    {t}
-                                </span>
-                            ))}
-                        </div>
+                        <p className="text-gray-400 text-sm mb-3">{nearData.summary}</p>
+                        <button
+                            onClick={() => setOpenTower(nearData.id)}
+                            className="w-full py-2 rounded-lg text-sm font-semibold text-white transition-all"
+                            style={{
+                                backgroundColor: `${nearData.color}30`,
+                                border: `1px solid ${nearData.color}50`,
+                            }}
+                        >
+                            ⏎ Enter Tower
+                        </button>
                     </div>
                 </div>
+            )}
+
+            {/* Full project detail overlay */}
+            {openData && (
+                <ProjectDetail
+                    data={openData}
+                    onClose={() => setOpenTower(null)}
+                />
             )}
         </div>
     );
