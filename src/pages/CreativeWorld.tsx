@@ -307,7 +307,7 @@ function EndParticles() {
     );
 }
 
-/* ───────────────────── PLAYER CONTROLLER ───────────────────── */
+/* ───────────────────── PLAYER CONTROLLER (FPS mouse look) ───────────────────── */
 
 function PlayerController({
     keys,
@@ -316,14 +316,42 @@ function PlayerController({
     keys: Record<string, boolean>;
     joystick: { x: number; y: number };
 }) {
-    const { camera } = useThree();
+    const { camera, gl } = useThree();
     const velocity = useRef(new THREE.Vector3());
-    const facing = useRef(new THREE.Vector3(0, 0, -1));
+    const euler = useRef(new THREE.Euler(0, 0, 0, 'YXZ'));
 
+    // Initial position
     useEffect(() => {
         camera.position.set(0, 2.5, 8);
-        camera.lookAt(0, 2, 0);
+        euler.current.set(-0.1, Math.PI, 0); // look toward center
+        camera.quaternion.setFromEuler(euler.current);
     }, [camera]);
+
+    // Pointer Lock + mouse movement
+    useEffect(() => {
+        const canvas = gl.domElement;
+
+        const onClick = () => {
+            canvas.requestPointerLock();
+        };
+
+        const onMouseMove = (e: MouseEvent) => {
+            if (document.pointerLockElement !== canvas) return;
+            const sensitivity = 0.002;
+            euler.current.y -= e.movementX * sensitivity;
+            euler.current.x -= e.movementY * sensitivity;
+            // Clamp pitch so you can't flip upside down
+            euler.current.x = Math.max(-Math.PI / 3, Math.min(Math.PI / 3, euler.current.x));
+            camera.quaternion.setFromEuler(euler.current);
+        };
+
+        canvas.addEventListener('click', onClick);
+        document.addEventListener('mousemove', onMouseMove);
+        return () => {
+            canvas.removeEventListener('click', onClick);
+            document.removeEventListener('mousemove', onMouseMove);
+        };
+    }, [camera, gl]);
 
     useFrame((_, delta) => {
         const speed = 7;
@@ -342,21 +370,20 @@ function PlayerController({
 
         if (dir.length() > 0) {
             dir.normalize();
-            const camDir = new THREE.Vector3();
-            camera.getWorldDirection(camDir);
-            camDir.y = 0;
-            camDir.normalize();
-            const camRight = new THREE.Vector3().crossVectors(
-                camDir,
-                new THREE.Vector3(0, 1, 0)
-            ).normalize();
+            // Forward/right based on current camera yaw
+            const forward = new THREE.Vector3(0, 0, -1).applyEuler(
+                new THREE.Euler(0, euler.current.y, 0)
+            );
+            const right = new THREE.Vector3(1, 0, 0).applyEuler(
+                new THREE.Euler(0, euler.current.y, 0)
+            );
 
             const move = new THREE.Vector3()
-                .addScaledVector(camRight, dir.x)
-                .addScaledVector(camDir, -dir.z);
+                .addScaledVector(right, dir.x)
+                .addScaledVector(forward, -dir.z);
+            move.y = 0;
 
             velocity.current.addScaledVector(move, speed * delta);
-            facing.current.copy(move).normalize();
         }
 
         velocity.current.multiplyScalar(damp);
@@ -372,14 +399,6 @@ function PlayerController({
         }
         newPos.y = 2.5;
         camera.position.copy(newPos);
-
-        if (velocity.current.length() > 0.01) {
-            const lookAt = camera.position
-                .clone()
-                .add(facing.current.clone().multiplyScalar(10));
-            lookAt.y = 2;
-            camera.lookAt(lookAt);
-        }
     });
 
     return null;
@@ -683,6 +702,8 @@ export default function CreativeWorld() {
                             </div>
                         </div>
                         <span className="text-purple-300/70">to move</span>
+                        <span className="text-purple-300/40 mx-1">•</span>
+                        <span className="text-purple-300/70">click + mouse to look</span>
                     </div>
                 </div>
             )}
