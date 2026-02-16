@@ -107,26 +107,83 @@ function EndGround() {
             {/* Main platform — circular end stone island */}
             <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.1, 0]} receiveShadow>
                 <circleGeometry args={[30, 64]} />
-                <meshStandardMaterial color="#d4c98a" roughness={0.95} metalness={0} />
+                <meshStandardMaterial color="#e8dca0" roughness={0.85} metalness={0.05} />
             </mesh>
-            {/* End stone texture overlay — darker spots */}
-            {Array.from({ length: 80 }).map((_, i) => {
+            {/* End stone texture overlay — darker spots + purple veins */}
+            {Array.from({ length: 120 }).map((_, i) => {
                 const angle = Math.random() * Math.PI * 2;
                 const r = Math.random() * 28;
+                const isPurple = Math.random() > 0.85;
                 return (
                     <mesh
                         key={i}
                         rotation={[-Math.PI / 2, 0, 0]}
                         position={[Math.cos(angle) * r, -0.08, Math.sin(angle) * r]}
                     >
-                        <circleGeometry args={[0.3 + Math.random() * 0.6, 6]} />
+                        <circleGeometry args={[0.2 + Math.random() * 0.5, 6]} />
                         <meshStandardMaterial
-                            color={Math.random() > 0.5 ? '#c4b97a' : '#b8a960'}
-                            roughness={1}
+                            color={isPurple ? '#6b3fa0' : Math.random() > 0.5 ? '#d4c88a' : '#c8bc7a'}
+                            emissive={isPurple ? '#6b3fa0' : '#000000'}
+                            emissiveIntensity={isPurple ? 0.3 : 0}
+                            roughness={0.9}
                         />
                     </mesh>
                 );
             })}
+            {/* Edge glow ring */}
+            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.05, 0]}>
+                <ringGeometry args={[28, 30, 64]} />
+                <meshBasicMaterial color="#2a0845" transparent opacity={0.6} />
+            </mesh>
+        </group>
+    );
+}
+
+/* ───────────────────── CENTER END PORTAL ───────────────────── */
+
+function EndPortal() {
+    const portalRef = useRef<THREE.Mesh>(null);
+
+    useFrame(({ clock }) => {
+        if (portalRef.current) {
+            (portalRef.current.material as THREE.MeshBasicMaterial).opacity =
+                0.6 + Math.sin(clock.getElapsedTime() * 2) * 0.15;
+            portalRef.current.rotation.z += 0.005;
+        }
+    });
+
+    return (
+        <group position={[0, 0.05, 0]}>
+            {/* Portal frame blocks */}
+            {Array.from({ length: 12 }).map((_, i) => {
+                const ang = (i / 12) * Math.PI * 2;
+                const px = Math.cos(ang) * 3.5;
+                const pz = Math.sin(ang) * 3.5;
+                return (
+                    <mesh key={i} position={[px, 0.3, pz]} rotation={[0, -ang, 0]}>
+                        <boxGeometry args={[1.2, 0.6, 0.6]} />
+                        <meshStandardMaterial
+                            color="#1a4a1a"
+                            emissive="#22cc66"
+                            emissiveIntensity={0.2}
+                            roughness={0.6}
+                        />
+                    </mesh>
+                );
+            })}
+            {/* Portal surface */}
+            <mesh ref={portalRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.4, 0]}>
+                <circleGeometry args={[3.2, 32]} />
+                <meshBasicMaterial color="#1a0033" transparent opacity={0.7} />
+            </mesh>
+            {/* Portal glow */}
+            <pointLight position={[0, 1.5, 0]} color="#aa44ff" intensity={3} distance={12} />
+            <pointLight position={[0, 0.5, 0]} color="#5500aa" intensity={2} distance={8} />
+            {/* Beacon upward */}
+            <mesh position={[0, 15, 0]}>
+                <cylinderGeometry args={[0.05, 0.3, 30, 8]} />
+                <meshBasicMaterial color="#aa44ff" transparent opacity={0.08} />
+            </mesh>
         </group>
     );
 }
@@ -168,14 +225,16 @@ function ObsidianTower({
 
     return (
         <group ref={groupRef} position={data.position}>
-            {/* Obsidian pillar — stacked blocks for Minecraft look */}
+            {/* Obsidian pillar — stacked blocks with purple sheen */}
             {Array.from({ length: Math.ceil(data.height / 1) }).map((_, i) => (
                 <mesh key={i} position={[0, i + 0.5, 0]} castShadow>
                     <boxGeometry args={[2.5, 1.02, 2.5]} />
                     <meshStandardMaterial
-                        color={i % 3 === 0 ? '#1a0a2e' : i % 3 === 1 ? '#120826' : '#0d0520'}
-                        roughness={0.3}
-                        metalness={0.8}
+                        color={i % 3 === 0 ? '#2a1050' : i % 3 === 1 ? '#1e0c3d' : '#150830'}
+                        emissive="#3d1a6e"
+                        emissiveIntensity={i === 0 || i === Math.ceil(data.height) - 1 ? 0.15 : 0.05}
+                        roughness={0.25}
+                        metalness={0.85}
                     />
                 </mesh>
             ))}
@@ -195,24 +254,30 @@ function ObsidianTower({
 
             {/* End Crystal — rotating diamond */}
             <mesh ref={crystalRef} position={[0, data.height + 2, 0]}>
-                <octahedronGeometry args={[0.6, 0]} />
+                <octahedronGeometry args={[0.7, 0]} />
                 <meshStandardMaterial
                     color={crystalColor}
                     emissive={crystalColor}
-                    emissiveIntensity={1.5}
+                    emissiveIntensity={3}
                     transparent
-                    opacity={0.9}
-                    roughness={0.1}
-                    metalness={0.5}
+                    opacity={0.95}
+                    roughness={0.05}
+                    metalness={0.3}
                 />
             </mesh>
 
-            {/* Crystal glow light */}
+            {/* Crystal glow — double light for vibrancy */}
             <pointLight
                 position={[0, data.height + 2, 0]}
                 color={data.color}
-                intensity={2}
-                distance={8}
+                intensity={4}
+                distance={12}
+            />
+            <pointLight
+                position={[0, data.height + 3, 0]}
+                color="#ffffff"
+                intensity={0.5}
+                distance={6}
             />
 
             {/* Beam of light from crystal to sky */}
@@ -221,11 +286,11 @@ function ObsidianTower({
                 <meshBasicMaterial color={data.color} transparent opacity={0.15} />
             </mesh>
 
-            {/* Label floating above tower */}
+            {/* Label just above the door */}
             <Suspense fallback={null}>
                 <Text
-                    position={[0, data.height + 4, 0]}
-                    fontSize={0.6}
+                    position={[0, 3, 3.1]}
+                    fontSize={0.45}
                     color="white"
                     anchorX="center"
                     anchorY="middle"
@@ -235,8 +300,8 @@ function ObsidianTower({
                     {data.label}
                 </Text>
                 <Text
-                    position={[0, data.height + 3.3, 0]}
-                    fontSize={0.3}
+                    position={[0, 2.4, 3.1]}
+                    fontSize={0.22}
                     color={data.color}
                     anchorX="center"
                     anchorY="middle"
@@ -265,17 +330,18 @@ function EndParticles() {
 
     const geom = useMemo(() => {
         const g = new THREE.BufferGeometry();
-        const count = 500;
+        const count = 800;
         const pos = new Float32Array(count * 3);
         const colors = new Float32Array(count * 3);
         for (let i = 0; i < count; i++) {
             pos[i * 3] = (Math.random() - 0.5) * 60;
-            pos[i * 3 + 1] = Math.random() * 20 + 0.5;
+            pos[i * 3 + 1] = Math.random() * 25 + 0.5;
             pos[i * 3 + 2] = (Math.random() - 0.5) * 60;
-            // Purple to magenta palette
-            colors[i * 3] = 0.5 + Math.random() * 0.3;
-            colors[i * 3 + 1] = 0.1 + Math.random() * 0.2;
-            colors[i * 3 + 2] = 0.7 + Math.random() * 0.3;
+            // Brighter purple-magenta-pink palette
+            const t = Math.random();
+            colors[i * 3] = 0.6 + t * 0.4;       // R: pink to magenta
+            colors[i * 3 + 1] = 0.05 + t * 0.15; // G: subtle
+            colors[i * 3 + 2] = 0.7 + t * 0.3;   // B: vivid purple
         }
         g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
         g.setAttribute('color', new THREE.BufferAttribute(colors, 3));
@@ -284,23 +350,22 @@ function EndParticles() {
 
     useFrame(({ clock }) => {
         if (!ref.current) return;
-        // Slow upward drift
         const positions = ref.current.geometry.attributes.position;
         for (let i = 0; i < positions.count; i++) {
             const y = positions.getY(i);
-            positions.setY(i, y > 20 ? 0.5 : y + 0.005);
+            positions.setY(i, y > 25 ? 0.5 : y + 0.008 + Math.sin(i) * 0.002);
         }
         positions.needsUpdate = true;
-        ref.current.rotation.y = clock.getElapsedTime() * 0.01;
+        ref.current.rotation.y = clock.getElapsedTime() * 0.015;
     });
 
     return (
         <points ref={ref} geometry={geom}>
             <pointsMaterial
-                size={0.12}
+                size={0.15}
                 vertexColors
                 transparent
-                opacity={0.7}
+                opacity={0.85}
                 sizeAttenuation
             />
         </points>
@@ -618,32 +683,42 @@ export default function CreativeWorld() {
                 style={{ width: '100%', height: '100%' }}
                 gl={{ antialias: true, alpha: false }}
             >
-                {/* End-dimension purple-black sky */}
-                <color attach="background" args={['#0a0015']} />
-                <fog attach="fog" args={['#0a0015', 30, 90]} />
+                {/* End-dimension rich purple sky */}
+                <color attach="background" args={['#120025']} />
+                <fog attach="fog" args={['#120025', 35, 100]} />
 
-                {/* Lighting — eerie End ambience */}
-                <ambientLight intensity={0.25} color="#9966cc" />
+                {/* Lighting — vibrant End ambience */}
+                <ambientLight intensity={0.45} color="#bb88ee" />
                 <directionalLight
-                    position={[5, 20, 5]}
-                    intensity={0.3}
-                    color="#cc99ff"
+                    position={[5, 25, 5]}
+                    intensity={0.6}
+                    color="#ddaaff"
                 />
-                <pointLight position={[0, 15, 0]} intensity={0.5} color="#7722aa" />
+                <directionalLight
+                    position={[-10, 15, -5]}
+                    intensity={0.25}
+                    color="#ff66cc"
+                />
+                <pointLight position={[0, 18, 0]} intensity={1} color="#9933cc" />
+                <pointLight position={[15, 5, 15]} intensity={0.4} color="#cc44ff" distance={25} />
+                <pointLight position={[-15, 5, -15]} intensity={0.4} color="#8844ff" distance={25} />
 
-                {/* Stars — sparse, cold */}
+                {/* Stars — dense, vibrant */}
                 <Stars
-                    radius={120}
-                    depth={80}
-                    count={2000}
-                    factor={2.5}
-                    saturation={0.1}
+                    radius={100}
+                    depth={60}
+                    count={5000}
+                    factor={3.5}
+                    saturation={0.5}
                     fade
-                    speed={0.3}
+                    speed={0.8}
                 />
 
                 {/* End stone ground */}
                 <EndGround />
+
+                {/* Center End Portal */}
+                <EndPortal />
 
                 {/* Obsidian Towers */}
                 {TOWERS.map((tower) => (
