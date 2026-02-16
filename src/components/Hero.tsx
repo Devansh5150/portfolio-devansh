@@ -1,14 +1,14 @@
 import { Button } from './ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { motion } from 'framer-motion';
-import { Github, Linkedin, Mail, Instagram, Phone, Youtube } from 'lucide-react';
+import { Github, Linkedin, Mail, Instagram, Youtube } from 'lucide-react';
 import { SplineScene } from './ui/splite';
 import { Spotlight } from './ui/spotlight';
 
 const Hero = () => {
-  const scrollToAbout = () => {
-    const aboutSection = document.getElementById('about');
-    if (aboutSection) aboutSection.scrollIntoView({ behavior: 'smooth' });
+  const scrollToProjects = () => {
+    const el = document.getElementById('projects');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
 
   const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1 } };
@@ -27,22 +27,6 @@ const Hero = () => {
           scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
           className="w-full h-full"
         />
-      </div>
-
-      {/* Social icons (top-right quick access) */}
-      <div className="absolute top-6 right-6 hidden sm:flex items-center gap-5 text-gray-300 z-20">
-        <a href="https://github.com/Devansh5150" target="_blank" rel="noreferrer" className="hover:text-white transition-colors" aria-label="GitHub">
-          <Github className="w-5 h-5" />
-        </a>
-        <a href="https://www.linkedin.com/in/devansh-datta06" target="_blank" rel="noreferrer" className="hover:text-white transition-colors" aria-label="LinkedIn">
-          <Linkedin className="w-5 h-5" />
-        </a>
-        <a href="https://www.instagram.com/devansh.datta/" target="_blank" rel="noreferrer" className="hover:text-white transition-colors" aria-label="Instagram">
-          <Instagram className="w-5 h-5" />
-        </a>
-        <a href="https://www.youtube.com/@devanshdatta" target="_blank" rel="noreferrer" className="hover:text-white transition-colors" aria-label="YouTube">
-          <Youtube className="w-5 h-5" />
-        </a>
       </div>
 
       <motion.div
@@ -73,19 +57,36 @@ const Hero = () => {
               </Avatar>
             </div>
           </div>
-          <div className="text-base md:text-lg text-gray-300">B.Tech CSE | AI Developer</div>
+          <div className="text-base md:text-lg text-gray-300 uppercase tracking-wide font-semibold">AI Developer & System Architect</div>
         </motion.div>
 
         <div className="w-full grid lg:grid-cols-2 gap-10 items-center">
           <div className="pointer-events-auto">
-            <motion.h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-2 leading-tight" variants={itemVariants}>
-              Hi, I'm <span className="text-transparent bg-clip-text bg-gradient-to-r from-neutral-100 to-neutral-500">Devansh</span>
+            <motion.h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-white mb-4 leading-tight" variants={itemVariants}>
+              I build AI systems<br className="hidden md:block" /> that{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-neutral-100 to-neutral-500">ship.</span>
             </motion.h1>
-            <motion.p className="text-gray-300 max-w-2xl mb-8 text-lg md:text-xl leading-relaxed" variants={itemVariants}>
-              I’m a Computer Science student and AI developer passionate about building systems where logic meets emotion.
-              <br className="hidden md:block" />
-              I craft AI-driven experiences that connect and inspire.
+            <motion.p className="text-gray-300 max-w-2xl mb-6 text-lg md:text-xl leading-relaxed" variants={itemVariants}>
+              From emotion-aware music players to emergency vehicle platforms — I take AI products from zero to production.
+              Currently Tech Lead at SkillSync, building recommendation engines that serve 1,000+ students.
             </motion.p>
+
+            {/* Credibility badges */}
+            <motion.div className="flex flex-wrap gap-2 mb-8" variants={itemVariants}>
+              {[
+                '🏆 3rd — National Patent Conclave',
+                '📚 Published Author',
+                '🚀 CEO, Torq (Startup)',
+                '🎓 B.Tech CSE (AIML)'
+              ].map((badge) => (
+                <span
+                  key={badge}
+                  className="px-3 py-1 text-xs rounded-full border border-white/20 text-gray-300 bg-white/5"
+                >
+                  {badge}
+                </span>
+              ))}
+            </motion.div>
 
             <motion.div className="flex flex-col sm:flex-row items-center gap-4" variants={itemVariants}>
               <Button
@@ -93,15 +94,15 @@ const Hero = () => {
                 className="bg-white hover:bg-neutral-200 text-black font-semibold px-8 h-12"
                 onClick={() => window.open('mailto:work.devansh.datta@gmail.com')}
               >
-                Get in touch
+                Get in Touch
               </Button>
               <Button
                 variant="outline"
                 size="lg"
                 className="border-white/30 text-white hover:bg-white hover:text-black px-8 h-12"
-                onClick={scrollToAbout}
+                onClick={scrollToProjects}
               >
-                Learn more
+                View Projects
               </Button>
             </motion.div>
 
@@ -111,51 +112,44 @@ const Hero = () => {
                 href="https://www.linkedin.com/in/devansh-datta06"
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center justify-center w-11 h-11 rounded-full border border-white/20 text-white hover:bg-white hover:text-black transition-all"
+                className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-white/20 text-white hover:bg-white hover:text-black transition-all"
                 title="LinkedIn"
               >
-                <Linkedin className="w-5 h-5" />
+                <Linkedin className="w-4 h-4" />
               </a>
               <a
                 href="https://github.com/Devansh5150"
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center justify-center w-11 h-11 rounded-full border border-white/20 text-white hover:bg-white hover:text-black transition-all"
+                className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-white/20 text-white hover:bg-white hover:text-black transition-all"
                 title="GitHub"
               >
-                <Github className="w-5 h-5" />
+                <Github className="w-4 h-4" />
               </a>
               <a
                 href="mailto:work.devansh.datta@gmail.com"
-                className="inline-flex items-center justify-center w-11 h-11 rounded-full border border-white/20 text-white hover:bg-white hover:text-black transition-all"
+                className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-white/20 text-white hover:bg-white hover:text-black transition-all"
                 title="Email"
               >
-                <Mail className="w-5 h-5" />
+                <Mail className="w-4 h-4" />
               </a>
               <a
                 href="https://www.instagram.com/devansh.datta/"
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center justify-center w-11 h-11 rounded-full border border-white/20 text-white hover:bg-white hover:text-black transition-all"
+                className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-white/20 text-white hover:bg-white hover:text-black transition-all"
                 title="Instagram"
               >
-                <Instagram className="w-5 h-5" />
+                <Instagram className="w-4 h-4" />
               </a>
               <a
                 href="https://www.youtube.com/@devanshdatta"
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center justify-center w-11 h-11 rounded-full border border-white/20 text-white hover:bg-white hover:text-black transition-all"
+                className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-white/20 text-white hover:bg-white hover:text-black transition-all"
                 title="YouTube"
               >
-                <Youtube className="w-5 h-5" />
-              </a>
-              <a
-                href="tel:9871993246"
-                className="inline-flex items-center justify-center w-11 h-11 rounded-full border border-white/20 text-white hover:bg-white hover:text-black transition-all"
-                title="Phone"
-              >
-                <Phone className="w-5 h-5" />
+                <Youtube className="w-4 h-4" />
               </a>
             </motion.div>
           </div>
