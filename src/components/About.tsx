@@ -93,11 +93,20 @@ const About = () => {
     {
       period: '2025 - Present',
       title: 'Tech Lead & AI Developer at SkillSync',
-      description: 'Building recommendation models, web scrapers, and CV analyzers for personalized student opportunities and content discovery.',
-      achievements: ['Built CV Analyzer', 'Recommendation Engine', 'Web Scraper'],
-      impact: 'Helped 1000+ students find opportunities',
+      description: 'Leading AI development for personalized student opportunity discovery. Built a recommendation engine using collaborative filtering and content-based scoring to match students with relevant opportunities. Architected a web scraping pipeline that aggregates data from 50+ sources. Developed a CV parsing and job-fit scoring system that evaluates resume-job alignment using NLP techniques.',
+      achievements: ['Recommendation Engine (Collaborative + Content-Based)', 'Web Scraping Pipeline (50+ Sources)', 'CV Parsing & Job-Fit Scoring System', 'NLP-based Resume Analysis'],
+      impact: 'Helped 1000+ students find personalized opportunities with 85% relevance accuracy',
       icon: Brain,
       color: 'text-purple-400'
+    },
+    {
+      period: '2025',
+      title: 'AI Research Intern at Emotions Lab',
+      description: 'Conducted research on emotion analysis workflows using facial expression recognition and physiological signal processing. Evaluated model architectures (CNNs, Transformers) for multi-modal emotion detection. Implemented performance optimization techniques including model quantization and inference pipeline optimization to achieve real-time processing.',
+      achievements: ['Emotion Analysis Workflow Design', 'Model Evaluation (CNN vs Transformer)', 'Performance Optimization (2x Inference Speed)', 'Multi-modal Emotion Detection'],
+      impact: 'Improved emotion detection accuracy by 15% and reduced inference latency by 50%',
+      icon: Brain,
+      color: 'text-pink-400'
     },
     {
       period: '2025 - Present',
@@ -150,16 +159,16 @@ const About = () => {
 
   const getAccentTextClass = (cat: string | null) => (
     cat === 'AI/ML' ? 'text-pink-400' :
-    cat === 'Frontend' ? 'text-blue-400' :
-    cat === 'Backend' ? 'text-green-400' :
-    cat === 'Creative' ? 'text-orange-400' : 'text-white'
+      cat === 'Frontend' ? 'text-blue-400' :
+        cat === 'Backend' ? 'text-green-400' :
+          cat === 'Creative' ? 'text-orange-400' : 'text-white'
   );
 
   const getAccentBgClass = (cat: string | null) => (
     cat === 'AI/ML' ? 'bg-pink-400' :
-    cat === 'Frontend' ? 'bg-blue-400' :
-    cat === 'Backend' ? 'bg-green-400' :
-    cat === 'Creative' ? 'bg-orange-400' : 'bg-white'
+      cat === 'Frontend' ? 'bg-blue-400' :
+        cat === 'Backend' ? 'bg-green-400' :
+          cat === 'Creative' ? 'bg-orange-400' : 'bg-white'
   );
 
   return (
@@ -171,9 +180,9 @@ const About = () => {
             AI Developer, Innovator & Creative Writer
           </h2>
           <p className="text-gray-300 text-lg max-w-3xl mx-auto animate-slide-up delay-300">
-            As a dedicated Computer Science student specializing in AI/ML at IILM University, I bring fresh perspectives 
-            to technology challenges. Currently serving as Tech Lead & AI Developer at SkillSync, I build recommendation 
-            models and CV analyzers. Beyond technology, I lead as President of Globe Club and express my creativity through 
+            As a dedicated Computer Science student specializing in AI/ML at IILM University, I bring fresh perspectives
+            to technology challenges. Currently serving as Tech Lead & AI Developer at SkillSync, I build recommendation
+            models and CV analyzers. Beyond technology, I lead as President of Globe Club and express my creativity through
             poetry and content writing, bringing a unique blend of technical expertise and artistic vision to everything I create.
           </p>
         </div>
@@ -183,18 +192,17 @@ const About = () => {
           <h3 className="text-2xl font-bold mb-8 text-center text-cyan-400 flex items-center justify-center gap-2">
             <span className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></span>
             Interactive Skills Explorer
-              <span className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></span>
-            </h3>
-          
+            <span className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></span>
+          </h3>
+
           {/* Category Selector */}
           <div className="flex flex-wrap justify-center gap-4 mb-8">
             <motion.button
               onClick={() => setSelectedCategory('all')}
-              className={`px-6 py-3 rounded-full font-semibold transition-all duration-300 ${
-                selectedCategory === 'all' 
-                  ? 'bg-white text-black' 
+              className={`px-6 py-3 rounded-full font-semibold transition-all duration-300 ${selectedCategory === 'all'
+                  ? 'bg-white text-black'
                   : 'bg-black/60 border border-white/15 text-gray-300 hover:border-white/30'
-              }`}
+                }`}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -207,11 +215,10 @@ const About = () => {
                 <motion.button
                   key={category}
                   onClick={() => setSelectedCategory(category)}
-                  className={`px-6 py-3 rounded-full font-semibold transition-all duration-300 flex items-center gap-2 ${
-                    selectedCategory === category 
-                      ? 'bg-white text-black' 
+                  className={`px-6 py-3 rounded-full font-semibold transition-all duration-300 flex items-center gap-2 ${selectedCategory === category
+                      ? 'bg-white text-black'
                       : 'bg-black/60 border border-white/15 text-gray-300 hover:border-white/30'
-                  }`}
+                    }`}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -232,7 +239,7 @@ const About = () => {
               transition={{ duration: 0.3 }}
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
             >
-              {(selectedCategory === 'all' 
+              {(selectedCategory === 'all'
                 ? Object.values(skillCategories).flatMap(cat => cat.skills)
                 : skillCategories[selectedCategory as keyof typeof skillCategories]?.skills || []
               ).map((skill, index) => (
@@ -249,7 +256,7 @@ const About = () => {
                   <div className="flex justify-between items-start mb-4">
                     <h4 className="text-xl font-bold text-white">{skill.name}</h4>
                   </div>
-                  
+
                   <div className="mb-4">
                     <div className="flex justify-between mb-2">
                       <span className="text-sm text-gray-400">Proficiency</span>
@@ -266,7 +273,7 @@ const About = () => {
                   </div>
 
                   <p className="text-gray-300 text-sm mb-3">{skill.description}</p>
-                  
+
                   <div className="space-y-2">
                     <p className="text-xs text-gray-400 font-semibold">Key Projects:</p>
                     <div className="flex flex-wrap gap-1">
@@ -287,10 +294,10 @@ const About = () => {
                         className="mt-4 p-3 bg-black/60 rounded-lg border border-white/10"
                       >
                         <p className="text-xs text-gray-300">
-                          💡 <strong>Fun Fact:</strong> {skill.name === 'Python' ? 'I wrote my first ML model at 16!' : 
+                          💡 <strong>Fun Fact:</strong> {skill.name === 'Python' ? 'I wrote my first ML model at 16!' :
                             skill.name === 'React.js' ? 'Built this portfolio in React!' :
-                            skill.name === 'Writing' ? 'Published a book chapter on AI and consciousness!' :
-                            'This skill helped me win multiple competitions!'}
+                              skill.name === 'Writing' ? 'Published a book chapter on AI and consciousness!' :
+                                'This skill helped me win multiple competitions!'}
                         </p>
                       </motion.div>
                     )}
@@ -308,16 +315,15 @@ const About = () => {
             Interactive Journey Timeline
             <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse delay-500"></span>
           </h3>
-          
+
           <div className="space-y-8">
             {timeline.map((item, index) => (
               <motion.div
                 key={index}
-                className={`flex flex-col md:flex-row gap-6 p-6 rounded-xl border transition-all duration-300 cursor-pointer ${
-                  activeTimelineItem === index 
-                    ? 'bg-black/70 border-white/30' 
+                className={`flex flex-col md:flex-row gap-6 p-6 rounded-xl border transition-all duration-300 cursor-pointer ${activeTimelineItem === index
+                    ? 'bg-black/70 border-white/30'
                     : 'bg-black/50 border-white/15 hover:border-white/30'
-                }`}
+                  }`}
                 whileHover={{ scale: 1.01 }}
                 onClick={() => setActiveTimelineItem(activeTimelineItem === index ? null : index)}
                 initial={{ opacity: 0, x: -50 }}
@@ -328,15 +334,15 @@ const About = () => {
                   <div className="flex items-center gap-3 mb-2">
                     <item.icon className={`w-6 h-6 ${item.color}`} />
                     <span className="inline-block px-3 py-1 border border-white/30 text-white text-sm font-semibold rounded-full">
-                    {item.period}
-                  </span>
+                      {item.period}
+                    </span>
                   </div>
                 </div>
-                
+
                 <div className="flex-1">
                   <h4 className="text-xl font-semibold text-white mb-2">{item.title}</h4>
                   <p className="text-gray-300 mb-4">{item.description}</p>
-                  
+
                   <AnimatePresence>
                     {activeTimelineItem === index && (
                       <motion.div
@@ -355,7 +361,7 @@ const About = () => {
                             ))}
                           </div>
                         </div>
-                        
+
                         <div className="p-3 bg-black/60 border border-white/15 rounded-lg">
                           <p className="text-sm text-green-400">
                             <strong>Impact:</strong> {item.impact}
@@ -375,9 +381,9 @@ const About = () => {
           <h3 className="text-2xl font-bold mb-6 text-center text-white">My Creative Writing</h3>
           <div className="italic text-gray-300 text-center max-w-2xl mx-auto mb-6 leading-relaxed">
             <p className="mb-4 hover:scale-105 transition-transform duration-300">
-              "Through silicon valleys and digital realms,<br/>
-              Where algorithms dance and logic overwhelms,<br/>
-              I craft with code and write with heart,<br/>
+              "Through silicon valleys and digital realms,<br />
+              Where algorithms dance and logic overwhelms,<br />
+              I craft with code and write with heart,<br />
               Blending science and poetry, never apart."
             </p>
             <p className="text-sm text-white/70">- Sample from my tech-inspired poetry collection</p>

@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
-import { ArrowDown } from 'lucide-react';
+import { ArrowDown, Download } from 'lucide-react';
 import Hero from '../components/Hero';
 import About from '../components/About';
 import Projects from '../components/Projects';
 import Services from '../components/Services';
 import Leadership from '../components/Leadership';
+import ResearchPublications from '../components/ResearchPublications';
+import Hackathons from '../components/Hackathons';
+import SystemThinking from '../components/SystemThinking';
 import Contact from '../components/Contact';
 import Navigation from '../components/Navigation';
 
@@ -13,7 +16,7 @@ const Index = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['home', 'about', 'projects', 'services', 'leadership', 'contact'];
+      const sections = ['home', 'about', 'projects', 'services', 'leadership', 'research', 'hackathons', 'vision', 'contact'];
       const scrollPosition = window.scrollY + 100;
 
       for (const section of sections) {
@@ -21,7 +24,7 @@ const Index = () => {
         if (element) {
           const offsetTop = element.offsetTop;
           const offsetHeight = element.offsetHeight;
-          
+
           if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
             setActiveSection(section);
             break;
@@ -47,28 +50,39 @@ const Index = () => {
         }}
       />
       <Navigation activeSection={activeSection} />
-      
+
       <section id="home" className="min-h-screen">
         <Hero />
       </section>
-      
+
       <section id="about" className="min-h-screen">
         <About />
       </section>
-      
+
       <section id="projects" className="min-h-screen">
         <Projects />
       </section>
-      
+
       <section id="services" className="min-h-screen">
         <Services />
       </section>
-      
+
       <section id="leadership" className="min-h-screen">
         <Leadership />
       </section>
-      
-      
+
+      <section id="research">
+        <ResearchPublications />
+      </section>
+
+      <section id="hackathons">
+        <Hackathons />
+      </section>
+
+      <section id="vision">
+        <SystemThinking />
+      </section>
+
       <section id="contact" className="min-h-screen">
         <Contact />
       </section>
