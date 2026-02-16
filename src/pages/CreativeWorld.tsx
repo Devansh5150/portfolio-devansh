@@ -160,7 +160,6 @@ function Island({ data, onApproach }: { data: IslandData; onApproach: (id: strin
                 color="white"
                 anchorX="center"
                 anchorY="middle"
-                font="/fonts/inter-bold.woff"
                 outlineWidth={0.04}
                 outlineColor="black"
             >
@@ -253,17 +252,20 @@ function PlayerController({ keys, joystick }: { keys: Record<string, boolean>; j
 
 function Particles() {
     const count = 200;
-    const positions = useMemo(() => {
+    const ref = useRef<THREE.Points>(null);
+
+    const geom = useMemo(() => {
+        const g = new THREE.BufferGeometry();
         const arr = new Float32Array(count * 3);
         for (let i = 0; i < count; i++) {
             arr[i * 3] = (Math.random() - 0.5) * 50;
             arr[i * 3 + 1] = Math.random() * 12 + 1;
             arr[i * 3 + 2] = (Math.random() - 0.5) * 50;
         }
-        return arr;
+        g.setAttribute('position', new THREE.BufferAttribute(arr, 3));
+        return g;
     }, []);
 
-    const ref = useRef<THREE.Points>(null);
     useFrame(({ clock }) => {
         if (ref.current) {
             ref.current.rotation.y = clock.getElapsedTime() * 0.02;
@@ -271,13 +273,7 @@ function Particles() {
     });
 
     return (
-        <points ref={ref}>
-            <bufferGeometry>
-                <bufferAttribute
-                    attach="attributes-position"
-                    args={[positions, 3]}
-                />
-            </bufferGeometry>
+        <points ref={ref} geometry={geom}>
             <pointsMaterial size={0.08} color="#88aaff" transparent opacity={0.6} sizeAttenuation />
         </points>
     );
@@ -394,7 +390,7 @@ export default function CreativeWorld() {
                 gl={{ antialias: true, alpha: false }}
             >
                 <color attach="background" args={['#050510']} />
-                <fog attach="fog" args={['#050510', 15, 45]} />
+                <fog attach="fog" args={['#050510', 20, 80]} />
 
                 {/* Lighting */}
                 <ambientLight intensity={0.3} />
