@@ -1,11 +1,13 @@
 import { Button } from './ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { motion } from 'framer-motion';
-import { Github, Linkedin, Mail, Instagram, Youtube } from 'lucide-react';
+import { Github, Linkedin, Mail, Instagram, Youtube, Globe } from 'lucide-react';
 import { SplineScene } from './ui/splite';
+import { useNavigate } from 'react-router-dom';
 import { Spotlight } from './ui/spotlight';
 
 const Hero = () => {
+  const navigate = useNavigate();
   const scrollToProjects = () => {
     const el = document.getElementById('projects');
     if (el) el.scrollIntoView({ behavior: 'smooth' });
@@ -95,6 +97,14 @@ const Hero = () => {
                 onClick={() => window.open('mailto:work.devansh.datta@gmail.com')}
               >
                 Get in Touch
+              </Button>
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-indigo-500 to-cyan-500 hover:from-indigo-600 hover:to-cyan-600 text-white font-semibold px-8 h-12 gap-2"
+                onClick={() => navigate('/world')}
+              >
+                <Globe className="w-5 h-5" />
+                Explore My World
               </Button>
               <Button
                 variant="outline"
