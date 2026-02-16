@@ -6,6 +6,9 @@ import * as THREE from 'three';
 
 /* ───────────────────── PROJECT DATA ───────────────────── */
 
+// Minecraft-style pixel font from Google Fonts
+const PIXEL_FONT = 'https://fonts.gstatic.com/s/pressstart2p/v15/e3t4euO8T-267oIAQAu6jDQyK0nSgPJE4580w.woff2';
+
 const TOWERS = [
     {
         id: 'torq',
@@ -289,22 +292,24 @@ function ObsidianTower({
             {/* Label just above the door */}
             <Suspense fallback={null}>
                 <Text
-                    position={[0, 3, 3.1]}
-                    fontSize={0.45}
+                    position={[0, 3.2, 3.1]}
+                    fontSize={0.32}
                     color="white"
                     anchorX="center"
                     anchorY="middle"
-                    outlineWidth={0.03}
+                    font={PIXEL_FONT}
+                    outlineWidth={0.02}
                     outlineColor="#1a0a2e"
                 >
                     {data.label}
                 </Text>
                 <Text
-                    position={[0, 2.4, 3.1]}
-                    fontSize={0.22}
+                    position={[0, 2.5, 3.1]}
+                    fontSize={0.14}
                     color={data.color}
                     anchorX="center"
                     anchorY="middle"
+                    font={PIXEL_FONT}
                 >
                     {data.summary}
                 </Text>
