@@ -1,16 +1,16 @@
 import { useRef, useState, useEffect, useCallback, useMemo, Suspense } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Text, Stars } from '@react-three/drei';
+import { Text } from '@react-three/drei';
 import { useNavigate } from 'react-router-dom';
 import * as THREE from 'three';
 
 const PIXEL_FONT = 'https://fonts.gstatic.com/s/pressstart2p/v15/e3t4euO8T-267oIAQAu6jDQyK0nSgPJE4580w.woff2';
 
-/* ─── PROJECT / GARAGE DATA ─── */
+/* ─── GARAGE DATA ─── */
 
 const GARAGES = [
     {
-        id: 'torq', num: '01', label: 'TORQ', emoji: '🚗', color: '#60a5fa',
+        id: 'torq', num: '01', label: 'TORQ', emoji: '🚗', color: '#2563eb',
         summary: 'AI Emergency Vehicle Support',
         description: 'On-demand roadside assistance platform connecting stranded drivers with service providers through AI matching and real-time tracking.',
         problem: 'No unified real-time platform for emergency roadside service in remote areas.',
@@ -20,7 +20,7 @@ const GARAGES = [
         features: ['Real-time GPS tracking', 'AI chatbot (OpenAI)', 'Razorpay escrow payments', 'Multi-vendor marketplace', 'Emergency SOS routing', 'Firebase push notifications'],
     },
     {
-        id: 'tatvam', num: '02', label: 'TATVAM', emoji: '🧘', color: '#a78bfa',
+        id: 'tatvam', num: '02', label: 'TATVAM', emoji: '🧘', color: '#7c3aed',
         summary: 'LLM Contextual Mapping Engine',
         description: 'LLM-powered platform connecting ancient philosophical texts with modern AI through RAG pipelines and ethical guardrails.',
         problem: 'Ancient philosophical knowledge is scattered and existing AI lacks cultural sensitivity.',
@@ -30,7 +30,7 @@ const GARAGES = [
         features: ['RAG pipeline with LangChain', 'Ethical guardrails', 'Subscription tiers (Stripe)', 'Vector DB semantic search', 'Personalized guidance', 'Serverless AWS deployment'],
     },
     {
-        id: 'minto', num: '03', label: 'MINTO', emoji: '📦', color: '#34d399',
+        id: 'minto', num: '03', label: 'MINTO', emoji: '📦', color: '#059669',
         summary: 'Last-Mile Delivery Platform',
         description: 'Delivery platform empowering Tier-2/3 city vendors by eliminating dark-store dependency.',
         problem: 'Small vendors in smaller cities can\'t afford dark-store logistics.',
@@ -40,7 +40,7 @@ const GARAGES = [
         features: ['Vendor onboarding system', 'Real-time order mapping', 'Analytics dashboard', 'Proximity-based matching', 'Customer tracking', 'Inventory management'],
     },
     {
-        id: 'mood', num: '04', label: 'MOOD', emoji: '🎵', color: '#f472b6',
+        id: 'mood', num: '04', label: 'MOOD', emoji: '🎵', color: '#db2777',
         summary: 'Emotion-Based Spotify Player',
         description: 'Real-time emotion detection via webcam → dynamic Spotify playlist generation using DeepFace.',
         problem: 'Music recommendation relies on history, not real-time emotional state.',
@@ -50,7 +50,7 @@ const GARAGES = [
         features: ['Real-time facial emotion detection', 'Dynamic Spotify playlist', 'Voice feedback', 'Multi-language support', 'Emotion history tracking', 'Cross-platform app'],
     },
     {
-        id: 'skillsync', num: '05', label: 'SKILLSYNC', emoji: '🧠', color: '#c084fc',
+        id: 'skillsync', num: '05', label: 'SKILLSYNC', emoji: '🧠', color: '#9333ea',
         summary: 'AI Opportunity Matching Engine',
         description: 'AI-powered student opportunity matching — recommendation engine serving 1,000+ students.',
         problem: 'Students struggle to find relevant opportunities across fragmented platforms.',
@@ -60,7 +60,7 @@ const GARAGES = [
         features: ['Recommendation engine', 'CV parsing & job-fit scoring', 'Web scraping (50+ sources)', 'Collaborative filtering', 'Content-based scoring', 'NLP resume analysis'],
     },
     {
-        id: 'research', num: '06', label: 'RESEARCH', emoji: '📚', color: '#22d3ee',
+        id: 'research', num: '06', label: 'RESEARCH', emoji: '📚', color: '#0891b2',
         summary: 'Published — AI and the Soul',
         description: 'Exploring the intersections of AI, creativity, and consciousness. Examines how generative AI challenges authorship.',
         problem: 'The philosophical implications of AI creativity remain underexplored.',
@@ -80,62 +80,63 @@ const PIT_LANE_START_Z = PIT_LANE_LENGTH / 2;
 function PitLane() {
     return (
         <group>
-            {/* Main pit lane asphalt */}
+            {/* Pit lane asphalt — medium grey */}
             <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]} receiveShadow>
                 <planeGeometry args={[14, PIT_LANE_LENGTH + 20]} />
-                <meshStandardMaterial color="#1c1c1c" roughness={0.85} />
+                <meshStandardMaterial color="#6b6b6b" roughness={0.9} />
             </mesh>
 
-            {/* White pit lane boundary lines */}
+            {/* White boundary lines */}
             <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-6.5, 0.005, 0]}>
-                <planeGeometry args={[0.15, PIT_LANE_LENGTH + 20]} />
-                <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={0.1} roughness={0.6} />
+                <planeGeometry args={[0.18, PIT_LANE_LENGTH + 20]} />
+                <meshStandardMaterial color="#ffffff" roughness={0.4} />
             </mesh>
             <mesh rotation={[-Math.PI / 2, 0, 0]} position={[6.5, 0.005, 0]}>
-                <planeGeometry args={[0.15, PIT_LANE_LENGTH + 20]} />
-                <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={0.1} roughness={0.6} />
+                <planeGeometry args={[0.18, PIT_LANE_LENGTH + 20]} />
+                <meshStandardMaterial color="#ffffff" roughness={0.4} />
             </mesh>
 
             {/* Center dashed line */}
             {Array.from({ length: Math.ceil(PIT_LANE_LENGTH / 3) }).map((_, i) => (
                 <mesh key={i} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.005, PIT_LANE_START_Z - i * 3]}>
-                    <planeGeometry args={[0.1, 1.5]} />
-                    <meshStandardMaterial color="#444444" roughness={0.7} />
+                    <planeGeometry args={[0.12, 1.5]} />
+                    <meshStandardMaterial color="#cccccc" roughness={0.5} />
                 </mesh>
             ))}
 
-            {/* Pit box markings — numbered bays */}
+            {/* Pit box floor markings */}
             {GARAGES.map((g, i) => {
                 const z = PIT_LANE_START_Z - 5 - i * GARAGE_SPACING;
                 return (
                     <group key={g.id}>
-                        {/* Pit box rectangle outline on ground */}
                         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-3, 0.006, z]}>
-                            <planeGeometry args={[5, 0.08]} />
-                            <meshStandardMaterial color={g.color} emissive={g.color} emissiveIntensity={0.2} />
+                            <planeGeometry args={[5, 0.1]} />
+                            <meshStandardMaterial color={g.color} roughness={0.5} />
                         </mesh>
                         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-3, 0.006, z + GARAGE_SPACING / 2 - 0.5]}>
-                            <planeGeometry args={[5, 0.08]} />
-                            <meshStandardMaterial color={g.color} emissive={g.color} emissiveIntensity={0.2} />
+                            <planeGeometry args={[5, 0.1]} />
+                            <meshStandardMaterial color={g.color} roughness={0.5} />
                         </mesh>
                     </group>
                 );
             })}
 
-            {/* Outer area — dark ground extending beyond */}
-            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[20, -0.02, 0]}>
-                <planeGeometry args={[30, PIT_LANE_LENGTH + 40]} />
-                <meshStandardMaterial color="#0f0f0f" roughness={0.95} />
+            {/* Grass areas — left of garages */}
+            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-18, -0.02, 0]}>
+                <planeGeometry args={[20, PIT_LANE_LENGTH + 40]} />
+                <meshStandardMaterial color="#4a7a3a" roughness={0.95} />
             </mesh>
-            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-20, -0.02, 0]}>
-                <planeGeometry args={[30, PIT_LANE_LENGTH + 40]} />
-                <meshStandardMaterial color="#0f0f0f" roughness={0.95} />
+
+            {/* Grass — right of track */}
+            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[32, -0.02, 0]}>
+                <planeGeometry args={[20, PIT_LANE_LENGTH + 40]} />
+                <meshStandardMaterial color="#4a7a3a" roughness={0.95} />
             </mesh>
         </group>
     );
 }
 
-/* ═══════════════ GARAGE BAY ═══════════════ */
+/* ═══════════════ GARAGE ═══════════════ */
 
 function Garage({
     data,
@@ -147,18 +148,10 @@ function Garage({
     onApproach: (id: string | null) => void;
 }) {
     const wasNear = useRef(false);
-    const ledRef = useRef<THREE.Mesh>(null);
-
     const z = PIT_LANE_START_Z - 5 - index * GARAGE_SPACING;
-    const x = -7.5; // garages on the left side
+    const x = -7.5;
 
-    useFrame(({ clock, camera }) => {
-        // LED strip pulse
-        if (ledRef.current) {
-            const mat = ledRef.current.material as THREE.MeshStandardMaterial;
-            mat.emissiveIntensity = 0.5 + Math.sin(clock.getElapsedTime() * 1.5 + index) * 0.2;
-        }
-        // Proximity check
+    useFrame(({ camera }) => {
         const dist = camera.position.distanceTo(new THREE.Vector3(-3, 0, z));
         const isNear = dist < 5;
         if (isNear !== wasNear.current) {
@@ -169,46 +162,52 @@ function Garage({
 
     return (
         <group position={[x, 0, z]}>
-            {/* Back wall */}
+            {/* Back wall — light concrete */}
             <mesh position={[0, 2.5, 0]}>
                 <boxGeometry args={[0.3, 5, GARAGE_SPACING - 0.5]} />
-                <meshStandardMaterial color="#1a1a1a" roughness={0.8} metalness={0.2} />
+                <meshStandardMaterial color="#e8e8e8" roughness={0.7} />
             </mesh>
 
             {/* Side walls */}
             <mesh position={[2.5, 2.5, (GARAGE_SPACING - 0.5) / 2]}>
                 <boxGeometry args={[5, 5, 0.2]} />
-                <meshStandardMaterial color="#181818" roughness={0.8} metalness={0.2} />
+                <meshStandardMaterial color="#e0e0e0" roughness={0.7} />
             </mesh>
             <mesh position={[2.5, 2.5, -(GARAGE_SPACING - 0.5) / 2]}>
                 <boxGeometry args={[5, 5, 0.2]} />
-                <meshStandardMaterial color="#181818" roughness={0.8} metalness={0.2} />
+                <meshStandardMaterial color="#e0e0e0" roughness={0.7} />
             </mesh>
 
             {/* Ceiling */}
             <mesh position={[2.5, 5, 0]}>
                 <boxGeometry args={[5.3, 0.2, GARAGE_SPACING - 0.3]} />
-                <meshStandardMaterial color="#111111" roughness={0.9} />
+                <meshStandardMaterial color="#d0d0d0" roughness={0.8} />
             </mesh>
 
-            {/* Floor inside garage — slightly lighter */}
+            {/* Floor inside */}
             <mesh rotation={[-Math.PI / 2, 0, 0]} position={[2.5, 0.01, 0]}>
                 <planeGeometry args={[5, GARAGE_SPACING - 0.5]} />
-                <meshStandardMaterial color="#222222" roughness={0.8} />
+                <meshStandardMaterial color="#aaaaaa" roughness={0.7} />
             </mesh>
 
-            {/* LED color strip along top of opening */}
-            <mesh ref={ledRef} position={[5, 4.85, 0]}>
-                <boxGeometry args={[0.15, 0.15, GARAGE_SPACING - 0.8]} />
-                <meshStandardMaterial color={data.color} emissive={data.color} emissiveIntensity={0.6} />
+            {/* Team color strip along top */}
+            <mesh position={[5, 4.85, 0]}>
+                <boxGeometry args={[0.2, 0.25, GARAGE_SPACING - 0.6]} />
+                <meshStandardMaterial color={data.color} roughness={0.3} />
+            </mesh>
+
+            {/* Team color stripe on back wall */}
+            <mesh position={[0.2, 3.5, 0]}>
+                <boxGeometry args={[0.05, 0.4, GARAGE_SPACING - 1]} />
+                <meshStandardMaterial color={data.color} roughness={0.3} />
             </mesh>
 
             {/* Team number plate */}
             <Suspense fallback={null}>
                 <Text
-                    position={[0.2, 4, 0]}
+                    position={[0.25, 4, 0]}
                     rotation={[0, Math.PI / 2, 0]}
-                    fontSize={0.8}
+                    fontSize={0.7}
                     color={data.color}
                     anchorX="center"
                     anchorY="middle"
@@ -218,13 +217,13 @@ function Garage({
                 </Text>
             </Suspense>
 
-            {/* Team name on back wall */}
+            {/* Team name */}
             <Suspense fallback={null}>
                 <Text
-                    position={[0.2, 2.5, 0]}
+                    position={[0.25, 2.5, 0]}
                     rotation={[0, Math.PI / 2, 0]}
-                    fontSize={0.35}
-                    color="white"
+                    fontSize={0.32}
+                    color="#333333"
                     anchorX="center"
                     anchorY="middle"
                     font={PIXEL_FONT}
@@ -232,10 +231,10 @@ function Garage({
                     {data.label}
                 </Text>
                 <Text
-                    position={[0.2, 1.8, 0]}
+                    position={[0.25, 1.9, 0]}
                     rotation={[0, Math.PI / 2, 0]}
-                    fontSize={0.12}
-                    color="#666666"
+                    fontSize={0.11}
+                    color="#777777"
                     anchorX="center"
                     anchorY="middle"
                     font={PIXEL_FONT}
@@ -244,25 +243,22 @@ function Garage({
                 </Text>
             </Suspense>
 
-            {/* Interior light */}
-            <pointLight position={[3, 4.5, 0]} color="#ffffff" intensity={0.8} distance={8} />
-
-            {/* Tire stack inside garage */}
+            {/* Tire stacks */}
             {[-1.5, 1.5].map((tz) => (
                 <group key={tz} position={[1, 0, tz]}>
                     {[0, 0.35, 0.7].map((ty) => (
                         <mesh key={ty} position={[0, ty + 0.17, 0]} rotation={[Math.PI / 2, 0, 0]}>
                             <torusGeometry args={[0.25, 0.12, 8, 12]} />
-                            <meshStandardMaterial color="#111111" roughness={0.95} />
+                            <meshStandardMaterial color="#222222" roughness={0.95} />
                         </mesh>
                     ))}
                 </group>
             ))}
 
-            {/* Equipment box */}
+            {/* Equipment box — red toolbox */}
             <mesh position={[1.5, 0.4, -2.5]}>
                 <boxGeometry args={[1, 0.8, 0.6]} />
-                <meshStandardMaterial color="#cc0000" roughness={0.5} metalness={0.4} />
+                <meshStandardMaterial color="#cc2222" roughness={0.4} metalness={0.3} />
             </mesh>
         </group>
     );
@@ -273,30 +269,30 @@ function Garage({
 function PitWall() {
     return (
         <group>
-            {/* Concrete wall on the right side — separating pit from track */}
+            {/* Concrete pit wall */}
             <mesh position={[6, 0.5, 0]}>
                 <boxGeometry args={[0.6, 1, PIT_LANE_LENGTH + 10]} />
-                <meshStandardMaterial color="#333333" roughness={0.9} />
+                <meshStandardMaterial color="#b0b0b0" roughness={0.85} />
             </mesh>
-
-            {/* Safety lights along pit wall */}
-            {Array.from({ length: Math.ceil(PIT_LANE_LENGTH / 4) }).map((_, i) => (
-                <mesh key={i} position={[6, 1.1, PIT_LANE_START_Z - 2 - i * 4]}>
-                    <boxGeometry args={[0.12, 0.12, 0.12]} />
-                    <meshBasicMaterial color={i % 2 === 0 ? '#ff3333' : '#33ff33'} />
-                </mesh>
-            ))}
 
             {/* Top cap */}
             <mesh position={[6, 1.05, 0]}>
                 <boxGeometry args={[0.8, 0.1, PIT_LANE_LENGTH + 10]} />
-                <meshStandardMaterial color="#444444" roughness={0.7} metalness={0.3} />
+                <meshStandardMaterial color="#cccccc" roughness={0.6} />
             </mesh>
+
+            {/* Safety lights */}
+            {Array.from({ length: Math.ceil(PIT_LANE_LENGTH / 4) }).map((_, i) => (
+                <mesh key={i} position={[6, 1.15, PIT_LANE_START_Z - 2 - i * 4]}>
+                    <boxGeometry args={[0.1, 0.1, 0.1]} />
+                    <meshStandardMaterial color={i % 2 === 0 ? '#22cc22' : '#22cc22'} roughness={0.3} />
+                </mesh>
+            ))}
         </group>
     );
 }
 
-/* ═══════════════ TRACK (beyond pit wall) ═══════════════ */
+/* ═══════════════ TRACK ═══════════════ */
 
 function TrackSection() {
     return (
@@ -304,78 +300,72 @@ function TrackSection() {
             {/* Track asphalt */}
             <mesh rotation={[-Math.PI / 2, 0, 0]} position={[14, -0.01, 0]}>
                 <planeGeometry args={[16, PIT_LANE_LENGTH + 20]} />
-                <meshStandardMaterial color="#1e1e1e" roughness={0.85} />
+                <meshStandardMaterial color="#555555" roughness={0.88} />
             </mesh>
 
-            {/* Red-white curbs — inner (pit side) */}
+            {/* Red-white curbs — inner */}
             {Array.from({ length: Math.ceil(PIT_LANE_LENGTH / 2) }).map((_, i) => (
                 <mesh key={`c-${i}`} rotation={[-Math.PI / 2, 0, 0]} position={[7, 0.008, PIT_LANE_START_Z + 5 - i * 2]}>
-                    <planeGeometry args={[0.8, 1]} />
-                    <meshStandardMaterial color={i % 2 === 0 ? '#cc0000' : '#ffffff'} roughness={0.6} />
+                    <planeGeometry args={[0.9, 1]} />
+                    <meshStandardMaterial color={i % 2 === 0 ? '#dd1111' : '#ffffff'} roughness={0.5} />
                 </mesh>
             ))}
 
             {/* Outer curbs */}
             {Array.from({ length: Math.ceil(PIT_LANE_LENGTH / 2) }).map((_, i) => (
                 <mesh key={`o-${i}`} rotation={[-Math.PI / 2, 0, 0]} position={[22, 0.008, PIT_LANE_START_Z + 5 - i * 2]}>
-                    <planeGeometry args={[0.8, 1]} />
-                    <meshStandardMaterial color={i % 2 === 0 ? '#cc0000' : '#ffffff'} roughness={0.6} />
+                    <planeGeometry args={[0.9, 1]} />
+                    <meshStandardMaterial color={i % 2 === 0 ? '#dd1111' : '#ffffff'} roughness={0.5} />
                 </mesh>
             ))}
 
-            {/* White track lines */}
+            {/* White track edge lines */}
             <mesh rotation={[-Math.PI / 2, 0, 0]} position={[7.5, 0.006, 0]}>
-                <planeGeometry args={[0.12, PIT_LANE_LENGTH + 20]} />
-                <meshStandardMaterial color="#ffffff" roughness={0.6} />
+                <planeGeometry args={[0.15, PIT_LANE_LENGTH + 20]} />
+                <meshStandardMaterial color="#ffffff" roughness={0.4} />
             </mesh>
             <mesh rotation={[-Math.PI / 2, 0, 0]} position={[21.5, 0.006, 0]}>
-                <planeGeometry args={[0.12, PIT_LANE_LENGTH + 20]} />
-                <meshStandardMaterial color="#ffffff" roughness={0.6} />
+                <planeGeometry args={[0.15, PIT_LANE_LENGTH + 20]} />
+                <meshStandardMaterial color="#ffffff" roughness={0.4} />
             </mesh>
 
-            {/* Catch fence / barrier beyond track */}
-            <mesh position={[23, 1.5, 0]}>
-                <boxGeometry args={[0.3, 3, PIT_LANE_LENGTH + 20]} />
-                <meshStandardMaterial color="#555555" roughness={0.5} metalness={0.6} transparent opacity={0.4} />
+            {/* Gravel trap then barrier beyond track */}
+            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[23, -0.01, 0]}>
+                <planeGeometry args={[2, PIT_LANE_LENGTH + 20]} />
+                <meshStandardMaterial color="#c4a96a" roughness={0.95} />
+            </mesh>
+            {/* TecPro barrier */}
+            <mesh position={[24.2, 0.6, 0]}>
+                <boxGeometry args={[0.5, 1.2, PIT_LANE_LENGTH + 10]} />
+                <meshStandardMaterial color="#2255cc" roughness={0.6} />
             </mesh>
         </group>
     );
 }
 
-/* ═══════════════ FLOODLIGHTS ═══════════════ */
+/* ═══════════════ GRANDSTAND ═══════════════ */
 
-function FloodLights() {
-    const positions = useMemo(() => {
-        const lights: [number, number][] = [];
-        for (let i = 0; i < 8; i++) {
-            const z = PIT_LANE_START_Z - i * (PIT_LANE_LENGTH / 7);
-            lights.push([-4, z], [14, z]);
-        }
-        return lights;
-    }, []);
-
+function Grandstand() {
     return (
-        <group>
-            {positions.map(([x, z], i) => (
-                <group key={i} position={[x, 0, z]}>
-                    {/* Pole */}
-                    <mesh position={[0, 7, 0]}>
-                        <cylinderGeometry args={[0.08, 0.12, 14, 6]} />
-                        <meshStandardMaterial color="#333333" metalness={0.8} roughness={0.3} />
-                    </mesh>
-                    {/* Light head */}
-                    <mesh position={[0, 14.2, 0]}>
-                        <boxGeometry args={[1.2, 0.3, 0.5]} />
-                        <meshStandardMaterial color="#222222" metalness={0.7} roughness={0.3} />
-                    </mesh>
-                    {/* Light glow panel */}
-                    <mesh position={[0, 14, 0]}>
-                        <boxGeometry args={[1, 0.08, 0.4]} />
-                        <meshBasicMaterial color="#fff8e0" />
-                    </mesh>
-                    {/* Actual light */}
-                    <pointLight position={[0, 13.5, 0]} color="#fff0d0" intensity={3} distance={25} castShadow />
-                </group>
+        <group position={[28, 0, 0]}>
+            {/* Stepped seating */}
+            {Array.from({ length: 6 }).map((_, row) => (
+                <mesh key={row} position={[row * 1.2, row * 1, 0]}>
+                    <boxGeometry args={[1, 0.4, PIT_LANE_LENGTH * 0.6]} />
+                    <meshStandardMaterial color={row % 2 === 0 ? '#d0d0d0' : '#c0c0c0'} roughness={0.7} />
+                </mesh>
+            ))}
+            {/* Roof */}
+            <mesh position={[4, 7.5, 0]}>
+                <boxGeometry args={[10, 0.3, PIT_LANE_LENGTH * 0.65]} />
+                <meshStandardMaterial color="#eeeeee" roughness={0.5} />
+            </mesh>
+            {/* Support columns */}
+            {[-PIT_LANE_LENGTH * 0.28, 0, PIT_LANE_LENGTH * 0.28].map((z, i) => (
+                <mesh key={i} position={[7, 3.75, z]}>
+                    <cylinderGeometry args={[0.12, 0.12, 7.5, 6]} />
+                    <meshStandardMaterial color="#999999" metalness={0.5} roughness={0.3} />
+                </mesh>
             ))}
         </group>
     );
@@ -387,45 +377,42 @@ function Podium() {
     const z = PIT_LANE_START_Z - PIT_LANE_LENGTH + 2;
     return (
         <group position={[0, 0, z]}>
-            {/* P2 */}
+            {/* P2 — silver */}
             <mesh position={[-2, 0.4, 0]}>
                 <boxGeometry args={[1.8, 0.8, 1.8]} />
-                <meshStandardMaterial color="#c0c0c0" metalness={0.7} roughness={0.3} />
+                <meshStandardMaterial color="#c0c0c0" metalness={0.6} roughness={0.3} />
             </mesh>
             <Suspense fallback={null}>
-                <Text position={[-2, 0.85, 0.95]} fontSize={0.35} color="#333" anchorX="center" font={PIXEL_FONT}>P2</Text>
+                <Text position={[-2, 0.85, 0.95]} fontSize={0.3} color="#555" anchorX="center" font={PIXEL_FONT}>P2</Text>
             </Suspense>
 
-            {/* P1 — center, tallest */}
-            <mesh position={[0, 0.6, 0]}>
-                <boxGeometry args={[1.8, 1.2, 1.8]} />
-                <meshStandardMaterial color="#ffd700" metalness={0.8} roughness={0.2} />
+            {/* P1 — gold */}
+            <mesh position={[0, 0.65, 0]}>
+                <boxGeometry args={[1.8, 1.3, 1.8]} />
+                <meshStandardMaterial color="#ffd700" metalness={0.7} roughness={0.25} />
             </mesh>
             <Suspense fallback={null}>
-                <Text position={[0, 1.3, 0.95]} fontSize={0.35} color="#333" anchorX="center" font={PIXEL_FONT}>P1</Text>
+                <Text position={[0, 1.35, 0.95]} fontSize={0.3} color="#555" anchorX="center" font={PIXEL_FONT}>P1</Text>
             </Suspense>
 
-            {/* P3 */}
+            {/* P3 — bronze */}
             <mesh position={[2, 0.3, 0]}>
                 <boxGeometry args={[1.8, 0.6, 1.8]} />
-                <meshStandardMaterial color="#cd7f32" metalness={0.7} roughness={0.3} />
+                <meshStandardMaterial color="#cd7f32" metalness={0.6} roughness={0.3} />
             </mesh>
             <Suspense fallback={null}>
-                <Text position={[2, 0.65, 0.95]} fontSize={0.35} color="#333" anchorX="center" font={PIXEL_FONT}>P3</Text>
+                <Text position={[2, 0.65, 0.95]} fontSize={0.3} color="#555" anchorX="center" font={PIXEL_FONT}>P3</Text>
             </Suspense>
 
-            {/* Checkered flag behind podium */}
+            {/* Checkered backdrop */}
             {Array.from({ length: 8 }).map((_, row) =>
                 Array.from({ length: 6 }).map((_, col) => (
                     <mesh key={`${row}-${col}`} position={[-2.5 + col * 1, 2 + row * 0.5, -1.5]}>
                         <boxGeometry args={[0.48, 0.48, 0.05]} />
-                        <meshStandardMaterial color={(row + col) % 2 === 0 ? '#ffffff' : '#111111'} roughness={0.5} />
+                        <meshStandardMaterial color={(row + col) % 2 === 0 ? '#ffffff' : '#222222'} roughness={0.4} />
                     </mesh>
                 ))
             )}
-
-            {/* Podium light */}
-            <pointLight position={[0, 5, 2]} color="#ffffff" intensity={2} distance={12} />
         </group>
     );
 }
@@ -435,17 +422,10 @@ function Podium() {
 function TimingBoard() {
     return (
         <group position={[5.5, 2, PIT_LANE_START_Z - 1]}>
-            {/* Board */}
             <mesh>
                 <boxGeometry args={[0.15, 2.5, 4]} />
-                <meshStandardMaterial color="#0a0a0a" roughness={0.4} metalness={0.8} />
+                <meshStandardMaterial color="#222222" roughness={0.3} metalness={0.7} />
             </mesh>
-            {/* Screen glow */}
-            <mesh position={[0.08, 0, 0]}>
-                <planeGeometry args={[0.01, 2.2, 3.6]} />
-                <meshBasicMaterial color="#001122" />
-            </mesh>
-            {/* Header text */}
             <Suspense fallback={null}>
                 <Text position={[0.1, 0.8, 0]} rotation={[0, Math.PI / 2, 0]} fontSize={0.18} color="#ff2222" anchorX="center" font={PIXEL_FONT}>
                     GRAND PRIX
@@ -453,7 +433,6 @@ function TimingBoard() {
                 <Text position={[0.1, 0.4, 0]} rotation={[0, Math.PI / 2, 0]} fontSize={0.12} color="#ffffff" anchorX="center" font={PIXEL_FONT}>
                     DEVANSH DATTA
                 </Text>
-                {/* Driver standings */}
                 {GARAGES.slice(0, 5).map((g, i) => (
                     <Text key={g.id} position={[0.1, -0.1 - i * 0.3, 0]} rotation={[0, Math.PI / 2, 0]} fontSize={0.1} color={g.color} anchorX="center" font={PIXEL_FONT}>
                         {`P${i + 1}  ${g.num}  ${g.label}`}
@@ -461,40 +440,6 @@ function TimingBoard() {
                 ))}
             </Suspense>
         </group>
-    );
-}
-
-/* ═══════════════ PARTICLES ═══════════════ */
-
-function Sparks() {
-    const ref = useRef<THREE.Points>(null);
-    const geom = useMemo(() => {
-        const g = new THREE.BufferGeometry();
-        const c = 150;
-        const p = new Float32Array(c * 3);
-        for (let i = 0; i < c; i++) {
-            p[i * 3] = (Math.random() - 0.3) * 30;
-            p[i * 3 + 1] = Math.random() * 15;
-            p[i * 3 + 2] = (Math.random() - 0.5) * PIT_LANE_LENGTH;
-        }
-        g.setAttribute('position', new THREE.BufferAttribute(p, 3));
-        return g;
-    }, []);
-
-    useFrame(() => {
-        if (!ref.current) return;
-        const pos = ref.current.geometry.attributes.position;
-        for (let i = 0; i < pos.count; i++) {
-            const y = pos.getY(i);
-            pos.setY(i, y > 15 ? 0.5 : y + 0.01 + Math.random() * 0.005);
-        }
-        pos.needsUpdate = true;
-    });
-
-    return (
-        <points ref={ref} geometry={geom}>
-            <pointsMaterial size={0.06} color="#ffaa44" transparent opacity={0.4} sizeAttenuation />
-        </points>
     );
 }
 
@@ -551,8 +496,7 @@ function PlayerController({
         velocity.current.multiplyScalar(0.88);
 
         const np = camera.position.clone().add(velocity.current.clone().multiplyScalar(delta * 60));
-        // Clamp to pit lane area
-        np.x = Math.max(-6, Math.min(22, np.x));
+        np.x = Math.max(-6, Math.min(24, np.x));
         np.z = Math.max(-(PIT_LANE_LENGTH / 2 + 8), Math.min(PIT_LANE_START_Z + 5, np.z));
         np.y = 2;
         camera.position.copy(np);
@@ -596,69 +540,68 @@ function MobileJoystick({ onMove }: { onMove: (x: number, y: number) => void }) 
     }, [onMove]);
 
     return (
-        <div ref={baseRef} className="absolute bottom-8 left-8 w-28 h-28 rounded-full border border-white/15 bg-black/30 backdrop-blur flex items-center justify-center touch-none select-none z-50"
+        <div ref={baseRef} className="absolute bottom-8 left-8 w-28 h-28 rounded-full border border-gray-400/30 bg-white/20 backdrop-blur flex items-center justify-center touch-none select-none z-50"
             onTouchStart={start} onTouchMove={move} onTouchEnd={end} onTouchCancel={end}>
-            <div ref={knobRef} className="w-12 h-12 rounded-full bg-white/10 border border-white/20" />
+            <div ref={knobRef} className="w-12 h-12 rounded-full bg-gray-500/20 border border-gray-400/40" />
         </div>
     );
 }
 
-/* ═══════════════ PROJECT DETAIL OVERLAY ═══════════════ */
+/* ═══════════════ PROJECT DETAIL ═══════════════ */
 
 function ProjectDetail({ data, onClose }: { data: (typeof GARAGES)[0]; onClose: () => void }) {
     return (
-        <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/85 backdrop-blur-sm">
-            <div className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto mx-4 rounded-2xl border p-6 md:p-8"
-                style={{ backgroundColor: '#111111ee', borderColor: `${data.color}30` }}>
-                <button onClick={onClose} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white text-sm transition">✕</button>
+        <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-white/70 backdrop-blur-sm">
+            <div className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto mx-4 rounded-2xl border shadow-2xl p-6 md:p-8"
+                style={{ backgroundColor: '#ffffffee', borderColor: `${data.color}30` }}>
+                <button onClick={onClose} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 text-sm transition">✕</button>
 
-                {/* Header — team style */}
                 <div className="flex items-center gap-4 mb-5">
-                    <div className="w-12 h-12 rounded-lg flex items-center justify-center text-2xl" style={{ backgroundColor: `${data.color}20` }}>
+                    <div className="w-12 h-12 rounded-lg flex items-center justify-center text-2xl" style={{ backgroundColor: `${data.color}15` }}>
                         {data.emoji}
                     </div>
                     <div>
                         <div className="flex items-center gap-2">
-                            <span className="text-xs font-mono px-2 py-0.5 rounded" style={{ backgroundColor: `${data.color}20`, color: data.color }}>#{data.num}</span>
-                            <h2 className="text-xl font-bold text-white">{data.label}</h2>
+                            <span className="text-xs font-mono px-2 py-0.5 rounded font-bold" style={{ backgroundColor: `${data.color}15`, color: data.color }}>#{data.num}</span>
+                            <h2 className="text-xl font-bold text-gray-900">{data.label}</h2>
                         </div>
                         <p className="text-sm text-gray-500">{data.summary}</p>
                     </div>
                 </div>
 
-                <p className="text-gray-400 text-sm leading-relaxed mb-5">{data.description}</p>
+                <p className="text-gray-600 text-sm leading-relaxed mb-5">{data.description}</p>
 
                 <div className="space-y-3 mb-5">
-                    <div className="p-3 rounded-lg bg-red-500/5 border border-red-500/15">
-                        <h4 className="text-red-400 font-semibold text-xs mb-1">⚡ Problem</h4>
-                        <p className="text-gray-400 text-sm">{data.problem}</p>
+                    <div className="p-3 rounded-lg bg-red-50 border border-red-100">
+                        <h4 className="text-red-600 font-semibold text-xs mb-1">⚡ Problem</h4>
+                        <p className="text-gray-600 text-sm">{data.problem}</p>
                     </div>
-                    <div className="p-3 rounded-lg bg-cyan-500/5 border border-cyan-500/15">
-                        <h4 className="text-cyan-400 font-semibold text-xs mb-1">🎯 My Role</h4>
-                        <p className="text-gray-400 text-sm">{data.role}</p>
+                    <div className="p-3 rounded-lg bg-blue-50 border border-blue-100">
+                        <h4 className="text-blue-600 font-semibold text-xs mb-1">🎯 My Role</h4>
+                        <p className="text-gray-600 text-sm">{data.role}</p>
                     </div>
-                    <div className="p-3 rounded-lg bg-green-500/5 border border-green-500/15">
-                        <h4 className="text-green-400 font-semibold text-xs mb-1">📈 Impact</h4>
-                        <p className="text-gray-400 text-sm">{data.impact}</p>
+                    <div className="p-3 rounded-lg bg-green-50 border border-green-100">
+                        <h4 className="text-green-600 font-semibold text-xs mb-1">📈 Impact</h4>
+                        <p className="text-gray-600 text-sm">{data.impact}</p>
                     </div>
                 </div>
 
                 <div className="mb-5">
-                    <h4 className="text-white text-sm font-semibold mb-2">Features</h4>
+                    <h4 className="text-gray-800 text-sm font-semibold mb-2">Features</h4>
                     <div className="grid grid-cols-2 gap-1.5">
                         {data.features.map((f) => (
                             <div key={f} className="flex items-center gap-2 text-gray-500 text-xs">
-                                <span className="w-1 h-1 rounded-full flex-shrink-0" style={{ backgroundColor: data.color }} />{f}
+                                <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: data.color }} />{f}
                             </div>
                         ))}
                     </div>
                 </div>
 
                 <div>
-                    <h4 className="text-white text-sm font-semibold mb-2">Tech Stack</h4>
+                    <h4 className="text-gray-800 text-sm font-semibold mb-2">Tech Stack</h4>
                     <div className="flex flex-wrap gap-1.5">
                         {data.tech.map((t) => (
-                            <span key={t} className="px-2 py-0.5 text-xs rounded-full border text-gray-400" style={{ borderColor: `${data.color}30` }}>{t}</span>
+                            <span key={t} className="px-2 py-0.5 text-xs rounded-full border text-gray-600 bg-gray-50" style={{ borderColor: `${data.color}30` }}>{t}</span>
                         ))}
                     </div>
                 </div>
@@ -667,7 +610,7 @@ function ProjectDetail({ data, onClose }: { data: (typeof GARAGES)[0]; onClose: 
     );
 }
 
-/* ═══════════════ MAIN PAGE ═══════════════ */
+/* ═══════════════ MAIN ═══════════════ */
 
 export default function CreativeWorld() {
     const navigate = useNavigate();
@@ -695,55 +638,52 @@ export default function CreativeWorld() {
     const openData = openGarage ? GARAGES.find((g) => g.id === openGarage) : null;
 
     return (
-        <div className="fixed inset-0 bg-black w-full h-full z-[9999]">
+        <div className="fixed inset-0 bg-white w-full h-full z-[9999]">
             <Canvas camera={{ fov: 65, near: 0.1, far: 200 }} style={{ width: '100%', height: '100%' }} gl={{ antialias: true, alpha: false }} shadows>
 
-                {/* Night sky */}
-                <color attach="background" args={['#050510']} />
-                <fog attach="fog" args={['#050510', 25, 70]} />
+                {/* Bright blue sky */}
+                <color attach="background" args={['#87CEEB']} />
+                <fog attach="fog" args={['#b0d0e8', 40, 100]} />
 
-                {/* Warm GP lighting */}
-                <ambientLight intensity={0.15} color="#ccbbaa" />
-                <hemisphereLight args={['#111133', '#000000', 0.2]} />
-
-                {/* Night stars */}
-                <Stars radius={80} depth={50} count={1500} factor={2} saturation={0.1} fade speed={0.3} />
+                {/* Daylight — strong sun */}
+                <ambientLight intensity={0.6} color="#ffffff" />
+                <directionalLight position={[15, 30, 10]} intensity={1.5} color="#fff8e8" castShadow shadow-mapSize={1024} />
+                <directionalLight position={[-10, 20, -5]} intensity={0.4} color="#e8f0ff" />
+                <hemisphereLight args={['#87CEEB', '#4a7a3a', 0.4]} />
 
                 {/* Scene */}
                 <PitLane />
                 <PitWall />
                 <TrackSection />
-                <FloodLights />
+                <Grandstand />
                 <TimingBoard />
                 <Podium />
 
-                {/* Garages */}
                 {GARAGES.map((g, i) => (
                     <Garage key={g.id} data={g} index={i} onApproach={setNearGarage} />
                 ))}
 
-                <Sparks />
                 <PlayerController keys={keysRef.current} joystick={joystick} />
             </Canvas>
 
-            {/* ─── HUD ─── */}
+            {/* HUD — Light theme */}
             <button onClick={() => navigate('/')}
-                className="absolute top-5 left-5 z-50 px-4 py-2 rounded-lg bg-black/50 backdrop-blur border border-white/10 text-white text-sm hover:bg-black/70 transition">
+                className="absolute top-5 left-5 z-50 px-4 py-2 rounded-lg bg-white/70 backdrop-blur border border-gray-200 text-gray-800 text-sm font-medium hover:bg-white/90 transition shadow-sm">
                 ← Portfolio
             </button>
 
             <div className="absolute top-5 left-1/2 -translate-x-1/2 z-50 text-center pointer-events-none">
-                <h1 className="text-white text-base md:text-xl font-bold tracking-widest uppercase" style={{ textShadow: '0 0 10px #ff333344' }}>
+                <h1 className="text-gray-900 text-base md:text-xl font-bold tracking-widest uppercase drop-shadow-sm">
                     🏎️ Devansh Datta Grand Prix
                 </h1>
-                <p className="text-white/30 text-xs mt-0.5">walk the pit lane · enter a garage to explore</p>
+                <p className="text-gray-500 text-xs mt-0.5">walk the pit lane · enter a garage to explore</p>
             </div>
 
             {!isMobile && (
                 <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none">
-                    <div className="px-4 py-2 rounded-lg bg-black/40 backdrop-blur border border-white/8 text-white/40 text-xs flex items-center gap-3">
-                        <span className="font-mono text-white/60">WASD</span> move
-                        <span className="text-white/15">|</span>
+                    <div className="px-4 py-2 rounded-lg bg-white/60 backdrop-blur border border-gray-200 text-gray-500 text-xs flex items-center gap-3 shadow-sm">
+                        <span className="font-mono text-gray-700">WASD</span> move
+                        <span className="text-gray-300">|</span>
                         click + mouse to look
                     </div>
                 </div>
@@ -751,17 +691,17 @@ export default function CreativeWorld() {
 
             {isMobile && <MobileJoystick onMove={handleJoystick} />}
 
-            {/* Garage approach prompt */}
             {nearData && !openGarage && (
                 <div className="absolute bottom-6 right-5 z-50 max-w-xs">
-                    <div className="p-4 rounded-xl bg-black/60 backdrop-blur border border-white/10 text-white">
+                    <div className="p-4 rounded-xl bg-white/80 backdrop-blur border border-gray-200 shadow-lg text-gray-900">
                         <div className="flex items-center gap-3 mb-2">
-                            <span className="text-xs font-mono px-2 py-0.5 rounded" style={{ backgroundColor: `${nearData.color}20`, color: nearData.color }}>#{nearData.num}</span>
+                            <span className="text-xs font-mono px-2 py-0.5 rounded font-bold" style={{ backgroundColor: `${nearData.color}15`, color: nearData.color }}>#{nearData.num}</span>
                             <h3 className="text-base font-bold">{nearData.label}</h3>
                         </div>
                         <p className="text-gray-500 text-xs mb-3">{nearData.summary}</p>
                         <button onClick={() => setOpenGarage(nearData.id)}
-                            className="w-full py-1.5 rounded-lg text-xs font-medium text-white/80 bg-white/5 border border-white/10 hover:bg-white/10 transition">
+                            className="w-full py-1.5 rounded-lg text-xs font-semibold text-white transition"
+                            style={{ backgroundColor: nearData.color }}>
                             Enter Garage →
                         </button>
                     </div>
