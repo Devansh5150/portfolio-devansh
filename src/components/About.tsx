@@ -64,10 +64,10 @@ const About = () => {
   const timeline = [
     {
       period: '2025 - Present',
-      title: 'Tech Lead & AI Developer — SkillSync',
+      title: 'Tech Lead & AI Developer - SkillSync',
       description: 'Built the AI pipeline powering personalized student opportunity matching.',
       achievements: [
-        'Recommendation engine (collaborative + content-based) — 85% relevance accuracy',
+        'Recommendation engine (collaborative + content-based) - 85% relevance accuracy',
         'Web scraping pipeline aggregating 50+ sources',
         'CV parsing & job-fit scoring system using NLP'
       ],
@@ -77,7 +77,7 @@ const About = () => {
     },
     {
       period: '2025',
-      title: 'AI Research Intern — Emotions Lab',
+      title: 'AI Research Intern - Emotions Lab',
       description: 'Researched multi-modal emotion detection for real-time applications.',
       achievements: [
         'Evaluated CNN vs Transformer architectures for facial expression recognition',
@@ -90,7 +90,7 @@ const About = () => {
     },
     {
       period: '2025 - Present',
-      title: 'President — Globe Club, IILM University',
+      title: 'President - Globe Club, IILM University',
       description: 'Led interdisciplinary tech and cultural initiatives for 50+ members.',
       achievements: ['Events with 100+ participation', 'Cross-department collaborations', 'Grew membership by 40%'],
       impact: 'Enhanced campus culture and interdisciplinary learning',
@@ -99,9 +99,9 @@ const About = () => {
     },
     {
       period: '2024 - 2028',
-      title: 'B.Tech CSE (AIML) — IILM University',
-      description: '3.8+ GPA · AI/ML specialization · Research projects',
-      achievements: ['3.8+ GPA', 'AI/ML Specialization', 'Research Projects'],
+      title: 'B.Tech CSE (AIML) - IILM University',
+      description: 'AI/ML specialization · Research projects',
+      achievements: ['AI/ML Specialization', 'Research Projects'],
       impact: 'Academic excellence with hands-on project experience',
       icon: BookOpen,
       color: 'text-green-400'
@@ -119,8 +119,8 @@ const About = () => {
           <div className="text-gray-300 text-lg max-w-3xl mx-auto animate-slide-up delay-300 space-y-4">
             <p>
               I'm a Computer Science student at IILM University, specializing in AI/ML. I build end-to-end
-              products — from recommendation engines and computer vision pipelines to full-stack web
-              platforms — and I've done it for startups, research labs, and institutional tools used
+              products - from recommendation engines and computer vision pipelines to full-stack web
+              platforms - and I've done it for startups, research labs, and institutional tools used
               across my university.
             </p>
             <p>
@@ -140,7 +140,7 @@ const About = () => {
           </div>
         </div>
 
-        {/* Skills — Pill-based, no percentages */}
+        {/* Skills - Pill-based, no percentages */}
         <div className="mb-16">
           <h3 className="text-2xl font-bold mb-8 text-center text-cyan-400 flex items-center justify-center gap-2">
             <span className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></span>

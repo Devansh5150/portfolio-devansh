@@ -4,7 +4,7 @@ const Services = () => {
     {
       icon: '🧠',
       title: 'AI & ML Engineering',
-      tagline: 'For teams that need intelligent features — not just experiments.',
+      tagline: 'For teams that need intelligent features - not just experiments.',
       description: 'Build production-ready AI features including recommendation engines, computer vision systems, LLM-powered tools, and NLP pipelines.',
       deliverables: [
         'Custom recommendation engine (collaborative, content-based, or hybrid)',
@@ -19,7 +19,7 @@ const Services = () => {
       icon: '💻',
       title: 'Full-Stack Product Development',
       tagline: 'For founders who need an AI-native product built end-to-end.',
-      description: 'Architecture, frontend, backend, database, APIs, deployment — from blank repo to live product.',
+      description: 'Architecture, frontend, backend, database, APIs, deployment - from blank repo to live product.',
       deliverables: [
         'React/Next.js frontend with responsive, modern UI',
         'Node.js backend with REST APIs and database design',
@@ -53,7 +53,7 @@ const Services = () => {
           <h2 className="text-3xl md:text-5xl font-extrabold mt-4 mb-6 text-white">How I Can Help</h2>
           <p className="text-gray-300 text-lg max-w-3xl mx-auto">
             I work with startup founders, research teams, and institutions that need
-            production-grade AI or full-stack products — fast.
+            production-grade AI or full-stack products - fast.
           </p>
         </div>
 
@@ -85,8 +85,8 @@ const Services = () => {
                   {service.deliverables.map((deliverable, dIndex) => (
                     <li key={dIndex} className="flex items-start text-gray-400 text-sm">
                       <span className={`w-2 h-2 rounded-full mr-3 mt-1.5 flex-shrink-0 ${service.color === 'cyan' ? 'bg-cyan-400' :
-                          service.color === 'blue' ? 'bg-blue-400' :
-                            'bg-green-400'
+                        service.color === 'blue' ? 'bg-blue-400' :
+                          'bg-green-400'
                         }`}></span>
                       {deliverable}
                     </li>

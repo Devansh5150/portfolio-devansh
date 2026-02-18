@@ -4,7 +4,7 @@ import { Trophy, Calendar } from 'lucide-react';
 const Hackathons = () => {
     const achievements = [
         {
-            title: '3rd Position — National Patent & Copyright Conclave',
+            title: '3rd Position - National Patent & Copyright Conclave',
             description: 'AI-based innovation prototype. National-level competition across institutions.',
             icon: '🥉',
             year: '2025',
@@ -12,7 +12,7 @@ const Hackathons = () => {
             color: 'yellow'
         },
         {
-            title: 'Special Recognition — CodeCraft 2026',
+            title: 'Special Recognition - CodeCraft 2026',
             description: 'Recognized for innovative problem-solving and clean code architecture.',
             icon: '🏆',
             year: '2026',

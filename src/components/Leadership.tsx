@@ -1,7 +1,7 @@
 const Leadership = () => {
   const leadershipRoles = [
     {
-      title: 'President — Globe Club, IILM University',
+      title: 'President - Globe Club, IILM University',
       period: '2025 - Present',
       icon: '👑',
       achievements: [
@@ -11,7 +11,7 @@ const Leadership = () => {
       ]
     },
     {
-      title: 'Core Team — Hackverse Hackathon, IILM',
+      title: 'Core Team - Hackverse Hackathon, IILM',
       period: '2024',
       icon: '🏆',
       achievements: [
@@ -21,7 +21,7 @@ const Leadership = () => {
       ]
     },
     {
-      title: 'Social Media Head — Aisyntech',
+      title: 'Social Media Head - Aisyntech',
       period: '2025',
       icon: '📱',
       achievements: [

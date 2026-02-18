@@ -12,12 +12,12 @@ const Projects = () => {
 
   const primaryProjects = [
     {
-      title: 'Torq — AI Emergency Vehicle Support',
+      title: 'Torq - AI Emergency Vehicle Support',
       status: 'Completed',
       description: 'On-demand roadside assistance platform connecting stranded drivers with service providers through AI matching and real-time tracking. Built as a startup, served 500+ users.',
       bullets: {
         problem: 'No unified real-time platform for emergency roadside service in remote areas',
-        role: 'Founded and led product development end-to-end — architecture, AI chatbot, payment flow',
+        role: 'Founded and led product development end-to-end - architecture, AI chatbot, payment flow',
         impact: 'Served 500+ users · Modular microservice backend · Razorpay escrow integration'
       },
       tech: ['React Native', 'Node.js', 'Firebase', 'PostgreSQL', 'OpenAI API', 'Razorpay'],
@@ -53,7 +53,7 @@ const Projects = () => {
       awards: ['Startup Innovation Award']
     },
     {
-      title: 'Tatvam — LLM Contextual Mapping Engine',
+      title: 'Tatvam - LLM Contextual Mapping Engine',
       status: 'Completed',
       description: 'LLM-powered platform connecting ancient philosophical texts with modern AI through RAG pipelines, ethical guardrails, and tiered subscription access.',
       bullets: {
@@ -94,7 +94,7 @@ const Projects = () => {
       awards: ['Innovation in AI Ethics']
     },
     {
-      title: 'Minto — Last-Mile Delivery Platform',
+      title: 'Minto - Last-Mile Delivery Platform',
       status: 'Completed',
       description: 'Delivery platform empowering Tier-2/3 city vendors by eliminating dark-store dependency. Built proximity-based delivery matching in 48 hours.',
       bullets: {
@@ -140,7 +140,7 @@ const Projects = () => {
       description: 'Real-time emotion detection via webcam → dynamic Spotify playlist generation. Detects 7 emotions through DeepFace and maps them to music genres.',
       bullets: {
         problem: 'Music recommendation relies on history, not real-time emotional state',
-        role: 'Built the entire CV pipeline — face detection, emotion classification, Spotify OAuth, playlist generation',
+        role: 'Built the entire CV pipeline - face detection, emotion classification, Spotify OAuth, playlist generation',
         impact: 'Real-time emotion-to-music at 30fps · 7-emotion classification · Won Best AI Innovation Award'
       },
       tech: ['Python', 'OpenCV', 'DeepFace', 'Spotify API', 'pyttsx3'],
@@ -223,7 +223,7 @@ const Projects = () => {
           <span className="text-white/70 text-sm font-semibold tracking-wide uppercase">Portfolio</span>
           <h2 className="text-4xl md:text-5xl font-extrabold mt-4 mb-6 text-white">What I've Built</h2>
           <p className="text-gray-300 text-lg max-w-3xl mx-auto">
-            End-to-end products — from architecture to deployment. Click any project for the full case study.
+            End-to-end products - from architecture to deployment. Click any project for the full case study.
           </p>
         </div>
 
@@ -370,7 +370,7 @@ const Projects = () => {
         </div>
       </div>
 
-      {/* Project Detail Modal — Case Study View */}
+      {/* Project Detail Modal - Case Study View */}
       <AnimatePresence>
         {selectedProject !== null && (
           <Dialog open={selectedProject !== null} onOpenChange={() => setSelectedProject(null)}>
@@ -395,7 +395,7 @@ const Projects = () => {
                   <p className="text-gray-300 leading-relaxed">{primaryProjects[selectedProject].detailedDescription}</p>
                 </div>
 
-                {/* System Architecture — Expandable */}
+                {/* System Architecture - Expandable */}
                 <div>
                   <button
                     onClick={() => setShowArchitecture(!showArchitecture)}

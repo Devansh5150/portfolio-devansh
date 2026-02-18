@@ -69,14 +69,14 @@ const Hero = () => {
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-neutral-100 to-neutral-500">ship.</span>
             </motion.h1>
             <motion.p className="text-gray-300 max-w-2xl mb-6 text-lg md:text-xl leading-relaxed" variants={itemVariants}>
-              From emotion-aware music players to emergency vehicle platforms — I take AI products from zero to production.
+              From emotion-aware music players to emergency vehicle platforms - I take AI products from zero to production.
               Currently Tech Lead at SkillSync, building recommendation engines that serve 1,000+ students.
             </motion.p>
 
             {/* Credibility badges */}
             <motion.div className="flex flex-wrap gap-2 mb-8" variants={itemVariants}>
               {[
-                '🏆 3rd — National Patent Conclave',
+                '🏆 3rd - National Patent Conclave',
                 '📚 Published Author',
                 '🚀 CEO, Torq (Startup)',
                 '🎓 B.Tech CSE (AIML)'

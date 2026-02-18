@@ -19,12 +19,12 @@ const SystemThinking = () => {
                     </h2>
 
                     <p className="text-gray-300 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed mb-4">
-                        I don't just build features — I architect systems. <span className="text-white font-semibold">Scalable AI systems</span> that
+                        I don't just build features - I architect systems. <span className="text-white font-semibold">Scalable AI systems</span> that
                         merge human insight with machine intelligence. Systems that solve real problems for real people,
                         and compound in value over time.
                     </p>
                     <p className="text-gray-300 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed mb-10">
-                        If you're building something that needs to be intelligent, reliable, and production-grade — let's talk.
+                        If you're building something that needs to be intelligent, reliable, and production-grade - let's talk.
                     </p>
 
                     <button

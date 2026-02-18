@@ -48,7 +48,7 @@ const ResearchPublications = () => {
                             {[
                                 'Explores the philosophical tension between algorithmic decision-making and human intuition',
                                 'Examines how generative AI challenges traditional notions of creativity and authorship',
-                                'Proposes a framework for understanding AI\'s role in augmenting — not replacing — human expression'
+                                'Proposes a framework for understanding AI\'s role in augmenting - not replacing - human expression'
                             ].map((highlight, index) => (
                                 <div key={index} className="flex items-start gap-2 text-gray-400 text-sm">
                                     <span className="w-2 h-2 bg-cyan-400 rounded-full mt-1.5 flex-shrink-0"></span>
