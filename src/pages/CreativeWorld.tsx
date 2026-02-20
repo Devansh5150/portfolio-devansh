@@ -1,465 +1,1044 @@
-import { useRef, useState, useEffect, useCallback, Suspense, useMemo } from 'react';
+import { useRef, useState, useEffect, Suspense, useMemo, useCallback } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Text, Circle, Sphere, Environment, ContactShadows } from '@react-three/drei';
+import { Text, PerspectiveCamera, Float, Environment, MeshReflectorMaterial, Html } from '@react-three/drei';
 import { useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import * as THREE from 'three';
+import { ArrowLeft, Mic2, Users, Play, Pause, SkipBack, SkipForward, Volume2, Instagram, Youtube, BookOpen, ChevronRight, Music } from 'lucide-react';
 
-/* ─── DARK SHOWROOM THEME ─── */
-const THEME = {
-    bg: '#020617',
-    fog: '#020617',
-    floor: '#0a0a0a',
-    walls: '#0f172a',
-    trim: '#334155',
-    text: '#f8fafc',
-    accent: '#60a5fa',
-    monitorBezel: '#1e293b',
-    monitorScreen: '#020617',
-};
-
-const PROJECTS = [
-    {
-        id: 'torq', num: '01', label: 'TORQ', emoji: '🚗', color: '#3b82f6',
-        summary: 'AI Emergency Vehicle Support',
-        description: 'TORQ is an on-demand roadside assistance platform connecting stranded drivers with service providers through AI matching and real-time tracking.',
-        problem: 'No unified real-time platform for emergency roadside service in remote areas.',
-        impact: 'Served 500+ users · Modular microservice backend · Razorpay escrow integration',
-        tech: ['React Native', 'Node.js', 'Firebase', 'PostgreSQL', 'OpenAI API', 'Razorpay'],
-        features: ['Real-time GPS tracking', 'AI chatbot (OpenAI)', 'Razorpay escrow payments', 'Multi-vendor marketplace'],
-    },
-    {
-        id: 'tatvam', num: '02', label: 'TATVAM', emoji: '🧘', color: '#8b5cf6',
-        summary: 'LLM Contextual Mapping Engine',
-        description: 'Tatvam is an LLM-powered platform connecting ancient philosophical texts with modern AI through RAG pipelines and ethical guardrails.',
-        problem: 'Ancient philosophical knowledge is scattered and existing AI lacks cultural sensitivity.',
-        impact: 'Novel AI bridging philosophy and tech · Stripe 3-tier access · Serverless AWS',
-        tech: ['Next.js', 'Python', 'LangChain', 'OpenAI API', 'Supabase', 'Stripe', 'AWS'],
-        features: ['RAG pipeline with LangChain', 'Ethical guardrails', 'Stripe integration', 'Vector DB semantic search'],
-    },
-    {
-        id: 'minto', num: '03', label: 'MINTO', emoji: '📦', color: '#10b981',
-        summary: 'Last-Mile Delivery Platform',
-        description: 'Minto is a delivery platform empowering Tier-2 and Tier-3 city vendors by eliminating dark-store dependency.',
-        problem: 'Small vendors in smaller cities can\'t afford dark-store logistics.',
-        impact: '50+ vendors onboarded · 40% delivery efficiency · Best Social Impact Project',
-        tech: ['Next.js', 'Node.js', 'Supabase', 'Google Maps API'],
-        features: ['Vendor onboarding system', 'Real-time order mapping', 'Analytics dashboard', 'Proximity-based matching'],
-    },
-    {
-        id: 'mood', num: '04', label: 'MOOD', emoji: '🎵', color: '#ec4899',
-        summary: 'Emotion-Based Spotify Player',
-        description: 'Mood is a real-time emotion detection player that uses webcam input to detect facial expressions and generate dynamic Spotify playlists.',
-        problem: 'Music recommendation relies on history, not real-time emotional state.',
-        impact: 'Real-time emotion-to-music at 30fps · 7-emotion classification',
-        tech: ['Python', 'OpenCV', 'DeepFace', 'Spotify API', 'pyttsx3'],
-        features: ['Facial emotion detection', 'Dynamic Spotify playlist', 'Voice feedback', 'Emotion history tracking'],
-    },
-    {
-        id: 'skillsync', num: '05', label: 'SKILLSYNC', emoji: '🧠', color: '#a855f7',
-        summary: 'AI Opportunity Matching Engine',
-        description: 'SkillSync is an AI-powered student opportunity matching engine serving over 1,000 students. It aggregates opportunities from 50+ sources.',
-        problem: 'Students struggle to find relevant opportunities across fragmented platforms.',
-        impact: '1,000+ students served · 85% relevance accuracy · 50+ sources aggregated',
-        tech: ['Python', 'NLP', 'Web Scraping', 'Collaborative Filtering'],
-        features: ['Recommendation engine', 'CV parsing & scoring', 'Web scraping', 'NLP resume analysis'],
-    },
-    {
-        id: 'research', num: '06', label: 'RESEARCH', emoji: '📚', color: '#06b6d4',
-        summary: 'Published - AI and the Soul',
-        description: 'Research exploring the intersections of AI, creativity, and consciousness. Published a book chapter on AI as a tool for augmenting expression.',
-        problem: 'The philosophical implications of AI creativity remain underexplored.',
-        impact: 'Published book chapter · Framework for AI augmenting human expression',
-        tech: ['AI', 'Consciousness', 'Creativity', 'Philosophy of Mind'],
-        features: ['Generative AI authorship', 'Framework for augmentation', 'Cross-disciplinary research'],
-    },
+/* ─── TRACK LIST ─── */
+const TRACKS = [
+    { id: 1, title: 'Kalm', artist: 'Devansh Datta', src: '/songs/Kalm.mp3', duration: '—' },
+    { id: 2, title: 'Kithe Duur', artist: 'Devansh Datta', src: '/songs/Kithe Duur.mp3', duration: '—' },
+    { id: 3, title: 'Na Jaane Kyu', artist: 'Devansh Datta', src: '/songs/Na Jaane Kyu.mp3', duration: '—' },
 ];
 
-const ROOM_RADIUS = 22;
+/* ─── THEME ─── */
+const T = {
+    bg: '#080a12',
+    indigo: '#818cf8',
+    violet: '#a78bfa',
+    cyan: '#67e8f9',
+    gold: '#fde68a',
+    rose: '#fb7185',
+    surface: '#1a2235',
+    wall: '#151e35',
+    pillar: '#1e2845',
+    floor: '#0a0e18',
+};
 
-/* ═══════ AUDIO GUIDE ═══════ */
-function AudioGuide({ text, position, color }: { text: string; position: [number, number, number]; color: string }) {
-    const [speaking, setSpeaking] = useState(false);
-    const meshRef = useRef<THREE.Group>(null);
-    const [hovered, setHover] = useState(false);
+/* ─── CAMERA STATIONS ─── */
+const STATIONS = [
+    { id: 'hall', label: 'Overview', cam: [0, 8, 22] as const, look: [0, 3, -10] as const },
+    { id: 'stage', label: 'Main Stage', cam: [0, 4, 8] as const, look: [0, 5, -25] as const },
+    { id: 'lounge', label: 'Social Lounge', cam: [-18, 6, -5] as const, look: [-28, 4, -20] as const },
+    { id: 'archive', label: 'Archive Wing', cam: [18, 6, -5] as const, look: [28, 4, -20] as const },
+];
 
-    const toggle = useCallback((e: any) => {
-        e.stopPropagation();
-        if (speaking) {
-            window.speechSynthesis.cancel();
-            setSpeaking(false);
-        } else {
-            window.speechSynthesis.cancel();
-            const u = new SpeechSynthesisUtterance(text);
-            u.rate = 1.0;
-            u.onend = () => setSpeaking(false);
-            window.speechSynthesis.speak(u);
-            setSpeaking(true);
-        }
-    }, [speaking, text]);
+/* ─── SMOOTH CAMERA RIG ─── */
+function CameraRig({ target, lookAt: look }: { target: readonly number[]; lookAt: readonly number[] }) {
+    const posVec = useMemo(() => new THREE.Vector3(), []);
+    const lookVec = useMemo(() => new THREE.Vector3(), []);
+    const currentLook = useMemo(() => new THREE.Vector3(look[0], look[1], look[2]), []);
+
+    useFrame(({ camera }) => {
+        posVec.set(target[0], target[1], target[2]);
+        lookVec.set(look[0], look[1], look[2]);
+        camera.position.lerp(posVec, 0.035);
+        currentLook.lerp(lookVec, 0.035);
+        camera.lookAt(currentLook);
+    });
+    return null;
+}
+
+/* ─── FLOATING DUST PARTICLES ─── */
+function DustParticles({ count = 200 }: { count?: number }) {
+    const mesh = useRef<THREE.InstancedMesh>(null);
+    const dummy = useMemo(() => new THREE.Object3D(), []);
+    const speeds = useMemo(() => Array.from({ length: count }, () => 0.1 + Math.random() * 0.4), [count]);
+    const positions = useMemo(() => {
+        return Array.from({ length: count }, () => [
+            (Math.random() - 0.5) * 60,
+            Math.random() * 20,
+            (Math.random() - 0.5) * 60 - 10,
+        ]);
+    }, [count]);
 
     useFrame(({ clock }) => {
-        if (!meshRef.current) return;
+        if (!mesh.current) return;
         const t = clock.getElapsedTime();
-        meshRef.current.position.y = Math.sin(t * 2) * 0.05;
+        for (let i = 0; i < count; i++) {
+            const [x, y, z] = positions[i];
+            dummy.position.set(
+                x + Math.sin(t * speeds[i] + i) * 0.5,
+                (y + t * speeds[i] * 0.3) % 20,
+                z + Math.cos(t * speeds[i] + i) * 0.5
+            );
+            dummy.scale.setScalar(0.015 + Math.sin(t + i) * 0.005);
+            dummy.updateMatrix();
+            mesh.current.setMatrixAt(i, dummy.matrix);
+        }
+        mesh.current.instanceMatrix.needsUpdate = true;
     });
 
     return (
-        <group position={position} onClick={toggle}
-            onPointerOver={() => { setHover(true); document.body.style.cursor = 'pointer'; }}
-            onPointerOut={() => { setHover(false); document.body.style.cursor = 'auto'; }}
-        >
-            <mesh ref={meshRef}>
-                <sphereGeometry args={[0.25, 32, 32]} />
-                <meshStandardMaterial
-                    color={speaking ? '#ff3366' : (hovered ? '#ffffff' : color)}
-                    emissive={speaking ? '#ff3366' : color}
-                    emissiveIntensity={speaking ? 1.5 : 0.8}
-                    metalness={0.9} roughness={0.1}
+        <instancedMesh ref={mesh} args={[undefined, undefined, count]}>
+            <sphereGeometry args={[1, 6, 6]} />
+            <meshBasicMaterial color={T.gold} transparent opacity={0.4} />
+        </instancedMesh>
+    );
+}
+
+/* ─── THE HALL ─── */
+function HallStructure() {
+    return (
+        <group>
+            {/* ── FLOOR ── */}
+            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
+                <planeGeometry args={[80, 80]} />
+                <MeshReflectorMaterial
+                    mirror={0.5}
+                    blur={[400, 200]}
+                    resolution={1024}
+                    mixBlur={1}
+                    mixStrength={80}
+                    roughness={0.7}
+                    depthScale={1.2}
+                    minDepthThreshold={0.4}
+                    maxDepthThreshold={1.4}
+                    color={T.floor}
+                    metalness={0.8}
                 />
             </mesh>
-            <Text position={[0, -0.4, 0]} fontSize={0.12} color={THEME.text} anchorX="center"> {speaking ? "STOP" : "GUIDE"} </Text>
+
+            {/* ── BACK WALL ── */}
+            <mesh position={[0, 15, -40]} receiveShadow>
+                <planeGeometry args={[80, 30]} />
+                <meshStandardMaterial color={T.wall} roughness={0.9} metalness={0.1} />
+            </mesh>
+
+            {/* ── SIDE WALLS ── */}
+            <mesh position={[-40, 15, 0]} rotation={[0, Math.PI / 2, 0]} receiveShadow>
+                <planeGeometry args={[80, 30]} />
+                <meshStandardMaterial color={T.wall} roughness={0.9} metalness={0.1} />
+            </mesh>
+            <mesh position={[40, 15, 0]} rotation={[0, -Math.PI / 2, 0]} receiveShadow>
+                <planeGeometry args={[80, 30]} />
+                <meshStandardMaterial color={T.wall} roughness={0.9} metalness={0.1} />
+            </mesh>
+
+            {/* ── CEILING ── */}
+            <mesh position={[0, 30, 0]} rotation={[Math.PI / 2, 0, 0]}>
+                <planeGeometry args={[80, 80]} />
+                <meshStandardMaterial color="#060810" roughness={1} />
+            </mesh>
+
+            {/* ── PILLARS (detailed) ── */}
+            {[-25, -15, 15, 25].map((x) =>
+                [-5, -20, -35].map((z, zi) => (
+                    <group key={`${x}-${zi}`} position={[x, 0, z]}>
+                        {/* Base */}
+                        <mesh position={[0, 0.5, 0]} castShadow>
+                            <cylinderGeometry args={[1.2, 1.4, 1, 16]} />
+                            <meshStandardMaterial color={T.pillar} roughness={0.3} metalness={0.7} />
+                        </mesh>
+                        {/* Shaft */}
+                        <mesh position={[0, 13, 0]} castShadow>
+                            <cylinderGeometry args={[0.8, 0.8, 24, 16]} />
+                            <meshStandardMaterial color={T.pillar} roughness={0.4} metalness={0.6} />
+                        </mesh>
+                        {/* Capital */}
+                        <mesh position={[0, 25.5, 0]} castShadow>
+                            <cylinderGeometry args={[1.4, 1, 1, 16]} />
+                            <meshStandardMaterial color={T.pillar} roughness={0.3} metalness={0.7} />
+                        </mesh>
+                        {/* Uplight */}
+                        <pointLight
+                            position={[0, 2, 0]}
+                            intensity={8}
+                            color={T.indigo}
+                            distance={20}
+                            decay={2}
+                        />
+                    </group>
+                ))
+            )}
+
+            {/* ── WALL SCONCES (ambient light strips) ── */}
+            {[-39.5, 39.5].map((x) =>
+                [-10, -25].map((z, i) => (
+                    <group key={`sconce-${x}-${i}`} position={[x, 8, z]}>
+                        <mesh>
+                            <boxGeometry args={[0.3, 4, 0.3]} />
+                            <meshStandardMaterial
+                                color={T.indigo}
+                                emissive={T.indigo}
+                                emissiveIntensity={2}
+                                toneMapped={false}
+                            />
+                        </mesh>
+                        <pointLight position={[x > 0 ? -1 : 1, 0, 0]} intensity={4} color={T.indigo} distance={12} decay={2} />
+                    </group>
+                ))
+            )}
         </group>
     );
 }
 
-function LEDScreen({ lines, color }: { lines: string[]; color: string }) {
-    const scrollRef = useRef<THREE.Group>(null);
-    const contentH = lines.length * 0.45;
+/* ─── SEATING ROWS ─── */
+function AuditoriumSeating() {
+    // Pre-compute which seats have audience (deterministic)
+    const occupied = useMemo(() => {
+        const map: Record<string, boolean> = {};
+        for (let row = 0; row < 4; row++) {
+            for (let col = 0; col < 10; col++) {
+                // ~65% occupancy, deterministic based on position
+                map[`${row}-${col}`] = Math.sin(row * 17 + col * 31) > -0.3;
+            }
+        }
+        return map;
+    }, []);
 
-    useFrame(({ clock }) => {
-        if (!scrollRef.current) return;
+    return (
+        <group position={[0, 0, 8]}>
+            {[0, 1, 2, 3].map((row) => (
+                <group key={row} position={[0, row * 0.3, row * 3.5]}>
+                    {Array.from({ length: 10 }, (_, col) => {
+                        const hasAudience = occupied[`${row}-${col}`];
+                        // Vibrant outfit colors
+                        const outfitColors = [
+                            '#e74c3c', '#3498db', '#2ecc71', '#e67e22', '#9b59b6',
+                            '#1abc9c', '#f1c40f', '#e84393', '#00cec9', '#6c5ce7',
+                            '#fd79a8', '#00b894', '#fdcb6e', '#74b9ff', '#a29bfe',
+                        ];
+                        const skinTones = ['#d4a574', '#c49a6c', '#e0b896', '#b8886e', '#f0c8a0'];
+                        const colorIdx = (row * 7 + col * 13) % outfitColors.length;
+                        const skinIdx = (row * 3 + col * 11) % skinTones.length;
+                        return (
+                            <group key={col} position={[(col - 4.5) * 3.2, 0, 0]}>
+                                {/* Seat base */}
+                                <mesh position={[0, 0.4, 0]} castShadow>
+                                    <boxGeometry args={[1.4, 0.8, 1.2]} />
+                                    <meshStandardMaterial color="#1a2035" roughness={0.6} metalness={0.4} />
+                                </mesh>
+                                {/* Seat back */}
+                                <mesh position={[0, 1.2, 0.5]} castShadow>
+                                    <boxGeometry args={[1.4, 1.2, 0.15]} />
+                                    <meshStandardMaterial color="#1e2740" roughness={0.5} metalness={0.3} />
+                                </mesh>
+                                {/* Audience Figure */}
+                                {hasAudience && (
+                                    <group position={[0, 0.8, 0]}>
+                                        {/* Body (torso) */}
+                                        <mesh position={[0, 0.7, 0]} castShadow>
+                                            <capsuleGeometry args={[0.35, 0.6, 4, 8]} />
+                                            <meshStandardMaterial color={outfitColors[colorIdx]} roughness={0.8} />
+                                        </mesh>
+                                        {/* Head */}
+                                        <mesh position={[0, 1.6, 0]} castShadow>
+                                            <sphereGeometry args={[0.25, 8, 8]} />
+                                            <meshStandardMaterial color={skinTones[skinIdx]} roughness={0.7} />
+                                        </mesh>
+                                    </group>
+                                )}
+                            </group>
+                        );
+                    })}
+                </group>
+            ))}
+        </group>
+    );
+}
+
+/* ─── THE MAIN STAGE ─── */
+const SCREEN_COLORS = ['#818cf8', '#a78bfa', '#67e8f9', '#fb7185', '#fde68a', '#34d399'];
+
+function MainStage({
+    isPlaying,
+    track,
+    progress,
+    currentTime,
+    duration,
+    togglePlay,
+    seekTo,
+    skipTrack,
+    currentTrackIdx,
+    totalTracks
+}: {
+    isPlaying: boolean;
+    track: { title: string; artist: string; src: string };
+    progress: number;
+    currentTime: string;
+    duration: string;
+    togglePlay: () => void;
+    seekTo: (e: React.MouseEvent<HTMLDivElement>) => void;
+    skipTrack: (dir: 1 | -1) => void;
+    currentTrackIdx: number;
+    totalTracks: number;
+}) {
+    const barsRef = useRef<THREE.Group>(null);
+    const screenRef = useRef<THREE.Mesh>(null);
+    const colorIdx = useRef(0);
+    const colorT = useRef(0);
+    const currentColor = useRef(new THREE.Color(SCREEN_COLORS[0]));
+    const nextColor = useRef(new THREE.Color(SCREEN_COLORS[1]));
+
+    useFrame(({ clock }, delta) => {
         const t = clock.getElapsedTime();
-        scrollRef.current.position.y = (t * 0.25) % (contentH + 2.4);
+        const speed = isPlaying ? 1.0 : 0.25;
+        const amp = isPlaying ? 1.0 : 0.15;
+
+        if (barsRef.current) {
+            barsRef.current.children.forEach((bar, i) => {
+                const h = Math.sin(t * 2.5 * speed + i * 0.15) * 1.5 * amp
+                    + Math.cos(t * 4 * speed + i * 0.08) * 0.8 * amp + (isPlaying ? 2.5 : 0.4);
+                bar.scale.y = Math.max(0.05, h);
+                const mat = (bar as THREE.Mesh).material as THREE.MeshStandardMaterial;
+                mat.emissiveIntensity = isPlaying ? h * 0.9 : 0.2;
+                // Color-shift bars through screen color
+                mat.emissive.lerp(currentColor.current, 0.05);
+                mat.color.lerp(currentColor.current, 0.05);
+            });
+        }
+
+        if (screenRef.current) {
+            const mat = screenRef.current.material as THREE.MeshStandardMaterial;
+            if (isPlaying) {
+                // Cycle screen through colors
+                colorT.current += delta * 0.4;
+                if (colorT.current >= 1) {
+                    colorT.current = 0;
+                    colorIdx.current = (colorIdx.current + 1) % SCREEN_COLORS.length;
+                    currentColor.current.set(SCREEN_COLORS[colorIdx.current]);
+                    nextColor.current.set(SCREEN_COLORS[(colorIdx.current + 1) % SCREEN_COLORS.length]);
+                }
+                const blended = currentColor.current.clone().lerp(nextColor.current, colorT.current);
+                mat.emissive.lerp(blended, 0.04);
+                mat.emissiveIntensity = 0.18 + Math.sin(t * 2) * 0.06;
+            } else {
+                mat.emissive.lerp(new THREE.Color(T.indigo), 0.05);
+                mat.emissiveIntensity = 0.06 + Math.sin(t * 0.8) * 0.02;
+            }
+        }
     });
 
     return (
-        <group>
-            <mesh>
-                <boxGeometry args={[4.4, 2.8, 0.15]} />
-                <meshStandardMaterial color={THEME.monitorBezel} roughness={0.1} metalness={0.9} />
+        <group position={[0, 0, -28]}>
+            {/* Stage Platform (2-tier) */}
+            <mesh position={[0, 0.4, 0]} castShadow receiveShadow>
+                <boxGeometry args={[34, 0.8, 16]} />
+                <meshStandardMaterial color="#0e1225" roughness={0.3} metalness={0.8} />
             </mesh>
-            <mesh position={[0, 0, 0.08]}>
-                <planeGeometry args={[4.1, 2.5]} />
-                <meshBasicMaterial color={THEME.monitorScreen} />
+            <mesh position={[0, 1.2, 0]} castShadow receiveShadow>
+                <boxGeometry args={[28, 0.8, 12]} />
+                <meshStandardMaterial color="#111733" roughness={0.2} metalness={0.9} />
             </mesh>
-            <group position={[0, 0, 0.09]}>
-                <group ref={scrollRef}>
-                    {lines.concat(lines).map((text, i) => (
-                        <Text
-                            key={i}
-                            position={[0, -i * 0.45 + 1.2, 0]}
-                            fontSize={0.14}
-                            color={color}
-                            maxWidth={3.8}
-                            anchorX="center"
-                            anchorY="top"
-                            lineHeight={1.4}
-                        >
-                            {text}
-                        </Text>
-                    ))}
-                </group>
+            {/* Glowing Stage Edge */}
+            <mesh position={[0, 0.05, 8]}>
+                <boxGeometry args={[34, 0.1, 0.1]} />
+                <meshStandardMaterial color={T.indigo} emissive={T.indigo} emissiveIntensity={5} toneMapped={false} />
+            </mesh>
+
+            {/* LED Backdrop Screen */}
+            <mesh ref={screenRef} position={[0, 12, -7.5]}>
+                <planeGeometry args={[30, 16]} />
+                <meshStandardMaterial color="#000408" emissive={T.indigo} emissiveIntensity={0.12} roughness={0} metalness={1} />
+            </mesh>
+            {/* Screen Frame */}
+            <mesh position={[0, 12, -7.6]}>
+                <boxGeometry args={[30.5, 16.5, 0.3]} />
+                <meshStandardMaterial color="#0a0e1a" roughness={0.2} metalness={0.9} />
+            </mesh>
+
+            {/* ═══ 3D SCREEN MUSIC PLAYER ═══ */}
+            <AnimatePresence>
+                <Html
+                    transform
+                    position={[0, 12.5, -7.42]}
+                    scale={0.75}
+                    center
+                >
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                        className="pointer-events-auto"
+                        style={{ width: '420px' }}
+                    >
+                        <div className="rounded-[32px] bg-[#0c0f16] border border-white/[0.05] p-6 shadow-2xl shadow-black/80 w-full">
+                            {/* Album Art Area */}
+                            <div className="relative w-full aspect-square rounded-[24px] overflow-hidden bg-[#12121e] mb-6 shadow-inner flex items-center justify-center">
+                                {/* Procedural concert lighting visual instead of just an image */}
+                                <div className="absolute inset-0 bg-gradient-to-tr from-indigo-900/60 via-black to-blue-900/40" />
+                                <div className="absolute top-[-20%] left-[-20%] w-[140%] h-[140%] bg-[radial-gradient(circle_at_50%_0%,_rgba(79,70,229,0.3),_transparent_60%)] animate-pulse mix-blend-screen" />
+                                {isPlaying && (
+                                    <div className="absolute top-[20%] right-[10%] w-40 h-40 bg-[radial-gradient(circle,_rgba(56,189,248,0.4),_transparent_70%)] animate-ping mix-blend-screen" style={{ animationDuration: '3s' }} />
+                                )}
+
+                                {/* Grain overlay */}
+                                <div className="absolute inset-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay" />
+
+                                {/* Volume Button Overlay */}
+                                <button className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/10 hover:bg-black/60 transition-colors z-10">
+                                    <Volume2 className="w-4 h-4 text-white/80" />
+                                </button>
+
+                                {/* Animated Visualizer inside Art when playing */}
+                                <Music className={`w-16 h-16 text-indigo-200/60 drop-shadow-2xl transition-transform duration-1000 ${isPlaying ? 'scale-110' : 'scale-100'}`} />
+                            </div>
+
+                            {/* Track Info */}
+                            <div className="px-2 mb-6 text-left">
+                                <h3 className="text-white font-bold text-[22px] truncate tracking-tight mb-1">
+                                    {track.title}
+                                </h3>
+                                <p className="text-white/50 text-sm truncate font-medium">
+                                    {track.artist}
+                                </p>
+                            </div>
+
+                            {/* Progress Bar */}
+                            <div className="px-2 mb-6">
+                                <div
+                                    className="w-full h-1 rounded-full bg-white/[0.1] cursor-pointer group mb-3 relative flex items-center"
+                                    onClick={seekTo}
+                                >
+                                    <div
+                                        className="h-full rounded-full bg-white relative transition-all duration-100"
+                                        style={{ width: `${progress}%` }}
+                                    >
+                                        {/* Thumb */}
+                                        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-white shadow-[0_0_10px_rgba(255,255,255,0.5)] opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    </div>
+                                </div>
+                                <div className="flex justify-between items-center text-[10px] font-medium text-white/40 tracking-wider">
+                                    <span>{currentTime}</span>
+                                    <span>-{duration.replace('0:', '')}</span>
+                                </div>
+                            </div>
+
+                            {/* Playback Controls */}
+                            <div className="flex items-center justify-center gap-10 mb-2">
+                                <button
+                                    onClick={() => skipTrack(-1)}
+                                    className="text-white/60 hover:text-white transition-colors disabled:opacity-20 hover:scale-110 active:scale-95"
+                                    disabled={currentTrackIdx === 0}
+                                >
+                                    <SkipBack className="w-6 h-6 fill-current" />
+                                </button>
+                                <button
+                                    onClick={togglePlay}
+                                    className="w-16 h-16 rounded-full flex items-center justify-center hover:scale-105 active:scale-95 transition-all text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
+                                >
+                                    {isPlaying
+                                        ? <Pause className="w-10 h-10 fill-current" />
+                                        : <Play className="w-10 h-10 fill-current ml-1" />
+                                    }
+                                </button>
+                                <button
+                                    onClick={() => skipTrack(1)}
+                                    className="text-white/60 hover:text-white transition-colors disabled:opacity-20 hover:scale-110 active:scale-95"
+                                    disabled={currentTrackIdx === totalTracks - 1}
+                                >
+                                    <SkipForward className="w-6 h-6 fill-current" />
+                                </button>
+                            </div>
+                        </div>
+                    </motion.div>
+                </Html>
+            </AnimatePresence>
+
+
+
+            {/* Audio Visualization Bars */}
+            <group ref={barsRef} position={[0, 5, -7.4]}>
+                {Array.from({ length: 40 }, (_, i) => (
+                    <mesh key={i} position={[(i - 19.5) * 0.7, 0, 0]}>
+                        <boxGeometry args={[0.35, 1, 0.2]} />
+                        <meshStandardMaterial
+                            color={T.indigo}
+                            emissive={T.indigo}
+                            emissiveIntensity={1}
+                            toneMapped={false}
+                        />
+                    </mesh>
+                ))}
             </group>
+
+            {/* Spotlights */}
+            <spotLight position={[-8, 22, 5]} angle={0.25} penumbra={0.8} intensity={50} color="#c2c8ff" castShadow />
+            <spotLight position={[8, 22, 5]} angle={0.25} penumbra={0.8} intensity={50} color="#c2c8ff" castShadow />
+            <spotLight position={[0, 25, 0]} angle={0.5} penumbra={1} intensity={30} color={T.indigo} castShadow />
+            <pointLight position={[0, 5, 5]} intensity={8} color={T.indigo} distance={25} decay={2} />
         </group>
     );
 }
 
-function RoadLane({ width, length, angle, position }: { width: number, length: number, angle: number, position: [number, number, number] }) {
-    return (
-        <group position={position} rotation={[-Math.PI / 2, 0, angle]}>
-            <mesh>
-                <planeGeometry args={[width, length]} />
-                <meshStandardMaterial color="#111111" roughness={0.9} metalness={0.1} />
-            </mesh>
-            <mesh position={[width / 2 - 0.05, 0, 0.005]}>
-                <planeGeometry args={[0.08, length]} />
-                <meshBasicMaterial color="#f59e0b" />
-            </mesh>
-            <mesh position={[-width / 2 + 0.05, 0, 0.005]}>
-                <planeGeometry args={[0.08, length]} />
-                <meshBasicMaterial color="#f59e0b" />
-            </mesh>
-        </group>
-    );
-}
+/* ─── SOCIAL CAROUSEL CARD ─── */
+const SOCIALS = [
+    { platform: 'Instagram', label: 'Instagram', handle: '@devansh.datta', color: '#e1306c', bg: '#1a0a0f', href: 'https://instagram.com/devansh.datta', emoji: '📸' },
+    { platform: 'YouTube', label: 'YouTube', handle: '@devanshdatta', color: '#ff2d2d', bg: '#1a0808', href: 'https://youtube.com/@devanshdatta', emoji: '▶' },
+    { platform: 'LinkedIn', label: 'LinkedIn', handle: 'in/devansh-datta06', color: '#0a9cf5', bg: '#06111a', href: 'https://www.linkedin.com/in/devansh-datta06', emoji: '💼' },
+    { platform: 'GitHub', label: 'GitHub', handle: 'Devansh5150', color: '#a78bfa', bg: '#10090f', href: 'https://github.com/Devansh5150', emoji: '⌘' },
+    { platform: 'Email', label: 'Email', handle: 'work.devansh.datta\n@gmail.com', color: '#34d399', bg: '#060f0a', href: 'mailto:work.devansh.datta@gmail.com', emoji: '✉' },
+    { platform: 'Phone', label: 'Phone', handle: '+91 9871993246', color: '#fbbf24', bg: '#120f04', href: 'tel:+919871993246', emoji: '📱' },
+    { platform: 'Linktree', label: 'Linktree', handle: 'linktr.ee/devansh.datta', color: '#43e660', bg: '#071209', href: 'https://linktr.ee/devansh.datta', emoji: '🌿' },
+];
 
-function RadialRoads() {
-    return (
-        <group>
-            <group rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
-                <mesh>
-                    <ringGeometry args={[6, 8.5, 64]} />
-                    <meshStandardMaterial color="#111111" />
-                </mesh>
-            </group>
-            {PROJECTS.map((p, i) => {
-                const angle = (i * Math.PI * 2) / PROJECTS.length;
-                const rStart = 8.5;
-                const rEnd = ROOM_RADIUS - 1;
-                const len = rEnd - rStart;
-                const midR = (rStart + rEnd) / 2;
-                const x = Math.sin(angle) * midR;
-                const z = Math.cos(angle) * midR;
-                return <RoadLane key={i} width={1.8} length={len} angle={angle} position={[x, 0.015, z]} />;
-            })}
-        </group>
-    );
-}
+function SocialCarousel() {
+    const ringRef = useRef<HTMLDivElement>(null);
+    const angleRef = useRef(0);
+    const velRef = useRef(0.18);
+    const dragging = useRef(false);
+    const lastX = useRef(0);
+    const rafRef = useRef<number>(0);
 
-function ProjectKiosk({ project, angle }: { project: typeof PROJECTS[0], angle: number, index: number }) {
-    const x = Math.sin(angle) * ROOM_RADIUS;
-    const z = Math.cos(angle) * ROOM_RADIUS;
+    useEffect(() => {
+        const animate = () => {
+            if (!dragging.current) {
+                velRef.current *= 0.96;
+                angleRef.current += velRef.current;
+                if (Math.abs(velRef.current) < 0.08) velRef.current = 0.18;
+            }
+            if (ringRef.current) {
+                ringRef.current.style.transform = `rotateY(${angleRef.current}deg)`;
+            }
+            rafRef.current = requestAnimationFrame(animate);
+        };
+        rafRef.current = requestAnimationFrame(animate);
+        return () => cancelAnimationFrame(rafRef.current);
+    }, []);
 
-    return (
-        <group position={[x, 0, z]} rotation={[0, angle + Math.PI, 0]}>
-            <mesh position={[0, 1.2, 0]}>
-                <boxGeometry args={[5, 2.4, 0.4]} />
-                <meshStandardMaterial color={THEME.walls} metalness={0.8} roughness={0.2} />
-            </mesh>
-            <group position={[0, 2.8, -0.1]}>
-                <LEDScreen lines={[project.label, project.summary, project.impact]} color={project.color} />
-            </group>
-            <Text position={[0, 4.0, 0]} fontSize={0.3} color={project.color} anchorX="center">
-                {project.label}
-            </Text>
-            <group position={[0, 1.5, 0.4]}>
-                <AudioGuide text={project.description} position={[1.8, 0, 0]} color={project.color} />
-                <Text position={[0, 0.2, 0]} fontSize={1.4} anchorX="center" anchorY="middle">
-                    {project.emoji}
-                </Text>
-            </group>
-            <pointLight position={[0, 6, 3]} color={project.color} intensity={2.5} />
-        </group>
-    );
-}
-
-function Centerpiece() {
-    return (
-        <group position={[0, 0, 0]}>
-            <Circle args={[6, 64]} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
-                <meshStandardMaterial color={THEME.floor} />
-            </Circle>
-            <Text position={[0, 1.8, 0]} fontSize={1.4} color={THEME.text} anchorX="center">
-                DEVANSH DATTA
-            </Text>
-            <Text position={[0, 1.0, 0]} fontSize={0.3} color={THEME.accent} anchorX="center">
-                AI ENGINEER · DEVELOPER
-            </Text>
-            <pointLight position={[0, 12, 0]} intensity={3} color={THEME.accent} />
-        </group>
-    );
-}
-
-function Showroom() {
-    return (
-        <group>
-            <Circle args={[120, 64]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-                <meshStandardMaterial color={THEME.floor} />
-            </Circle>
-            <Sphere args={[120, 32, 32]} position={[0, 0, 0]}>
-                <meshBasicMaterial color={THEME.bg} side={THREE.BackSide} />
-            </Sphere>
-        </group>
-    );
-}
-
-function Joystick({ onMove }: { onMove: (v: THREE.Vector2) => void }) {
-    const [active, setActive] = useState(false);
-    const [pos, setPos] = useState({ x: 0, y: 0 });
-    const baseRef = useRef<HTMLDivElement>(null);
-
-    const handleStart = (e: React.TouchEvent | React.MouseEvent) => {
-        setActive(true);
-        handleMove(e);
+    const onDown = (e: React.PointerEvent) => {
+        dragging.current = true;
+        lastX.current = e.clientX;
+        velRef.current = 0;
+        (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
     };
-
-    const handleMove = (e: React.TouchEvent | React.MouseEvent) => {
-        if (!active || !baseRef.current) return;
-        const rect = baseRef.current.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        let clientX, clientY;
-        if ('touches' in e) {
-            clientX = e.touches[0].clientX;
-            clientY = e.touches[0].clientY;
-        } else {
-            clientX = e.clientX;
-            clientY = e.clientY;
-        }
-        const dx = clientX - centerX;
-        const dy = clientY - centerY;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        const maxDist = rect.width / 2;
-        const clampedDX = (dx / dist) * Math.min(dist, maxDist);
-        const clampedDY = (dy / dist) * Math.min(dist, maxDist);
-        setPos({ x: clampedDX, y: clampedDY });
-        onMove(new THREE.Vector2(clampedDX / maxDist, -clampedDY / maxDist));
+    const onMove = (e: React.PointerEvent) => {
+        if (!dragging.current) return;
+        const dx = e.clientX - lastX.current;
+        velRef.current = dx * 0.4;
+        angleRef.current += dx * 0.4;
+        lastX.current = e.clientX;
     };
+    const onUp = () => { dragging.current = false; };
 
-    const handleEnd = () => {
-        setActive(false);
-        setPos({ x: 0, y: 0 });
-        onMove(new THREE.Vector2(0, 0));
-    };
+    const n = SOCIALS.length;
+    const radius = 310;
 
     return (
-        <div ref={baseRef} className="absolute bottom-12 left-12 w-32 h-32 rounded-full border-2 border-white/20 bg-white/5 z-[100] touch-none"
-            onTouchStart={handleStart} onTouchMove={handleMove} onTouchEnd={handleEnd}
-            onMouseDown={handleStart} onMouseMove={handleMove} onMouseUp={handleEnd}
+        <div
+            style={{ width: '860px', height: '460px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'grab', userSelect: 'none', WebkitUserSelect: 'none', background: 'transparent' }}
+            onPointerDown={onDown}
+            onPointerMove={onMove}
+            onPointerUp={onUp}
+            onPointerLeave={onUp}
         >
-            <div className="absolute w-12 h-12 rounded-full bg-blue-500/60"
-                style={{ left: 'calc(50% - 1.5rem)', top: 'calc(50% - 1.5rem)', transform: `translate(${pos.x}px, ${pos.y}px)` }}
-            />
+            <div style={{ perspective: '1400px', width: '860px', height: '460px', position: 'relative', background: 'transparent' }}>
+                <div ref={ringRef} style={{ width: '100%', height: '100%', position: 'relative', transformStyle: 'preserve-3d', background: 'transparent' }}>
+                    {SOCIALS.map((s, i) => {
+                        const rotY = (360 / n) * i;
+                        return (
+                            <div
+                                key={s.platform}
+                                style={{
+                                    position: 'absolute',
+                                    width: '200px',
+                                    height: '280px',
+                                    left: '50%',
+                                    top: '50%',
+                                    marginLeft: '-100px',
+                                    marginTop: '-140px',
+                                    transform: `rotateY(${rotY}deg) translateZ(${radius}px)`,
+                                    transformStyle: 'preserve-3d',
+                                    backfaceVisibility: 'hidden',
+                                    background: s.bg,
+                                    border: `1px solid ${s.color}55`,
+                                    borderRadius: '20px',
+                                    padding: '20px',
+                                    boxShadow: `0 0 24px ${s.color}33, inset 0 0 30px ${s.color}0a`,
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'flex-start',
+                                    gap: '10px',
+                                    pointerEvents: 'auto',
+                                    cursor: 'pointer',
+                                }}
+                                onClick={(e) => { e.stopPropagation(); window.open(s.href, '_blank'); }}
+                            >
+                                {/* Icon Block */}
+                                <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: `${s.color}22`, border: `1px solid ${s.color}55`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px' }}>
+                                    {s.emoji}
+                                </div>
+
+                                {/* Title */}
+                                <div style={{ color: 'rgba(255,255,255,0.9)', fontWeight: '700', fontSize: '16px', letterSpacing: '0.03em', fontFamily: 'system-ui, sans-serif' }}>
+                                    {s.label}
+                                </div>
+
+                                {/* Handle */}
+                                <div style={{ color: s.color, fontSize: '12px', fontFamily: 'monospace', lineHeight: '1.5', wordBreak: 'break-all', flex: 1 }}>
+                                    {s.handle}
+                                </div>
+
+                                {/* Visit Button */}
+                                <div style={{ width: '100%', padding: '10px 0', borderTop: `1px solid ${s.color}33`, color: s.color, fontSize: '11px', fontWeight: '600', letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'system-ui, sans-serif', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                    <span>Visit</span>
+                                    <span style={{ fontSize: '14px' }}>→</span>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
         </div>
     );
 }
 
-function PlayerController({ keys, mobileMove, mobileLook }: {
-    keys: Record<string, boolean>,
-    mobileMove: THREE.Vector2,
-    mobileLook: { x: number, y: number }
-}) {
-    const { camera } = useThree();
-    const velocity = useRef(new THREE.Vector3());
-    const euler = useRef(new THREE.Euler(0, 0, 0, 'YXZ'));
+/* ─── SOCIAL LOUNGE (LEFT WING) ─── */
+function SocialLounge({ stationIdx }: { stationIdx: number }) {
+    return (
+        <group position={[-30, 0, -18]} rotation={[0, Math.PI / 6, 0]}>
+            {/* Elevated Platform */}
+            <mesh position={[0, 1, 0]} castShadow receiveShadow>
+                <boxGeometry args={[16, 2, 14]} />
+                <meshStandardMaterial color="#0d1220" roughness={0.3} metalness={0.7} />
+            </mesh>
+            {/* Glass Railing */}
+            <mesh position={[0, 3.5, 7]}>
+                <boxGeometry args={[16, 3, 0.15]} />
+                <meshPhysicalMaterial color={T.cyan} transparent opacity={0.08} roughness={0} metalness={0.5} />
+            </mesh>
+            {/* Railing Glow */}
+            <mesh position={[0, 2.1, 7]}>
+                <boxGeometry args={[16, 0.08, 0.08]} />
+                <meshStandardMaterial color={T.cyan} emissive={T.cyan} emissiveIntensity={4} toneMapped={false} />
+            </mesh>
 
-    useEffect(() => {
-        camera.position.set(0, 2.5, 15);
-        euler.current.set(0, Math.PI, 0);
-    }, [camera]);
+            {/* ─── 3D CARD RING CAROUSEL — hidden in Overview to avoid pillar clipping ─── */}
+            {stationIdx !== 0 && (
+                <Html
+                    transform
+                    position={[1, 5.5, 1]}
+                    scale={0.75}
+                    center
+                    occlude
+                    style={{ background: 'transparent' }}
+                >
+                    <SocialCarousel />
+                </Html>
+            )}
 
-    useEffect(() => {
-        const handleMouseMove = (e: MouseEvent) => {
-            if (document.pointerLockElement === null) return;
-            euler.current.y -= e.movementX * 0.002;
-            euler.current.x -= e.movementY * 0.002;
-            euler.current.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, euler.current.x));
-            camera.quaternion.setFromEuler(euler.current);
-        };
-        window.addEventListener('mousemove', handleMouseMove);
-        return () => window.removeEventListener('mousemove', handleMouseMove);
-    }, [camera]);
-
-    useFrame((_, delta) => {
-        if (mobileLook.x !== 0 || mobileLook.y !== 0) {
-            euler.current.y -= mobileLook.x * 0.005;
-            euler.current.x -= mobileLook.y * 0.005;
-            euler.current.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, euler.current.x));
-            camera.quaternion.setFromEuler(euler.current);
-        }
-
-        const move = new THREE.Vector3();
-        if (keys['w'] || keys['arrowup']) move.z -= 1;
-        if (keys['s'] || keys['arrowdown']) move.z += 1;
-        if (keys['a'] || keys['arrowleft']) move.x -= 1;
-        if (keys['d'] || keys['arrowright']) move.x += 1;
-        if (mobileMove.length() > 0) { move.x = mobileMove.x; move.z = -mobileMove.y; }
-
-        if (move.length() > 0) {
-            if (mobileMove.length() === 0) move.normalize();
-            const fwd = new THREE.Vector3(0, 0, -1).applyEuler(new THREE.Euler(0, euler.current.y, 0));
-            const side = new THREE.Vector3(1, 0, 0).applyEuler(new THREE.Euler(0, euler.current.y, 0));
-            const finalDir = new THREE.Vector3().addScaledVector(fwd, -move.z).addScaledVector(side, move.x);
-            velocity.current.addScaledVector(finalDir, 150 * delta);
-        }
-        velocity.current.multiplyScalar(0.85);
-
-        const nextPos = camera.position.clone().add(velocity.current.clone().multiplyScalar(delta));
-        const r = new THREE.Vector2(nextPos.x, nextPos.z).length();
-        let onRoad = false;
-        if (r >= 6.0 && r <= 8.5) { onRoad = true; }
-        else if (r > 8.5 && r <= ROOM_RADIUS - 1) {
-            const angle = Math.atan2(nextPos.x, nextPos.z);
-            PROJECTS.forEach((_, i) => {
-                const spokeAngle = (i * Math.PI * 2) / PROJECTS.length;
-                let diff = Math.abs(angle - spokeAngle);
-                if (diff > Math.PI) diff = Math.PI * 2 - diff;
-                if (r * Math.sin(diff) <= 0.95) onRoad = true;
-            });
-        }
-        if (onRoad) camera.position.copy(nextPos);
-        else velocity.current.set(0, 0, 0);
-        camera.position.y = 2.5;
-    });
-    return null;
+            <spotLight position={[0, 15, 5]} angle={0.4} penumbra={1} intensity={20} color={T.cyan} />
+            <pointLight position={[0, 6, 3]} intensity={5} color={T.cyan} distance={15} decay={2} />
+        </group>
+    );
 }
 
-function ProximitySensor({ onNear }: { onNear: (id: string | null) => void }) {
-    useFrame(({ camera }) => {
-        let best: string | null = null;
-        let minDist = 10;
-        PROJECTS.forEach((p, i) => {
-            const angle = (i * Math.PI * 2) / PROJECTS.length;
-            const px = Math.sin(angle) * ROOM_RADIUS;
-            const pz = Math.cos(angle) * ROOM_RADIUS;
-            const d = new THREE.Vector3(px, 0, pz).distanceTo(camera.position);
-            if (d < minDist) { minDist = d; best = p.id; }
+
+/* ─── ARCHIVE WING (RIGHT WING) ─── */
+const BOOK_COLORS = [
+    '#7c3aed', '#db2777', '#0891b2', '#059669', '#d97706',
+    '#dc2626', '#2563eb', '#16a34a', '#9333ea', '#ea580c',
+    '#0d9488', '#b45309', '#be123c', '#1d4ed8', '#15803d',
+];
+
+function ArchiveWing({ onRead }: { onRead: () => void }) {
+    const manuscriptsRef = useRef<THREE.Group>(null);
+
+    useFrame(({ clock }) => {
+        if (!manuscriptsRef.current) return;
+        const t = clock.getElapsedTime();
+        manuscriptsRef.current.children.forEach((child, i) => {
+            child.position.y = 5 + Math.sin(t * 0.8 + i * 0.8) * 0.4;
+            child.rotation.y = Math.sin(t * 0.3 + i) * 0.15;
         });
-        onNear(best);
     });
-    return null;
-}
 
-export default function CreativeWorld() {
-    const navigate = useNavigate();
-    const [nearProject, setNearProject] = useState<string | null>(null);
-    const [mobileMove, setMobileMove] = useState(new THREE.Vector2(0, 0));
-    const [mobileLook, setMobileLook] = useState({ x: 0, y: 0 });
-    const keysRef = useRef<Record<string, boolean>>({});
-
-    useEffect(() => {
-        const d = (e: KeyboardEvent) => { keysRef.current[e.key.toLowerCase()] = true; };
-        const u = (e: KeyboardEvent) => { keysRef.current[e.key.toLowerCase()] = false; };
-        window.addEventListener('keydown', d); window.addEventListener('keyup', u);
-        return () => { window.removeEventListener('keydown', d); window.removeEventListener('keyup', u); };
+    // Generate shelf book data deterministically
+    const books = useMemo(() => {
+        const result = [];
+        const shelves = [4, 7, 10, 13];
+        for (const y of shelves) {
+            let x = -6;
+            let idx = 0;
+            while (x < 6) {
+                const w = 0.25 + ((idx * 17 + y * 7) % 10) * 0.04;
+                const h = 1.2 + ((idx * 13 + y * 3) % 10) * 0.08;
+                const color = BOOK_COLORS[(idx * 3 + y) % BOOK_COLORS.length];
+                result.push({ x, y, w, h, color });
+                x += w + 0.03;
+                idx++;
+            }
+        }
+        return result;
     }, []);
 
-    const lastTouch = useRef({ x: 0, y: 0 });
-    const handleTouchMove = (e: React.TouchEvent) => {
-        const touch = e.touches[0];
-        if (lastTouch.current.x !== 0) setMobileLook({ x: touch.clientX - lastTouch.current.x, y: touch.clientY - lastTouch.current.y });
-        lastTouch.current = { x: touch.clientX, y: touch.clientY };
-    };
-    const handleTouchEnd = () => { setMobileLook({ x: 0, y: 0 }); lastTouch.current = { x: 0, y: 0 }; };
+    return (
+        <group position={[30, 0, -18]} rotation={[0, -Math.PI / 6, 0]}>
+            {/* Elevated Platform */}
+            <mesh position={[0, 1, 0]} castShadow receiveShadow>
+                <boxGeometry args={[16, 2, 14]} />
+                <meshStandardMaterial color="#0d1220" roughness={0.3} metalness={0.7} />
+            </mesh>
 
-    const nearData = PROJECTS.find(p => p.id === nearProject);
+            {/* Bookcase Wall backing */}
+            <mesh position={[0, 10, -6.5]} receiveShadow>
+                <boxGeometry args={[14, 16, 1.5]} />
+                <meshStandardMaterial color="#0a0f1a" roughness={0.8} metalness={0.2} />
+            </mesh>
+
+            {/* Shelf planks */}
+            {[4, 7, 10, 13, 16].map((y) => (
+                <mesh key={y} position={[0, y, -5.7]}>
+                    <boxGeometry args={[13, 0.12, 0.85]} />
+                    <meshStandardMaterial color="#1a2040" roughness={0.5} metalness={0.5} />
+                </mesh>
+            ))}
+
+            {/* Actual Book Geometry on shelves */}
+            {books.map((b, i) => (
+                <mesh key={i} position={[b.x, b.y + b.h / 2 + 0.06, -5.75]} castShadow>
+                    <boxGeometry args={[b.w, b.h, 0.6]} />
+                    <meshStandardMaterial color={b.color} roughness={0.9} metalness={0.05} />
+                </mesh>
+            ))}
+
+            {/* Scholar's Desk */}
+            <group position={[0, 2, 3]}>
+                {/* Desktop */}
+                <mesh position={[0, 0.8, 0]} castShadow>
+                    <boxGeometry args={[5, 0.12, 2.5]} />
+                    <meshStandardMaterial color="#1c1a0e" roughness={0.8} metalness={0.1} />
+                </mesh>
+                {/* Desk Legs */}
+                {[[-2.2, -1.1], [-2.2, 1.1], [2.2, -1.1], [2.2, 1.1]].map(([lx, lz], li) => (
+                    <mesh key={li} position={[lx, 0.35, lz]}>
+                        <boxGeometry args={[0.12, 0.7, 0.12]} />
+                        <meshStandardMaterial color="#2a2310" roughness={0.7} metalness={0.3} />
+                    </mesh>
+                ))}
+                {/* Open Book on desk */}
+                <mesh position={[-0.5, 0.88, 0]} rotation={[0, 0.15, 0]}>
+                    <boxGeometry args={[2.2, 0.04, 1.6]} />
+                    <meshStandardMaterial color="#fef3c7" roughness={1} metalness={0} />
+                </mesh>
+                {/* Desk lamp */}
+                <group position={[1.8, 0.88, -0.8]}>
+                    <mesh position={[0, 0.6, 0]}>
+                        <cylinderGeometry args={[0.05, 0.05, 1.2, 6]} />
+                        <meshStandardMaterial color="#334" roughness={0.3} metalness={0.9} />
+                    </mesh>
+                    <mesh position={[0, 1.3, 0]}>
+                        <coneGeometry args={[0.3, 0.4, 12]} />
+                        <meshStandardMaterial color="#2a2a10" roughness={0.5} metalness={0.4} emissive={T.gold} emissiveIntensity={0.4} />
+                    </mesh>
+                    <pointLight position={[0, 0.9, 0.3]} intensity={10} color={T.gold} distance={6} decay={2} />
+                </group>
+            </group>
+
+            {/* Scholar's Chair */}
+            <group position={[0, 2, 4.8]}>
+                <mesh position={[0, 0.25, 0]} castShadow>
+                    <boxGeometry args={[1.2, 0.08, 1.2]} />
+                    <meshStandardMaterial color="#1a1408" roughness={0.8} metalness={0.1} />
+                </mesh>
+                <mesh position={[0, 0.7, -0.55]} castShadow>
+                    <boxGeometry args={[1.2, 0.9, 0.1]} />
+                    <meshStandardMaterial color="#1a1408" roughness={0.8} metalness={0.1} />
+                </mesh>
+                {[[-0.5, -0.5], [-0.5, 0.5], [0.5, -0.5], [0.5, 0.5]].map(([cx, cz], ci) => (
+                    <mesh key={ci} position={[cx, -0.1, cz]}>
+                        <cylinderGeometry args={[0.05, 0.05, 0.5, 6]} />
+                        <meshStandardMaterial color="#2a2310" roughness={0.7} metalness={0.3} />
+                    </mesh>
+                ))}
+            </group>
+
+            {/* Floating Manuscripts */}
+            <group ref={manuscriptsRef}>
+                {[
+                    { x: -4, label: 'Ch I' },
+                    { x: -1.5, label: 'Ch II' },
+                    { x: 1.5, label: 'Ch III' },
+                    { x: 4, label: 'Ch IV' },
+                ].map((m, i) => (
+                    <group key={i} position={[m.x, 5, 0]} onClick={(e) => { e.stopPropagation(); onRead(); }}>
+                        <mesh rotation={[0.3, 0, 0]} castShadow>
+                            <boxGeometry args={[2, 2.8, 0.12]} />
+                            <meshStandardMaterial color="#fef3c7" roughness={0.9} metalness={0} />
+                        </mesh>
+                        <Text position={[0, 0, 0.15]} fontSize={0.2} color="#78350f" anchorX="center" rotation={[0.3, 0, 0]}>
+                            {m.label}
+                        </Text>
+                        <pointLight position={[0, 0, 1]} intensity={2} color={T.gold} distance={5} decay={2} />
+                    </group>
+                ))}
+            </group>
+
+            <spotLight position={[0, 18, 5]} angle={0.3} penumbra={1} intensity={20} color={T.violet} />
+            <pointLight position={[0, 6, 3]} intensity={5} color={T.gold} distance={15} decay={2} />
+        </group>
+    );
+}
+
+/* ─── DYNAMIC STATION LIGHTING ─── */
+const STATION_COLORS = [
+    { ambient: '#d0d4ff', accent: '#818cf8' }, // Overview  — indigo
+    { ambient: '#c8c0ff', accent: '#a78bfa' }, // Main Stage — violet
+    { ambient: '#b0f0ff', accent: '#67e8f9' }, // Lounge — cyan
+    { ambient: '#ffe8a0', accent: '#fde68a' }, // Archive — gold
+];
+
+function DynamicLighting({ stationIdx }: { stationIdx: number }) {
+    const ambientRef = useRef<THREE.AmbientLight>(null);
+    const accentRef = useRef<THREE.PointLight>(null);
+    const targetAmbient = useMemo(() => new THREE.Color(STATION_COLORS[stationIdx].ambient), [stationIdx]);
+    const targetAccent = useMemo(() => new THREE.Color(STATION_COLORS[stationIdx].accent), [stationIdx]);
+
+    useFrame(() => {
+        if (ambientRef.current) ambientRef.current.color.lerp(targetAmbient, 0.03);
+        if (accentRef.current) accentRef.current.color.lerp(targetAccent, 0.03);
+    });
 
     return (
-        <div className="fixed inset-0 w-full h-full overflow-hidden select-none bg-[#020617]"
-            onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}
+        <>
+            <ambientLight ref={ambientRef} intensity={1.2} color={STATION_COLORS[stationIdx].ambient} />
+            <pointLight ref={accentRef} position={[0, 18, 0]} intensity={30} distance={80} decay={1.5} color={STATION_COLORS[stationIdx].accent} />
+        </>
+    );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MAIN COMPONENT
+   ═══════════════════════════════════════════════════════════════ */
+export default function CreativeWorld() {
+    const navigate = useNavigate();
+    const [stationIdx, setStationIdx] = useState(0);
+    const [isReading, setIsReading] = useState(false);
+    const station = STATIONS[stationIdx];
+
+    /* ─── MOBILE DETECTION ─── */
+    const [isMobile, setIsMobile] = useState(() => window.innerWidth < 640);
+    useEffect(() => {
+        const onResize = () => setIsMobile(window.innerWidth < 640);
+        window.addEventListener('resize', onResize);
+        return () => window.removeEventListener('resize', onResize);
+    }, []);
+
+    /* ─── MUSIC PLAYER STATE ─── */
+    const audioRef = useRef<HTMLAudioElement | null>(null);
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [currentTrack, setCurrentTrack] = useState(0);
+    const [progress, setProgress] = useState(0);
+    const [currentTime, setCurrentTime] = useState('0:00');
+    const [duration, setDuration] = useState('0:00');
+
+    const formatTime = (s: number) => {
+        const m = Math.floor(s / 60);
+        const sec = Math.floor(s % 60);
+        return `${m}:${sec.toString().padStart(2, '0')}`;
+    };
+
+    useEffect(() => {
+        const audio = audioRef.current;
+        if (!audio) return;
+        const onTime = () => {
+            setProgress(audio.duration ? (audio.currentTime / audio.duration) * 100 : 0);
+            setCurrentTime(formatTime(audio.currentTime));
+        };
+        const onMeta = () => setDuration(formatTime(audio.duration));
+        const onEnd = () => {
+            if (currentTrack < TRACKS.length - 1) {
+                setCurrentTrack(i => i + 1);
+            } else {
+                setIsPlaying(false);
+                setProgress(0);
+            }
+        };
+        audio.addEventListener('timeupdate', onTime);
+        audio.addEventListener('loadedmetadata', onMeta);
+        audio.addEventListener('ended', onEnd);
+        return () => {
+            audio.removeEventListener('timeupdate', onTime);
+            audio.removeEventListener('loadedmetadata', onMeta);
+            audio.removeEventListener('ended', onEnd);
+        };
+    }, [currentTrack]);
+
+    useEffect(() => {
+        const audio = audioRef.current;
+        if (!audio) return;
+        audio.src = TRACKS[currentTrack].src;
+        if (isPlaying) audio.play();
+    }, [currentTrack]);
+
+    const togglePlay = () => {
+        const audio = audioRef.current;
+        if (!audio) return;
+        if (isPlaying) { audio.pause(); } else { audio.play(); }
+        setIsPlaying(!isPlaying);
+    };
+
+    const seekTo = (e: React.MouseEvent<HTMLDivElement>) => {
+        const audio = audioRef.current;
+        if (!audio || !audio.duration) return;
+        const rect = e.currentTarget.getBoundingClientRect();
+        const pct = (e.clientX - rect.left) / rect.width;
+        audio.currentTime = pct * audio.duration;
+    };
+
+    const skipTrack = (dir: 1 | -1) => {
+        const next = currentTrack + dir;
+        if (next >= 0 && next < TRACKS.length) setCurrentTrack(next);
+    };
+
+    const goTo = useCallback((idx: number) => {
+        setStationIdx(idx);
+        setIsReading(false);
+    }, []);
+
+    return (
+        <div
+            className="fixed inset-0 bg-[#080a12] select-none"
+            style={{ overflowX: isMobile ? 'scroll' : 'hidden', overflowY: 'hidden' }}
         >
-            <Canvas camera={{ fov: 60, near: 0.1, far: 500 }} shadows onClick={(e) => (e.target as HTMLElement).requestPointerLock?.()}>
-                <color attach="background" args={[THEME.bg]} />
-                <ambientLight intensity={0.6} />
-                <directionalLight position={[10, 20, 10]} intensity={1.5} />
-                <Showroom />
-                <Centerpiece />
-                <RadialRoads />
-                {PROJECTS.map((p, i) => (
-                    <ProjectKiosk key={p.id} project={p} index={i} angle={(i * Math.PI * 2) / PROJECTS.length} />
-                ))}
-                <Environment preset="night" />
-                <ProximitySensor onNear={setNearProject} />
-                <PlayerController keys={keysRef.current} mobileMove={mobileMove} mobileLook={mobileLook} />
-            </Canvas>
+            {/* Canvas wrapper — wider on mobile so user can scroll L/R */}
+            <div style={{ width: isMobile ? '180vw' : '100%', height: '100%', position: 'relative' }}>
+                <Canvas
+                    shadows
+                    gl={{ antialias: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 2.5 }}
+                    dpr={[1, 1.5]}
+                >
+                    <PerspectiveCamera makeDefault fov={isMobile ? 70 : 50} near={0.1} far={200} />
+                    <CameraRig target={station.cam} lookAt={station.look} />
 
-            <button onClick={() => navigate('/')} className="absolute top-8 left-8 z-[110] px-6 py-3 rounded-2xl bg-white/10 text-white text-xs font-bold">
-                EXIT SIMULATION
-            </button>
+                    <color attach="background" args={['#0a0e18']} />
+                    <fog attach="fog" args={['#0a0e18', 30, 120]} />
 
-            <div className="absolute top-8 left-1/2 -translate-x-1/2 z-50 text-center pointer-events-none">
-                <h1 className="text-white text-2xl font-bold tracking-widest">THE NEON ROTUNDA (SAFE MODE)</h1>
-            </div>
+                    <hemisphereLight intensity={1.5} color="#d0d4ff" groundColor="#1e2440" />
+                    <directionalLight position={[10, 20, 10]} intensity={2} color="#e0e4ff" />
+                    <directionalLight position={[-10, 15, 5]} intensity={1} color="#c8b8ff" />
+                    <DynamicLighting stationIdx={stationIdx} />
 
-            <div className="md:hidden"><Joystick onMove={setMobileMove} /></div>
+                    <Suspense fallback={null}>
+                        <HallStructure />
+                        {stationIdx === 0 && <AuditoriumSeating />}
+                        <MainStage
+                            isPlaying={isPlaying}
+                            track={TRACKS[currentTrack]}
+                            progress={progress}
+                            currentTime={currentTime}
+                            duration={duration}
+                            togglePlay={togglePlay}
+                            seekTo={seekTo}
+                            skipTrack={skipTrack}
+                            currentTrackIdx={currentTrack}
+                            totalTracks={TRACKS.length}
+                        />
+                        <SocialLounge stationIdx={stationIdx} />
+                        <ArchiveWing onRead={() => { setStationIdx(3); setIsReading(true); }} />
+                        <DustParticles count={150} />
+                        <Environment preset="night" />
 
-            {nearData && (
-                <div className="absolute bottom-12 right-12 z-50 w-full max-w-md bg-black/80 border border-blue-500/20 rounded-3xl p-8">
-                    <h3 className="text-white font-bold text-2xl mb-2">{nearData.label}</h3>
-                    <p className="text-slate-300 mb-6">{nearData.description}</p>
-                    <button className="w-full py-4 bg-blue-600 rounded-2xl text-white font-bold">EXPLORE</button>
+                    </Suspense>
+
+
+                </Canvas>
+
+                {/* ═══ UI OVERLAY ═══ */}
+                <div className="absolute inset-0 pointer-events-none z-50">
+                    {/* Header */}
+                    <div className="absolute top-4 left-4 sm:top-8 sm:left-8 pointer-events-auto flex items-start gap-3 sm:gap-5">
+                        <button
+                            onClick={() => navigate('/')}
+                            className="p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-white/[0.04] border border-white/[0.06] text-white/60 hover:text-white hover:bg-white/[0.08] transition-all duration-300 shrink-0"
+                        >
+                            <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+                        </button>
+                        <div>
+                            <div className="flex items-center gap-2 mb-1">
+                                <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-indigo-400 animate-pulse" />
+                                <span className="text-indigo-400/80 text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.2em] sm:tracking-[0.25em]">
+                                    Live Experience
+                                </span>
+                            </div>
+                            <h1 className="text-white/90 text-lg sm:text-2xl font-bold tracking-tight">
+                                Datta's Creative Corner
+                            </h1>
+                        </div>
+                    </div>
+
+                    {/* Station Navigator */}
+                    <div className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 pointer-events-auto w-[calc(100%-2rem)] sm:w-auto max-w-[560px]">
+                        <div className="flex items-center gap-2 sm:gap-1.5 p-2 sm:p-1.5 rounded-2xl bg-black/60 border border-white/[0.06] backdrop-blur-2xl shadow-2xl">
+                            {STATIONS.map((s, i) => (
+                                <button
+                                    key={s.id}
+                                    onClick={() => goTo(i)}
+                                    className={`relative flex-1 sm:flex-none px-3 sm:px-6 py-4 sm:py-3.5 rounded-xl text-[11px] sm:text-xs font-bold sm:font-semibold uppercase tracking-widest sm:tracking-wider transition-all duration-500 leading-tight text-center whitespace-nowrap ${stationIdx === i
+                                        ? 'bg-indigo-600/90 text-white shadow-lg shadow-indigo-600/20'
+                                        : 'text-white/40 hover:text-white/80 hover:bg-white/[0.06]'
+                                        }`}
+                                >
+                                    {s.label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+
+                    {/* Hidden audio element */}
+                    <audio ref={audioRef} preload="metadata" />
+
+
+                    {/* Reading Mode */}
+                    <AnimatePresence>
+                        {isReading && (
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="fixed inset-0 flex items-center justify-center bg-black/85 backdrop-blur-2xl p-8 pointer-events-auto z-[100]"
+                            >
+                                <motion.div
+                                    initial={{ y: 60, scale: 0.96 }}
+                                    animate={{ y: 0, scale: 1 }}
+                                    exit={{ y: 60, scale: 0.96 }}
+                                    transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                                    className="w-full max-w-2xl bg-[#fef3c7] p-6 sm:p-16 rounded-[2rem] sm:rounded-[3rem] relative shadow-2xl"
+                                >
+                                    <button
+                                        onClick={() => setIsReading(false)}
+                                        className="absolute top-4 right-4 sm:top-8 sm:right-8 p-2.5 sm:p-3 rounded-full hover:bg-black/5 transition-colors"
+                                    >
+                                        <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 text-black/60" />
+                                    </button>
+                                    <p className="text-black/30 text-[10px] font-semibold uppercase tracking-[0.3em] mb-4 sm:mb-6">Chapter I</p>
+                                    <h2 className="text-black text-2xl sm:text-4xl font-bold tracking-tight mb-5 sm:mb-8 leading-tight">
+                                        The Neural Symphony
+                                    </h2>
+                                    <div className="w-12 sm:w-16 h-1 bg-indigo-500 mb-6 sm:mb-10" />
+                                    <p className="text-black/60 text-base sm:text-lg leading-relaxed font-serif italic first-letter:text-4xl sm:first-letter:text-5xl first-letter:font-bold first-letter:float-left first-letter:mr-2 sm:first-letter:mr-3 first-letter:text-indigo-600">
+                                        In the quiet hum of the midnight server farm, the algorithms began to compose. It was not mere computation - it was the birth of a digital soul, each line of code a verse in an unfolding epic that would bridge the gap between silicon thought and human emotion...
+                                    </p>
+                                    <div className="mt-8 sm:mt-12 pt-4 sm:pt-6 border-t border-black/10 flex justify-between items-center">
+                                        <div className="flex gap-1.5">
+                                            <div className="w-2 h-2 rounded-full bg-indigo-500" />
+                                            <div className="w-2 h-2 rounded-full bg-black/10" />
+                                            <div className="w-2 h-2 rounded-full bg-black/10" />
+                                        </div>
+                                        <span className="text-black/30 text-[10px] font-semibold uppercase tracking-widest">Next Chapter</span>
+                                    </div>
+                                </motion.div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </div>
-            )}
+            </div>
+            {/* end canvas wrapper */}
         </div>
     );
 }

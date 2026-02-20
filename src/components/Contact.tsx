@@ -11,8 +11,7 @@ const Contact = () => {
     name: '',
     email: '',
     subject: '',
-    message: '',
-    projectType: ''
+    message: ''
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -21,7 +20,7 @@ const Contact = () => {
       title: "Message Sent!",
       description: "Thank you for reaching out. I'll get back to you within 24 hours.",
     });
-    setFormData({ name: '', email: '', subject: '', message: '', projectType: '' });
+    setFormData({ name: '', email: '', subject: '', message: '' });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -31,7 +30,7 @@ const Contact = () => {
     });
   };
 
-  const projectTypes = ['AI/ML Project', 'Full-Stack App', 'Consulting', 'Hackathon', 'Other'];
+
 
   const contactInfo = [
     { icon: Mail, title: 'Email', value: 'work.devansh.datta@gmail.com', link: 'mailto:work.devansh.datta@gmail.com' },
@@ -90,25 +89,6 @@ const Contact = () => {
             <h3 className="text-2xl font-bold text-white mb-8">Send a Message</h3>
 
             <form onSubmit={handleSubmit} className="space-y-5">
-              {/* Project Type Hints */}
-              <div>
-                <label className="block text-white text-sm font-medium mb-2">What's this about?</label>
-                <div className="flex flex-wrap gap-2">
-                  {projectTypes.map((type) => (
-                    <button
-                      key={type}
-                      type="button"
-                      onClick={() => setFormData({ ...formData, projectType: type })}
-                      className={`px-4 py-2 text-sm rounded-full border transition-all duration-200 ${formData.projectType === type
-                          ? 'bg-white text-black border-white'
-                          : 'border-white/20 text-gray-300 hover:border-white/40'
-                        }`}
-                    >
-                      {type}
-                    </button>
-                  ))}
-                </div>
-              </div>
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div>

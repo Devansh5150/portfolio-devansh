@@ -99,6 +99,14 @@ const Hero = () => {
                 Get in Touch
               </Button>
               <Button
+                size="lg"
+                className="bg-gradient-to-r from-indigo-500 to-cyan-500 hover:from-indigo-600 hover:to-cyan-600 text-white font-semibold px-8 h-12 gap-2"
+                onClick={() => navigate('/world')}
+              >
+                <Globe className="w-5 h-5" />
+                Explore My World
+              </Button>
+              <Button
                 variant="outline"
                 size="lg"
                 className="border-white/30 text-white hover:bg-white hover:text-black px-8 h-12"

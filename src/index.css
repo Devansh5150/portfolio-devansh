@@ -100,3 +100,9 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Music player visualizer bars */
+@keyframes musicBar {
+  0% { height: 20%; }
+  100% { height: 100%; }
+}
