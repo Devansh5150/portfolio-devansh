@@ -193,6 +193,22 @@ const Projects = () => {
       tech: ['React Native', 'Supabase', 'UI/UX Design'],
       image: '👥',
       github: 'https://github.com/Devansh5150'
+    },
+    {
+      title: 'Madat - Shopify Automation Tool',
+      description: 'Shopify automation platform streamlining store management, inventory updates, and order processing workflows for e-commerce businesses.',
+      impact: 'Automated repetitive e-commerce workflows, reducing manual operations',
+      tech: ['Shopify API', 'Node.js', 'React', 'Webhooks'],
+      image: '🛒',
+      github: 'https://github.com/Devansh5150'
+    },
+    {
+      title: 'EvoFox Vehicle Control System',
+      description: 'Real-time vehicle control simulation using an EvoFox game controller, mapping joystick inputs to vehicle commands to simulate smart transport systems.',
+      impact: 'Demonstrated real-time hardware-software integration for autonomous control',
+      tech: ['Python', 'EvoFox SDK', 'Real-time I/O', 'Simulation'],
+      image: '🎮',
+      github: 'https://github.com/Devansh5150'
     }
   ];
 

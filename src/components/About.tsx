@@ -56,7 +56,9 @@ const About = () => {
         { name: 'Figma', proof: 'Mobile & Web UI Design' },
         { name: 'UI/UX Design', proof: 'Mentor-Mentee, Minto' },
         { name: 'Technical Writing', proof: 'Published Book Chapter' },
-        { name: 'Team Leadership', proof: 'Globe Club, Hackverse, SkillSync' }
+        { name: 'Team Leadership', proof: 'Globe Club, Hackverse, SkillSync' },
+        { name: 'Cyber Security', proof: 'Ethical Hacking, Security Research' },
+        { name: 'Social Media Strategy', proof: 'AI SYNC TECH, Content Creation' }
       ]
     }
   ];
@@ -76,6 +78,32 @@ const About = () => {
       color: 'text-purple-400'
     },
     {
+      period: 'Jul 2025',
+      title: 'Data Analyst Intern - Deloitte',
+      description: 'Worked on data analysis and business intelligence projects at Deloitte.',
+      achievements: [
+        'Analyzed large datasets to extract actionable business insights',
+        'Built dashboards and data visualization reports',
+        'Collaborated with cross-functional teams on analytics workflows'
+      ],
+      impact: 'Delivered data-driven insights to support key business decisions',
+      icon: Database,
+      color: 'text-green-400'
+    },
+    {
+      period: '2024 - Present',
+      title: 'Social Media Coordinator - AI SYNC TECH',
+      description: 'Managing social media strategy and content creation for AI SYNC TECH.',
+      achievements: [
+        'Developed and executed social media strategies across platforms',
+        'Created engaging AI-focused content and grew community',
+        'Coordinated campaigns and improved brand engagement metrics'
+      ],
+      impact: 'Enhanced brand awareness and community growth for an AI-focused company',
+      icon: Users,
+      color: 'text-pink-400'
+    },
+    {
       period: '2025',
       title: 'AI Research Intern - Emotions Lab',
       description: 'Researched multi-modal emotion detection for real-time applications.',
@@ -86,7 +114,7 @@ const About = () => {
       ],
       impact: 'Improved emotion detection accuracy by 15% and reduced inference latency by 50%',
       icon: Brain,
-      color: 'text-pink-400'
+      color: 'text-cyan-400'
     },
     {
       period: '2025 - Present',
@@ -100,11 +128,20 @@ const About = () => {
     {
       period: '2024 - 2028',
       title: 'B.Tech CSE (AIML) - IILM University',
-      description: 'AI/ML specialization · Research projects',
-      achievements: ['AI/ML Specialization', 'Research Projects'],
+      description: 'AI/ML specialization · Research projects · IILM University, Gurugram',
+      achievements: ['AI/ML Specialization', 'Research Projects', 'Hackathon Organizer'],
       impact: 'Academic excellence with hands-on project experience',
       icon: BookOpen,
       color: 'text-green-400'
+    },
+    {
+      period: '2012 - 2024',
+      title: 'Ryan International School, Sohna Road',
+      description: 'Completed schooling at Ryan International School.',
+      achievements: ['Foundation in Science & Mathematics', 'Extracurricular activities', 'NCC Training'],
+      impact: 'Built a strong academic foundation for engineering studies',
+      icon: BookOpen,
+      color: 'text-orange-400'
     }
   ];
 
@@ -119,15 +156,16 @@ const About = () => {
           <div className="text-gray-300 text-lg max-w-3xl mx-auto animate-slide-up delay-300 space-y-4">
             <p>
               I'm a Computer Science student at IILM University, specializing in AI/ML. I build end-to-end
-              products - from recommendation engines and computer vision pipelines to full-stack web
-              platforms - and I've done it for startups, research labs, and institutional tools used
+              products — from recommendation engines and computer vision pipelines to full-stack web
+              platforms — and I've done it for startups, research labs, and institutional tools used
               across my university.
             </p>
             <p>
-              Right now I lead AI development at SkillSync, where I architect the recommendation and
-              CV-analysis pipeline. Previously, I researched multi-modal emotion detection at Emotions Lab
-              and founded Torq, a startup delivering on-demand roadside assistance. Outside code,
-              I'm a published author exploring the intersection of AI and consciousness.{' '}
+              I lead AI development at SkillSync, where I architect the recommendation and CV-analysis
+              pipeline. I've also worked as a Data Analyst at Deloitte, Social Media Coordinator at
+              AI SYNC TECH, and previously interned via Microsoft Azure Cloud. Outside code, I'm a
+              published horror fiction writer and poet — my story <em>The Unseen</em> is live on Wattpad,
+              and I regularly share poetry exploring the depths of human feeling.{' '}
               <a
                 href="https://linktr.ee/devansh.datta"
                 target="_blank"

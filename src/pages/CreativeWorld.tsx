@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect, Suspense, useMemo, useCallback } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Text, PerspectiveCamera, Float, Environment, MeshReflectorMaterial, Html } from '@react-three/drei';
+import { Text, PerspectiveCamera, Float, Environment, MeshReflectorMaterial, Html, useGLTF, useTexture } from '@react-three/drei';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as THREE from 'three';
@@ -32,7 +32,7 @@ const STATIONS = [
     { id: 'hall', label: 'Overview', cam: [0, 8, 22] as const, look: [0, 3, -10] as const },
     { id: 'stage', label: 'Main Stage', cam: [0, 4, 8] as const, look: [0, 5, -25] as const },
     { id: 'lounge', label: 'Social Lounge', cam: [-18, 6, -5] as const, look: [-28, 4, -20] as const },
-    { id: 'archive', label: 'Archive Wing', cam: [18, 6, -5] as const, look: [28, 4, -20] as const },
+    { id: 'archive', label: 'Projects Room', cam: [32, 10, -2] as const, look: [30, 2, -18] as const },
 ];
 
 /* ─── SMOOTH CAMERA RIG ─── */
@@ -645,144 +645,140 @@ const BOOK_COLORS = [
     '#0d9488', '#b45309', '#be123c', '#1d4ed8', '#15803d',
 ];
 
-function ArchiveWing({ onRead }: { onRead: () => void }) {
-    const manuscriptsRef = useRef<THREE.Group>(null);
+function ProjectRoom() {
+    const { scene, nodes } = useGLTF('https://rawcdn.githack.com/ricardoolivaalonso/ThreeJS-Room01/98fd8d7909308ec03a596928a394bb25ed9239f1/THREEJS2.glb');
+    const bakedTexture = useTexture('https://rawcdn.githack.com/ricardoolivaalonso/ThreeJS-Room01/98fd8d7909308ec03a596928a394bb25ed9239f1/baked.jpg');
 
-    useFrame(({ clock }) => {
-        if (!manuscriptsRef.current) return;
-        const t = clock.getElapsedTime();
-        manuscriptsRef.current.children.forEach((child, i) => {
-            child.position.y = 5 + Math.sin(t * 0.8 + i * 0.8) * 0.4;
-            child.rotation.y = Math.sin(t * 0.3 + i) * 0.15;
-        });
-    });
+    bakedTexture.flipY = false;
+    bakedTexture.colorSpace = THREE.SRGBColorSpace;
 
-    // Generate shelf book data deterministically
-    const books = useMemo(() => {
-        const result = [];
-        const shelves = [4, 7, 10, 13];
-        for (const y of shelves) {
-            let x = -6;
-            let idx = 0;
-            while (x < 6) {
-                const w = 0.25 + ((idx * 17 + y * 7) % 10) * 0.04;
-                const h = 1.2 + ((idx * 13 + y * 3) % 10) * 0.08;
-                const color = BOOK_COLORS[(idx * 3 + y) % BOOK_COLORS.length];
-                result.push({ x, y, w, h, color });
-                x += w + 0.03;
-                idx++;
+    const clonedScene = useMemo(() => scene.clone(), [scene]);
+
+    // Find the monitor screen mesh position from the GLTF scene
+    const monitorInfo = useMemo(() => {
+        let bestCandidate: { center: THREE.Vector3; size: THREE.Vector3; normal: 'x' | 'y' | 'z' } | null = null;
+        let bestArea = 0;
+        const box = new THREE.Box3();
+        const center = new THREE.Vector3();
+        const size = new THREE.Vector3();
+
+        scene.traverse((child) => {
+            if (!(child as THREE.Mesh).isMesh) return;
+            const mesh = child as THREE.Mesh;
+            mesh.geometry.computeBoundingBox();
+            const bb = mesh.geometry.boundingBox;
+            if (!bb) return;
+
+            box.copy(bb);
+            box.getCenter(center);
+            box.getSize(size);
+
+            // Monitor screen: thin in one axis, wide in another two
+            // Check each axis as the "thin" axis
+            const dims = [
+                { thin: 'x' as const, w: size.z, h: size.y, d: size.x },
+                { thin: 'y' as const, w: size.x, h: size.z, d: size.y },
+                { thin: 'z' as const, w: size.x, h: size.y, d: size.z },
+            ];
+
+            for (const dim of dims) {
+                const area = dim.w * dim.h;
+                const ratio = Math.max(dim.w, dim.h) / Math.min(dim.w, dim.h);
+                // Monitor is wide (ratio ~2-3), large area, and thin
+                if (dim.d < 0.15 && ratio > 1.5 && ratio < 4 && area > bestArea && area > 0.5) {
+                    bestArea = area;
+                    bestCandidate = {
+                        center: center.clone(),
+                        size: size.clone(),
+                        normal: dim.thin,
+                    };
+                }
             }
+        });
+
+        if (bestCandidate) {
+            console.log('Monitor found!', bestCandidate.center, bestCandidate.size, 'thin axis:', bestCandidate.normal);
+        } else {
+            console.log('No monitor mesh found, using fallback');
         }
-        return result;
-    }, []);
+        return bestCandidate;
+    }, [scene]);
+
+    useMemo(() => {
+        const bakedMaterial = new THREE.MeshBasicMaterial({ map: bakedTexture, side: THREE.DoubleSide });
+        clonedScene.traverse((child) => {
+            if ((child as THREE.Mesh).isMesh) {
+                (child as THREE.Mesh).material = bakedMaterial;
+            }
+        });
+    }, [clonedScene, bakedTexture]);
+
+    // Compute the Html position in group-local space
+    // primitive is at [0, -2, 0] with scale 2.5
+    // So model coords -> group coords: x*2.5, y*2.5 - 2, z*2.5
+    const screenPos: [number, number, number] = monitorInfo
+        ? [
+            monitorInfo.center.x * 2.5,
+            monitorInfo.center.y * 2.5 - 2,
+            monitorInfo.center.z * 2.5 + (monitorInfo.normal === 'x' ? 0.05 : monitorInfo.normal === 'z' ? 0.05 : 0),
+        ]
+        : [-4.5, 3.5, 1.5]; // fallback
+
+    // Compute the overlay dimensions based on the monitor mesh size
+    const screenScale = monitorInfo
+        ? Math.max(monitorInfo.size.x, monitorInfo.size.y, monitorInfo.size.z) * 2.5 * 0.14
+        : 0.35;
 
     return (
-        <group position={[30, 0, -18]} rotation={[0, -Math.PI / 6, 0]}>
-            {/* Elevated Platform */}
-            <mesh position={[0, 1, 0]} castShadow receiveShadow>
-                <boxGeometry args={[16, 2, 14]} />
-                <meshStandardMaterial color="#0d1220" roughness={0.3} metalness={0.7} />
-            </mesh>
+        <group position={[30, 0, -18]} rotation={[0, -Math.PI / 4.5, 0]}>
+            <primitive object={clonedScene} position={[0, -2, 0]} scale={2.5} />
 
-            {/* Bookcase Wall backing */}
-            <mesh position={[0, 10, -6.5]} receiveShadow>
-                <boxGeometry args={[14, 16, 1.5]} />
-                <meshStandardMaterial color="#0a0f1a" roughness={0.8} metalness={0.2} />
-            </mesh>
-
-            {/* Shelf planks */}
-            {[4, 7, 10, 13, 16].map((y) => (
-                <mesh key={y} position={[0, y, -5.7]}>
-                    <boxGeometry args={[13, 0.12, 0.85]} />
-                    <meshStandardMaterial color="#1a2040" roughness={0.5} metalness={0.5} />
-                </mesh>
-            ))}
-
-            {/* Actual Book Geometry on shelves */}
-            {books.map((b, i) => (
-                <mesh key={i} position={[b.x, b.y + b.h / 2 + 0.06, -5.75]} castShadow>
-                    <boxGeometry args={[b.w, b.h, 0.6]} />
-                    <meshStandardMaterial color={b.color} roughness={0.9} metalness={0.05} />
-                </mesh>
-            ))}
-
-            {/* Scholar's Desk */}
-            <group position={[0, 2, 3]}>
-                {/* Desktop */}
-                <mesh position={[0, 0.8, 0]} castShadow>
-                    <boxGeometry args={[5, 0.12, 2.5]} />
-                    <meshStandardMaterial color="#1c1a0e" roughness={0.8} metalness={0.1} />
-                </mesh>
-                {/* Desk Legs */}
-                {[[-2.2, -1.1], [-2.2, 1.1], [2.2, -1.1], [2.2, 1.1]].map(([lx, lz], li) => (
-                    <mesh key={li} position={[lx, 0.35, lz]}>
-                        <boxGeometry args={[0.12, 0.7, 0.12]} />
-                        <meshStandardMaterial color="#2a2310" roughness={0.7} metalness={0.3} />
-                    </mesh>
-                ))}
-                {/* Open Book on desk */}
-                <mesh position={[-0.5, 0.88, 0]} rotation={[0, 0.15, 0]}>
-                    <boxGeometry args={[2.2, 0.04, 1.6]} />
-                    <meshStandardMaterial color="#fef3c7" roughness={1} metalness={0} />
-                </mesh>
-                {/* Desk lamp */}
-                <group position={[1.8, 0.88, -0.8]}>
-                    <mesh position={[0, 0.6, 0]}>
-                        <cylinderGeometry args={[0.05, 0.05, 1.2, 6]} />
-                        <meshStandardMaterial color="#334" roughness={0.3} metalness={0.9} />
-                    </mesh>
-                    <mesh position={[0, 1.3, 0]}>
-                        <coneGeometry args={[0.3, 0.4, 12]} />
-                        <meshStandardMaterial color="#2a2a10" roughness={0.5} metalness={0.4} emissive={T.gold} emissiveIntensity={0.4} />
-                    </mesh>
-                    <pointLight position={[0, 0.9, 0.3]} intensity={10} color={T.gold} distance={6} decay={2} />
-                </group>
-            </group>
-
-            {/* Scholar's Chair */}
-            <group position={[0, 2, 4.8]}>
-                <mesh position={[0, 0.25, 0]} castShadow>
-                    <boxGeometry args={[1.2, 0.08, 1.2]} />
-                    <meshStandardMaterial color="#1a1408" roughness={0.8} metalness={0.1} />
-                </mesh>
-                <mesh position={[0, 0.7, -0.55]} castShadow>
-                    <boxGeometry args={[1.2, 0.9, 0.1]} />
-                    <meshStandardMaterial color="#1a1408" roughness={0.8} metalness={0.1} />
-                </mesh>
-                {[[-0.5, -0.5], [-0.5, 0.5], [0.5, -0.5], [0.5, 0.5]].map(([cx, cz], ci) => (
-                    <mesh key={ci} position={[cx, -0.1, cz]}>
-                        <cylinderGeometry args={[0.05, 0.05, 0.5, 6]} />
-                        <meshStandardMaterial color="#2a2310" roughness={0.7} metalness={0.3} />
-                    </mesh>
-                ))}
-            </group>
-
-            {/* Floating Manuscripts */}
-            <group ref={manuscriptsRef}>
-                {[
-                    { x: -4, label: 'Ch I' },
-                    { x: -1.5, label: 'Ch II' },
-                    { x: 1.5, label: 'Ch III' },
-                    { x: 4, label: 'Ch IV' },
-                ].map((m, i) => (
-                    <group key={i} position={[m.x, 5, 0]} onClick={(e) => { e.stopPropagation(); onRead(); }}>
-                        <mesh rotation={[0.3, 0, 0]} castShadow>
-                            <boxGeometry args={[2, 2.8, 0.12]} />
-                            <meshStandardMaterial color="#fef3c7" roughness={0.9} metalness={0} />
-                        </mesh>
-                        <Text position={[0, 0, 0.15]} fontSize={0.2} color="#78350f" anchorX="center" rotation={[0.3, 0, 0]}>
-                            {m.label}
-                        </Text>
-                        <pointLight position={[0, 0, 1]} intensity={2} color={T.gold} distance={5} decay={2} />
-                    </group>
-                ))}
-            </group>
+            {/* Live Projects iframe embedded on the monitor screen */}
+            <Html
+                transform
+                position={screenPos}
+                rotation={[0, 0, 0]}
+                scale={screenScale}
+                center
+                style={{ background: 'transparent' }}
+            >
+                <div
+                    style={{
+                        width: '520px',
+                        height: '300px',
+                        borderRadius: '4px',
+                        overflow: 'hidden',
+                        position: 'relative',
+                        cursor: 'pointer',
+                        pointerEvents: 'auto',
+                        background: '#0a0e18',
+                    }}
+                    onClick={(e) => { e.stopPropagation(); window.location.href = '/#projects'; }}
+                >
+                    <iframe
+                        src="/#projects"
+                        title="Projects"
+                        style={{
+                            width: '1560px',
+                            height: '900px',
+                            border: 'none',
+                            transform: 'scale(0.333)',
+                            transformOrigin: 'top left',
+                            pointerEvents: 'none',
+                            background: '#080a12',
+                        }}
+                    />
+                </div>
+            </Html>
 
             <spotLight position={[0, 18, 5]} angle={0.3} penumbra={1} intensity={20} color={T.violet} />
             <pointLight position={[0, 6, 3]} intensity={5} color={T.gold} distance={15} decay={2} />
         </group>
     );
 }
+
+useGLTF.preload('https://rawcdn.githack.com/ricardoolivaalonso/ThreeJS-Room01/98fd8d7909308ec03a596928a394bb25ed9239f1/THREEJS2.glb');
+useTexture.preload('https://rawcdn.githack.com/ricardoolivaalonso/ThreeJS-Room01/98fd8d7909308ec03a596928a394bb25ed9239f1/baked.jpg');
 
 /* ─── DYNAMIC STATION LIGHTING ─── */
 const STATION_COLORS = [
@@ -817,7 +813,6 @@ function DynamicLighting({ stationIdx }: { stationIdx: number }) {
 export default function CreativeWorld() {
     const navigate = useNavigate();
     const [stationIdx, setStationIdx] = useState(0);
-    const [isReading, setIsReading] = useState(false);
     const station = STATIONS[stationIdx];
 
     /* ─── MOBILE DETECTION ─── */
@@ -897,7 +892,6 @@ export default function CreativeWorld() {
 
     const goTo = useCallback((idx: number) => {
         setStationIdx(idx);
-        setIsReading(false);
     }, []);
 
     return (
@@ -939,7 +933,7 @@ export default function CreativeWorld() {
                             totalTracks={TRACKS.length}
                         />
                         <SocialLounge stationIdx={stationIdx} />
-                        <ArchiveWing onRead={() => { setStationIdx(3); setIsReading(true); }} />
+                        <ProjectRoom />
                         <DustParticles count={150} />
                         <Environment preset="night" />
 
@@ -994,48 +988,7 @@ export default function CreativeWorld() {
                     <audio ref={audioRef} preload="metadata" />
 
 
-                    {/* Reading Mode */}
-                    <AnimatePresence>
-                        {isReading && (
-                            <motion.div
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                className="fixed inset-0 flex items-center justify-center bg-black/85 backdrop-blur-2xl p-8 pointer-events-auto z-[100]"
-                            >
-                                <motion.div
-                                    initial={{ y: 60, scale: 0.96 }}
-                                    animate={{ y: 0, scale: 1 }}
-                                    exit={{ y: 60, scale: 0.96 }}
-                                    transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                                    className="w-full max-w-2xl bg-[#fef3c7] p-6 sm:p-16 rounded-[2rem] sm:rounded-[3rem] relative shadow-2xl"
-                                >
-                                    <button
-                                        onClick={() => setIsReading(false)}
-                                        className="absolute top-4 right-4 sm:top-8 sm:right-8 p-2.5 sm:p-3 rounded-full hover:bg-black/5 transition-colors"
-                                    >
-                                        <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 text-black/60" />
-                                    </button>
-                                    <p className="text-black/30 text-[10px] font-semibold uppercase tracking-[0.3em] mb-4 sm:mb-6">Chapter I</p>
-                                    <h2 className="text-black text-2xl sm:text-4xl font-bold tracking-tight mb-5 sm:mb-8 leading-tight">
-                                        The Neural Symphony
-                                    </h2>
-                                    <div className="w-12 sm:w-16 h-1 bg-indigo-500 mb-6 sm:mb-10" />
-                                    <p className="text-black/60 text-base sm:text-lg leading-relaxed font-serif italic first-letter:text-4xl sm:first-letter:text-5xl first-letter:font-bold first-letter:float-left first-letter:mr-2 sm:first-letter:mr-3 first-letter:text-indigo-600">
-                                        In the quiet hum of the midnight server farm, the algorithms began to compose. It was not mere computation - it was the birth of a digital soul, each line of code a verse in an unfolding epic that would bridge the gap between silicon thought and human emotion...
-                                    </p>
-                                    <div className="mt-8 sm:mt-12 pt-4 sm:pt-6 border-t border-black/10 flex justify-between items-center">
-                                        <div className="flex gap-1.5">
-                                            <div className="w-2 h-2 rounded-full bg-indigo-500" />
-                                            <div className="w-2 h-2 rounded-full bg-black/10" />
-                                            <div className="w-2 h-2 rounded-full bg-black/10" />
-                                        </div>
-                                        <span className="text-black/30 text-[10px] font-semibold uppercase tracking-widest">Next Chapter</span>
-                                    </div>
-                                </motion.div>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
+                    {/* Removed Reading Mode Overlay as ArchiveWing is now ProjectRoom */}
                 </div>
             </div>
             {/* end canvas wrapper */}

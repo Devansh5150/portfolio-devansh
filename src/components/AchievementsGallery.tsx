@@ -69,18 +69,48 @@ const AchievementsGallery = () => {
     },
     {
       id: 5,
-      title: "Hackverse Core Team",
+      title: "Organizer of HackVerse",
       category: "Event Management",
       year: "2024",
       location: "IILM University",
-      description: "Collaborated with faculty and sponsors to structure and manage Hackverse hackathon, handling logistics and participant mentorship.",
-      details: "Managed a hackathon with 200+ participants, coordinated with sponsors, handled logistics, and provided technical mentorship to participants.",
-      impact: "Successful hackathon execution, participant satisfaction, strengthened industry connections",
-      skills: ["Event Management", "Logistics", "Mentoring", "Sponsor Relations"],
+      description: "Organized and led HackVerse hackathon, managing all operations from logistics and sponsor coordination to participant mentorship.",
+      details: "Spearheaded a hackathon with 200+ participants as Organizer. Coordinated with sponsors, structured event timelines, handled logistics, and provided technical mentorship to participants throughout the event.",
+      impact: "Successful hackathon execution with 200+ participants, strong industry connections and participant satisfaction",
+      skills: ["Event Organization", "Logistics", "Mentoring", "Sponsor Relations"],
       icon: Zap,
       color: "from-orange-500 to-red-500",
       bgColor: "bg-orange-500/10",
       borderColor: "border-orange-500/30"
+    },
+    {
+      id: 7,
+      title: "NCC Certificate 'A'",
+      category: "Certification",
+      year: "2024",
+      location: "National Cadet Corps",
+      description: "Earned the NCC 'A' Certificate, demonstrating discipline, leadership, and commitment to national service through rigorous cadet training.",
+      details: "Completed the National Cadet Corps 'A' level certification, which involved physical training, drill, leadership exercises, and civic education. This certification is recognized nationally as a mark of discipline and service.",
+      impact: "Enhanced leadership qualities, discipline, and civic responsibility recognized at a national level",
+      skills: ["Leadership", "Discipline", "Physical Training", "Civic Education"],
+      icon: Medal,
+      color: "from-emerald-500 to-teal-500",
+      bgColor: "bg-emerald-500/10",
+      borderColor: "border-emerald-500/30"
+    },
+    {
+      id: 8,
+      title: "Microsoft Azure Cloud Internship",
+      category: "Internship",
+      year: "2024",
+      location: "Microsoft (Virtual)",
+      description: "Completed a Microsoft Azure Cloud internship, gaining hands-on experience with cloud computing, Azure services, and deployment architectures.",
+      details: "Worked with core Azure services including virtual machines, storage, networking, and cloud deployment pipelines. Gained certification-level knowledge of cloud architecture and Microsoft's enterprise cloud ecosystem.",
+      impact: "Acquired cloud computing expertise and validated skills on Microsoft's enterprise cloud platform",
+      skills: ["Azure Cloud", "Cloud Architecture", "DevOps", "Infrastructure"],
+      icon: Award,
+      color: "from-blue-500 to-sky-500",
+      bgColor: "bg-blue-500/10",
+      borderColor: "border-blue-500/30"
     },
     {
       id: 6,
@@ -106,11 +136,13 @@ const AchievementsGallery = () => {
     { id: 'Leadership', label: 'Leadership', icon: Users },
     { id: 'Professional', label: 'Professional', icon: Code },
     { id: 'Event Management', label: 'Events', icon: Zap },
-    { id: 'Marketing', label: 'Marketing', icon: Star }
+    { id: 'Marketing', label: 'Marketing', icon: Star },
+    { id: 'Certification', label: 'Certifications', icon: Medal },
+    { id: 'Internship', label: 'Internships', icon: Award }
   ];
 
-  const filteredAchievements = selectedCategory === 'all' 
-    ? achievements 
+  const filteredAchievements = selectedCategory === 'all'
+    ? achievements
     : achievements.filter(achievement => achievement.category === selectedCategory);
 
   const getCategoryStats = () => {
@@ -135,7 +167,7 @@ const AchievementsGallery = () => {
             MY <span className="italic text-orange-400">ACHIEVEMENTS</span> & MILESTONES
           </h2>
           <p className="text-gray-300 text-lg max-w-3xl mx-auto">
-            Explore my journey of accomplishments across competitions, leadership, 
+            Explore my journey of accomplishments across competitions, leadership,
             professional work, and creative endeavors. Each achievement tells a story of growth and impact.
           </p>
         </div>
@@ -170,11 +202,10 @@ const AchievementsGallery = () => {
               <motion.button
                 key={category.id}
                 onClick={() => setSelectedCategory(category.id)}
-                className={`px-6 py-3 rounded-full font-semibold transition-all duration-300 flex items-center gap-2 ${
-                  selectedCategory === category.id 
-                    ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-black' 
+                className={`px-6 py-3 rounded-full font-semibold transition-all duration-300 flex items-center gap-2 ${selectedCategory === category.id
+                    ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-black'
                     : 'bg-slate-800/50 text-gray-300 hover:bg-slate-700/50 border border-slate-600'
-                }`}
+                  }`}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -225,11 +256,11 @@ const AchievementsGallery = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   <p className="text-gray-300 text-sm mb-4 leading-relaxed">
                     {achievement.description}
                   </p>
-                  
+
                   <div className="space-y-2">
                     <p className="text-xs text-gray-400 font-semibold">Key Skills:</p>
                     <div className="flex flex-wrap gap-1">
@@ -270,9 +301,9 @@ const AchievementsGallery = () => {
                 {(() => {
                   const achievement = achievements.find(a => a.id === selectedAchievement);
                   if (!achievement) return null;
-                  
+
                   const Icon = achievement.icon;
-                  
+
                   return (
                     <div className="p-8">
                       <div className="flex items-center gap-4 mb-6">
