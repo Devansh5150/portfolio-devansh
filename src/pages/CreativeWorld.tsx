@@ -822,7 +822,7 @@ export default function CreativeWorld() {
             "Step into Devansh Datta's immersive 3D creative world — a virtual auditorium featuring original music tracks, social lounge, and project showcase room.",
         keywords:
             'Devansh Datta creative world, 3D portfolio, original music, Kalm, Kithe Duur, Na Jaane Kyu, virtual auditorium',
-        canonical: 'https://devansh-datta.vercel.app/world',
+        canonical: 'https://devanshdattafolio.vercel.app/world',
     });
 
     /* ─── MOBILE DETECTION ─── */

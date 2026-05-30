@@ -9,7 +9,7 @@ const Achievements = () => {
       'Awards, certifications, and recognition earned by Devansh Datta — AI Innovation Award, hackathon finalist, poetry competition winner, and professional certifications in Python, ML, and Web Development.',
     keywords:
       'Devansh Datta achievements, AI Innovation Award, hackathon finalist, Python certification, Machine Learning certificate, IILM University',
-    canonical: 'https://devansh-datta.vercel.app/achievements',
+    canonical: 'https://devanshdattafolio.vercel.app/achievements',
   });
   const achievements = [{
     title: "AI Innovation Award",

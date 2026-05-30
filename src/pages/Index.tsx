@@ -34,7 +34,7 @@ const Index = () => {
       'Portfolio of Devansh Datta — AI/ML engineer, full-stack developer, published author, and startup founder. Tech Lead at SkillSync, CEO of Torq. B.Tech CSE (AIML) at IILM University.',
     keywords:
       'Devansh Datta, AI Developer, Machine Learning, Full-Stack, LLM, Python, React, SkillSync, Torq, IILM',
-    canonical: 'https://devansh-datta.vercel.app/',
+    canonical: 'https://devanshdattafolio.vercel.app/',
   });
 
   useEffect(() => {

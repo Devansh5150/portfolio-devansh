@@ -10,7 +10,7 @@ interface SEOOptions {
   noindex?: boolean;
 }
 
-const BASE_URL = 'https://devansh-datta.vercel.app';
+const BASE_URL = 'https://devanshdattafolio.vercel.app';
 const DEFAULT_DESCRIPTION =
   'Portfolio of Devansh Datta — AI/ML engineer, full-stack developer, published author, and startup founder.';
 const DEFAULT_OG_IMAGE = `${BASE_URL}/og-image.png`;
