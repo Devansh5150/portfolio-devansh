@@ -35,6 +35,8 @@ const Navigation = ({ activeSection }: NavigationProps) => {
       animate={{ y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
       className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-md border-b border-white/15"
+      role="navigation"
+      aria-label="Main Navigation"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
@@ -61,6 +63,8 @@ const Navigation = ({ activeSection }: NavigationProps) => {
                   ? 'text-black'
                   : 'text-white hover:text-green-300 hover:bg-white/10'
                   }`}
+                aria-label={`Scroll to ${item.label} section`}
+                aria-current={activeSection === item.id ? 'page' : undefined}
               >
                 {activeSection === item.id && (
                   <motion.div
@@ -83,17 +87,20 @@ const Navigation = ({ activeSection }: NavigationProps) => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-white text-black text-sm font-semibold hover:bg-neutral-200 transition-all duration-300"
+              aria-label="Download Resume (opens in new tab)"
             >
-              <Download className="w-3.5 h-3.5" />
+              <Download className="w-3.5 h-3.5" aria-hidden="true" />
               Resume
             </motion.a>
           </div>
 
           {/* Mobile Navigation Toggle */}
           <motion.button
-            className="md:hidden text-white"
+            className="md:hidden text-white p-2"
             onClick={() => setIsOpen(!isOpen)}
             whileTap={{ scale: 0.95 }}
+            aria-label={isOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isOpen}
           >
             <AnimatePresence mode="wait">
               {isOpen ? (
@@ -104,7 +111,7 @@ const Navigation = ({ activeSection }: NavigationProps) => {
                   exit={{ rotate: 90, opacity: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <X size={24} />
+                  <X size={24} aria-hidden="true" />
                 </motion.div>
               ) : (
                 <motion.div
@@ -114,7 +121,7 @@ const Navigation = ({ activeSection }: NavigationProps) => {
                   exit={{ rotate: -90, opacity: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Menu size={24} />
+                  <Menu size={24} aria-hidden="true" />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -143,6 +150,7 @@ const Navigation = ({ activeSection }: NavigationProps) => {
                     ? 'bg-white text-black'
                     : 'text-white hover:text-green-300 hover:bg-white/10'
                     }`}
+                  aria-label={`Scroll to ${item.label} section`}
                 >
                   {item.label}
                 </motion.button>
@@ -156,8 +164,9 @@ const Navigation = ({ activeSection }: NavigationProps) => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.2, delay: navItems.length * 0.1 }}
                 className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white text-black font-semibold transition-all duration-300"
+                aria-label="Download Resume (opens in new tab)"
               >
-                <Download className="w-4 h-4" />
+                <Download className="w-4 h-4" aria-hidden="true" />
                 Download Resume
               </motion.a>
             </motion.div>

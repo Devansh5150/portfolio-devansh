@@ -1,8 +1,15 @@
 import { useNavigate } from 'react-router-dom';
+import { useSEO } from '../hooks/useSEO';
 
 /* ─── ROUTE VERIFICATION MODE ─── */
 export default function EndWorld() {
     const navigate = useNavigate();
+
+    useSEO({
+        title: 'Route Test | Devansh Datta',
+        description: 'Internal route verification page.',
+        noindex: true,
+    });
 
     return (
         <div className="fixed inset-0 w-full h-full bg-red-600 flex flex-col items-center justify-center p-20 text-center z-[9999]">

@@ -1,6 +1,16 @@
 import { ArrowLeft, Award, Trophy, Star, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useSEO } from '../hooks/useSEO';
+
 const Achievements = () => {
+  useSEO({
+    title: 'Achievements & Certifications | Devansh Datta',
+    description:
+      'Awards, certifications, and recognition earned by Devansh Datta — AI Innovation Award, hackathon finalist, poetry competition winner, and professional certifications in Python, ML, and Web Development.',
+    keywords:
+      'Devansh Datta achievements, AI Innovation Award, hackathon finalist, Python certification, Machine Learning certificate, IILM University',
+    canonical: 'https://devansh-datta.vercel.app/achievements',
+  });
   const achievements = [{
     title: "AI Innovation Award",
     description: "Recognition for developing an innovative AI-powered solution",
@@ -47,7 +57,7 @@ const Achievements = () => {
     year: "2023",
     level: "Beginner"
   }];
-  return <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white py-20 px-4">
+  return <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white py-20 px-4" aria-label="Achievements and Certifications">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-12">
@@ -129,6 +139,6 @@ const Achievements = () => {
           </div>
         </div>
       </div>
-    </div>;
+    </main>;
 };
 export default Achievements;

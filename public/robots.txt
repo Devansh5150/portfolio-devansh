@@ -1,7 +1,20 @@
+# ─── Devansh Datta Portfolio — robots.txt ───────────────────────────────────
+# https://devansh-datta.vercel.app/robots.txt
+
+# Allow all well-known crawlers
 User-agent: Googlebot
 Allow: /
+Crawl-delay: 1
 
 User-agent: Bingbot
+Allow: /
+Crawl-delay: 2
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 2
+
+User-agent: DuckDuckBot
 Allow: /
 
 User-agent: Twitterbot
@@ -10,5 +23,16 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+# Allow all other bots by default
 User-agent: *
 Allow: /
+Disallow: /end
+
+# ─── Sitemap ─────────────────────────────────────────────────────────────────
+Sitemap: https://devansh-datta.vercel.app/sitemap.xml

@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as THREE from 'three';
 import { ArrowLeft, Mic2, Users, Play, Pause, SkipBack, SkipForward, Volume2, Instagram, Youtube, BookOpen, ChevronRight, Music } from 'lucide-react';
+import { useSEO } from '../hooks/useSEO';
 
 /* ─── TRACK LIST ─── */
 const TRACKS = [
@@ -815,6 +816,15 @@ export default function CreativeWorld() {
     const [stationIdx, setStationIdx] = useState(0);
     const station = STATIONS[stationIdx];
 
+    useSEO({
+        title: "Devansh's Creative World | Music, Art & 3D Experience",
+        description:
+            "Step into Devansh Datta's immersive 3D creative world — a virtual auditorium featuring original music tracks, social lounge, and project showcase room.",
+        keywords:
+            'Devansh Datta creative world, 3D portfolio, original music, Kalm, Kithe Duur, Na Jaane Kyu, virtual auditorium',
+        canonical: 'https://devansh-datta.vercel.app/world',
+    });
+
     /* ─── MOBILE DETECTION ─── */
     const [isMobile, setIsMobile] = useState(() => window.innerWidth < 640);
     useEffect(() => {
@@ -985,7 +995,7 @@ export default function CreativeWorld() {
 
 
                     {/* Hidden audio element */}
-                    <audio ref={audioRef} preload="metadata" />
+                    <audio ref={audioRef} preload="metadata" aria-label="Music player for Devansh Datta's original tracks" />
 
 
                     {/* Removed Reading Mode Overlay as ArchiveWing is now ProjectRoom */}

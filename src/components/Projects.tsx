@@ -3,214 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Badge } from './ui/badge';
-import { ExternalLink, Github, Code, Users, Award, Calendar, Zap, ChevronDown, ChevronUp } from 'lucide-react';
+import { ExternalLink, Github, Code, Award, Zap, ChevronDown, ChevronUp } from 'lucide-react';
+import { primaryProjects, secondaryProjects } from '../data/projects';
 
 const Projects = () => {
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
-  const [hoveredProject, setHoveredProject] = useState<number | null>(null);
   const [showArchitecture, setShowArchitecture] = useState(false);
-
-  const primaryProjects = [
-    {
-      title: 'Torq - AI Emergency Vehicle Support',
-      status: 'Completed',
-      description: 'On-demand roadside assistance platform connecting stranded drivers with service providers through AI matching and real-time tracking. Built as a startup, served 500+ users.',
-      bullets: {
-        problem: 'No unified real-time platform for emergency roadside service in remote areas',
-        role: 'Founded and led product development end-to-end - architecture, AI chatbot, payment flow',
-        impact: 'Served 500+ users · Modular microservice backend · Razorpay escrow integration'
-      },
-      tech: ['React Native', 'Node.js', 'Firebase', 'PostgreSQL', 'OpenAI API', 'Razorpay'],
-      image: '🚗',
-      category: 'Mobile App',
-      problemStatement: 'Drivers stranded due to fuel shortages or vehicle breakdowns in remote areas face long wait times and unreliable service. There was no unified platform connecting emergency service providers with users in real-time.',
-      detailedDescription: 'A comprehensive emergency vehicle support platform that connects drivers with service providers through intelligent matching. Built as a startup venture, this platform addresses real-world problems in emergency vehicle assistance with a modular backend architecture.',
-      architectureFlow: 'User App → Backend API (Node.js + Express) → PostgreSQL Database → AI Layer (OpenAI GPT) → Payment Gateway (Razorpay) → Push Notifications (Firebase FCM)',
-      architectureDetails: [
-        'Modular backend: Auth Module, Service Matching Module, Payment Module, Notification Module',
-        'Real-time tracking: Firebase Realtime DB + Geolocation API for live driver/provider positions',
-        'OpenAI chatbot: Context-aware assistant trained on FAQ data for instant user support',
-        'Payment flow: Razorpay integration with escrow-like hold until service completion'
-      ],
-      features: [
-        'Real-time GPS tracking with live driver-provider matching',
-        'AI-powered chatbot for instant assistance (OpenAI GPT)',
-        'Secure payment integration with Razorpay escrow flow',
-        'Multi-vendor marketplace with provider rating system',
-        'Emergency SOS with priority routing',
-        'Push notification pipeline via Firebase FCM'
-      ],
-      challenges: [
-        'Achieving sub-second location accuracy for real-time tracking in low-connectivity zones',
-        'Implementing secure payment escrow flow with Razorpay for service-based transactions',
-        'Training the OpenAI chatbot with domain-specific emergency assistance context',
-        'Designing a horizontally scalable microservice architecture for peak-load scenarios'
-      ],
-      github: 'https://github.com/Devansh5150',
-      demo: '#',
-      timeline: '6 months',
-      team: 'CEO & Lead Developer',
-      awards: ['Startup Innovation Award']
-    },
-    {
-      title: 'Tatvam - LLM Contextual Mapping Engine',
-      status: 'Completed',
-      description: 'LLM-powered platform connecting ancient philosophical texts with modern AI through RAG pipelines, ethical guardrails, and tiered subscription access.',
-      bullets: {
-        problem: 'Ancient philosophical knowledge is scattered and existing AI lacks cultural sensitivity',
-        role: 'Designed the RAG pipeline, ethical guardrail system, and AWS deployment architecture',
-        impact: 'Novel AI application bridging philosophy and technology · Stripe-based 3-tier access · Serverless AWS deployment'
-      },
-      tech: ['Next.js', 'Python', 'LangChain', 'OpenAI API', 'Supabase', 'Stripe', 'AWS'],
-      image: '🧘',
-      category: 'AI Platform',
-      problemStatement: 'Spiritual and philosophical knowledge is scattered across ancient texts, making it inaccessible to modern seekers. Existing AI tools lack the contextual depth and ethical sensitivity needed for such guidance.',
-      detailedDescription: 'Tatvam uses an LLM-based contextual mapping engine to bridge ancient philosophical traditions with modern AI capabilities. It provides personalized, ethically-grounded guidance while respecting cultural sensitivities through carefully designed guardrails.',
-      architectureFlow: 'User Interface (Next.js) → API Gateway → LLM Contextual Engine (LangChain + OpenAI) → Vector DB (Embeddings) → Subscription Layer (Stripe) → Cloud Infrastructure (AWS)',
-      architectureDetails: [
-        'LLM Contextual Mapping: LangChain pipeline with custom prompt templates and retrieval-augmented generation (RAG)',
-        'Subscription access control: Stripe-based tiered access (Free, Premium, Scholar) with Supabase RLS policies',
-        'Ethical guardrails: Content filtering layer with sensitivity scoring and cultural respect checks',
-        'Scalable cloud deployment: AWS EC2 + Lambda for burst traffic, CloudFront CDN for static assets'
-      ],
-      features: [
-        'LLM-based contextual mapping engine with RAG pipeline',
-        'Subscription access control system (Free/Premium/Scholar tiers)',
-        'Ethical guardrails with sensitivity scoring',
-        'Personalized guidance based on user context and history',
-        'Vector database for semantic search across ancient texts',
-        'Scalable cloud deployment on AWS infrastructure'
-      ],
-      challenges: [
-        'Building a culturally sensitive LLM pipeline that respects philosophical traditions',
-        'Implementing effective RAG with ancient texts that have multiple interpretations',
-        'Designing subscription tiers with proper access control using Supabase RLS',
-        'Deploying a cost-efficient serverless architecture on AWS for variable traffic'
-      ],
-      github: 'https://github.com/Devansh5150',
-      demo: '#',
-      timeline: '4 months',
-      team: 'Lead AI Engineer',
-      awards: ['Innovation in AI Ethics']
-    },
-    {
-      title: 'Minto - Last-Mile Delivery Platform',
-      status: 'Completed',
-      description: 'Delivery platform empowering Tier-2/3 city vendors by eliminating dark-store dependency. Built proximity-based delivery matching in 48 hours.',
-      bullets: {
-        problem: 'Small vendors in smaller cities can\'t afford dark-store logistics',
-        role: 'Built real-time order mapping, vendor analytics dashboard, and delivery assignment algorithm',
-        impact: '50+ vendors onboarded · 40% delivery efficiency improvement · Won Best Social Impact Project'
-      },
-      tech: ['Next.js', 'Node.js', 'Supabase', 'Tailwind CSS', 'Google Maps API'],
-      image: '📦',
-      category: 'Web Platform',
-      problemStatement: 'Small vendors in Tier-2 and Tier-3 cities are excluded from the delivery economy due to expensive dark-store requirements and complex logistics systems designed for urban centers.',
-      detailedDescription: 'A social impact project designed to empower local vendors in smaller cities by providing them with efficient delivery solutions. The platform eliminates the need for expensive dark stores while optimizing logistics through real-time order mapping and vendor analytics.',
-      architectureFlow: 'Vendor Dashboard → Order Management API → Real-time Mapping Engine (Google Maps) → Delivery Assignment Algorithm → Customer Tracking Interface',
-      architectureDetails: [
-        'Vendor onboarding system: Multi-step registration with document verification and inventory setup',
-        'Real-time order mapping: Google Maps API integration for live order tracking and delivery route optimization',
-        'Vendor analytics dashboard: Sales trends, delivery performance metrics, and customer feedback aggregation',
-        'Delivery assignment algorithm: Proximity-based matching with load balancing across available delivery agents'
-      ],
-      features: [
-        'Vendor onboarding with multi-step registration and verification',
-        'Real-time order mapping with Google Maps integration',
-        'Vendor analytics dashboard with sales and performance metrics',
-        'Proximity-based delivery assignment algorithm',
-        'Mobile-responsive customer tracking interface',
-        'Inventory management with low-stock alerts'
-      ],
-      challenges: [
-        'Building a delivery assignment algorithm that works with sparse delivery networks in smaller cities',
-        'Implementing real-time order tracking with Google Maps for multiple concurrent deliveries',
-        'Designing a vendor analytics dashboard that surfaces actionable insights from limited data',
-        'Optimizing database queries for real-time order management at scale'
-      ],
-      github: 'https://github.com/Devansh5150',
-      demo: '#',
-      timeline: '48 hours (Hackathon)',
-      team: '4 members',
-      awards: ['Best Social Impact Project']
-    },
-    {
-      title: 'Mood-Based Spotify Player',
-      status: 'Completed',
-      description: 'Real-time emotion detection via webcam → dynamic Spotify playlist generation. Detects 7 emotions through DeepFace and maps them to music genres.',
-      bullets: {
-        problem: 'Music recommendation relies on history, not real-time emotional state',
-        role: 'Built the entire CV pipeline - face detection, emotion classification, Spotify OAuth, playlist generation',
-        impact: 'Real-time emotion-to-music at 30fps · 7-emotion classification · Won Best AI Innovation Award'
-      },
-      tech: ['Python', 'OpenCV', 'DeepFace', 'Spotify API', 'pyttsx3'],
-      image: '🎵',
-      category: 'AI/Computer Vision',
-      problemStatement: 'Music discovery is often manual and disconnected from the listener\'s emotional state. Existing recommendation systems rely on listening history rather than real-time emotional context.',
-      detailedDescription: 'An innovative AI-powered music player that revolutionizes how we discover music. Using advanced computer vision techniques, the system analyzes facial expressions in real-time to understand emotional states and curates personalized playlists dynamically.',
-      architectureFlow: 'Webcam Feed → OpenCV Preprocessing → DeepFace Emotion Classifier → Mood-to-Genre Mapping → Spotify API → Audio Playback + Voice Feedback (pyttsx3)',
-      architectureDetails: [
-        'Video pipeline: OpenCV captures frames, applies face detection, and sends cropped faces to DeepFace',
-        'Emotion classification: DeepFace analyzes 7 emotions (happy, sad, angry, surprise, fear, disgust, neutral)',
-        'Mood mapping: Custom algorithm maps detected emotions to Punjabi music genres and energy levels',
-        'Spotify integration: OAuth2 flow with dynamic playlist generation and track queueing'
-      ],
-      features: [
-        'Real-time facial emotion detection via DeepFace',
-        'Dynamic Spotify playlist generation based on mood',
-        'Voice feedback with pyttsx3 for accessibility',
-        'Multi-language support with Punjabi music focus',
-        'Emotion history tracking and mood timeline',
-        'Cross-platform Python application'
-      ],
-      challenges: [
-        'Optimizing emotion detection accuracy across diverse lighting conditions',
-        'Real-time video processing performance at 30fps without frame drops',
-        'Handling Spotify API rate limiting during rapid mood transitions',
-        'Cross-cultural music recommendation with limited labeled Punjabi music data'
-      ],
-      github: 'https://github.com/Devansh5150',
-      demo: '#',
-      timeline: '3 months',
-      team: 'Solo Project',
-      awards: ['Best AI Innovation Award']
-    }
-  ];
-
-  const secondaryProjects = [
-    {
-      title: 'AttainHub',
-      description: 'OBE automation platform adopted by my college. Automated CO/PO mapping, attainment tracking, and accreditation reporting.',
-      impact: 'Reduced faculty manual work by 80%',
-      tech: ['React', 'Node.js', 'Database Design'],
-      image: '🎓',
-      github: 'https://github.com/Devansh5150'
-    },
-    {
-      title: 'Mentor-Mentee App',
-      description: 'Mentorship scheduling and progress tracking platform. Built the entire frontend with smart matching and goal tracking.',
-      impact: 'Facilitated 200+ mentor-mentee relationships',
-      tech: ['React Native', 'Supabase', 'UI/UX Design'],
-      image: '👥',
-      github: 'https://github.com/Devansh5150'
-    },
-    {
-      title: 'Madat - Shopify Automation Tool',
-      description: 'Shopify automation platform streamlining store management, inventory updates, and order processing workflows for e-commerce businesses.',
-      impact: 'Automated repetitive e-commerce workflows, reducing manual operations',
-      tech: ['Shopify API', 'Node.js', 'React', 'Webhooks'],
-      image: '🛒',
-      github: 'https://github.com/Devansh5150'
-    },
-    {
-      title: 'EvoFox Vehicle Control System',
-      description: 'Real-time vehicle control simulation using an EvoFox game controller, mapping joystick inputs to vehicle commands to simulate smart transport systems.',
-      impact: 'Demonstrated real-time hardware-software integration for autonomous control',
-      tech: ['Python', 'EvoFox SDK', 'Real-time I/O', 'Simulation'],
-      image: '🎮',
-      github: 'https://github.com/Devansh5150'
-    }
-  ];
 
   const getCategoryColor = (category: string) => {
     const colors: Record<string, string> = {
@@ -250,8 +48,6 @@ const Projects = () => {
               key={index}
               className="group bg-black/60 rounded-xl border border-white/15 hover:border-white/30 transition-all duration-300 overflow-hidden cursor-pointer"
               whileHover={{ scale: 1.02, y: -5 }}
-              onHoverStart={() => setHoveredProject(index)}
-              onHoverEnd={() => setHoveredProject(null)}
               onClick={() => { setSelectedProject(index); setShowArchitecture(false); }}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -259,7 +55,7 @@ const Projects = () => {
             >
               <div className="p-6 md:p-8">
                 <div className="flex items-center justify-between mb-4">
-                  <div className="text-4xl">{project.image}</div>
+                  <div className="text-4xl" aria-hidden="true">{project.image}</div>
                   <Badge variant="outline" className="text-xs">
                     {project.timeline}
                   </Badge>
@@ -314,8 +110,9 @@ const Projects = () => {
                       setSelectedProject(index);
                       setShowArchitecture(false);
                     }}
+                    aria-label={`View case study for ${project.title}`}
                   >
-                    <Code className="w-4 h-4 mr-2" />
+                    <Code className="w-4 h-4 mr-2" aria-hidden="true" />
                     View Case Study
                   </Button>
                   <Button
@@ -324,10 +121,11 @@ const Projects = () => {
                     className="border-white/30 text-white hover:bg-white hover:text-black transition-all duration-300"
                     onClick={(e) => {
                       e.stopPropagation();
-                      window.open(project.github, '_blank');
+                      window.open(project.github, '_blank', 'noopener,noreferrer');
                     }}
+                    aria-label={`View source code for ${project.title} on GitHub`}
                   >
-                    <Github className="w-4 h-4" />
+                    <Github className="w-4 h-4" aria-hidden="true" />
                   </Button>
                 </div>
               </div>
@@ -348,7 +146,7 @@ const Projects = () => {
                 transition={{ delay: 0.4 + index * 0.1 }}
               >
                 <div className="flex items-center gap-3 mb-3">
-                  <span className="text-2xl">{project.image}</span>
+                  <span className="text-2xl" aria-hidden="true">{project.image}</span>
                   <h4 className="text-lg font-bold text-white">{project.title}</h4>
                 </div>
                 <p className="text-gray-400 text-sm mb-3">{project.description}</p>
@@ -364,9 +162,10 @@ const Projects = () => {
                   variant="outline"
                   size="sm"
                   className="border-white/30 text-white hover:bg-white hover:text-black transition-all duration-300"
-                  onClick={() => window.open(project.github, '_blank')}
+                  onClick={() => window.open(project.github, '_blank', 'noopener,noreferrer')}
+                  aria-label={`View code for ${project.title} on GitHub`}
                 >
-                  <Github className="w-4 h-4 mr-2" />
+                  <Github className="w-4 h-4 mr-2" aria-hidden="true" />
                   View Code
                 </Button>
               </motion.div>
@@ -378,9 +177,10 @@ const Projects = () => {
           <Button
             size="lg"
             className="bg-gradient-to-r from-fuchsia-500 to-cyan-500 hover:from-fuchsia-600 hover:to-cyan-600 text-black font-semibold px-8 py-3 transition-all duration-300 transform hover:scale-105 w-full sm:w-auto"
-            onClick={() => window.open('https://github.com/Devansh5150', '_blank')}
+            onClick={() => window.open('https://github.com/Devansh5150', '_blank', 'noopener,noreferrer')}
+            aria-label="View all projects on GitHub"
           >
-            <Github className="w-5 h-5 mr-2" />
+            <Github className="w-5 h-5 mr-2" aria-hidden="true" />
             View All on GitHub
           </Button>
         </div>
@@ -393,7 +193,7 @@ const Projects = () => {
             <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-slate-900 border-slate-700">
               <DialogHeader>
                 <DialogTitle className="text-2xl font-bold text-white flex items-center gap-3">
-                  <span className="text-3xl">{primaryProjects[selectedProject].image}</span>
+                  <span className="text-3xl" aria-hidden="true">{primaryProjects[selectedProject].image}</span>
                   {primaryProjects[selectedProject].title}
                 </DialogTitle>
               </DialogHeader>
@@ -416,13 +216,16 @@ const Projects = () => {
                   <button
                     onClick={() => setShowArchitecture(!showArchitecture)}
                     className="w-full flex items-center justify-between p-4 bg-slate-800/50 rounded-lg border border-white/10 hover:border-white/30 transition-all duration-300"
+                    aria-expanded={showArchitecture}
+                    aria-controls="architecture-details"
                   >
                     <h3 className="text-lg font-semibold text-blue-400">System Architecture</h3>
-                    {showArchitecture ? <ChevronUp className="w-5 h-5 text-gray-400" /> : <ChevronDown className="w-5 h-5 text-gray-400" />}
+                    {showArchitecture ? <ChevronUp className="w-5 h-5 text-gray-400" aria-hidden="true" /> : <ChevronDown className="w-5 h-5 text-gray-400" aria-hidden="true" />}
                   </button>
                   <AnimatePresence>
                     {showArchitecture && (
                       <motion.div
+                        id="architecture-details"
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
@@ -438,7 +241,7 @@ const Projects = () => {
                             <div className="space-y-2">
                               {primaryProjects[selectedProject].architectureDetails.map((detail, index) => (
                                 <div key={index} className="flex items-start gap-2 text-gray-300 text-sm">
-                                  <span className="w-1.5 h-1.5 mt-1.5 bg-blue-400 rounded-full flex-shrink-0"></span>
+                                  <span className="w-1.5 h-1.5 mt-1.5 bg-blue-400 rounded-full flex-shrink-0" aria-hidden="true"></span>
                                   {detail}
                                 </div>
                               ))}
@@ -456,7 +259,7 @@ const Projects = () => {
                   <div className="grid md:grid-cols-2 gap-2">
                     {primaryProjects[selectedProject].features.map((feature, index) => (
                       <div key={index} className="flex items-center gap-2 text-gray-300">
-                        <Zap className="w-4 h-4 text-yellow-400 flex-shrink-0" />
+                        <Zap className="w-4 h-4 text-yellow-400 flex-shrink-0" aria-hidden="true" />
                         {feature}
                       </div>
                     ))}
@@ -508,7 +311,7 @@ const Projects = () => {
                     <div className="space-y-1">
                       {primaryProjects[selectedProject].awards.map((award, index) => (
                         <div key={index} className="flex items-center gap-2 text-sm">
-                          <Award className="w-4 h-4 text-yellow-400" />
+                          <Award className="w-4 h-4 text-yellow-400" aria-hidden="true" />
                           <span className="text-gray-300">{award}</span>
                         </div>
                       ))}
@@ -519,18 +322,20 @@ const Projects = () => {
                 {/* Action Buttons */}
                 <div className="flex gap-4 pt-4">
                   <Button
-                    onClick={() => window.open(primaryProjects[selectedProject].github, '_blank')}
+                    onClick={() => window.open(primaryProjects[selectedProject].github, '_blank', 'noopener,noreferrer')}
                     className="flex-1 bg-slate-800 hover:bg-slate-700 text-white border border-slate-600"
+                    aria-label="View code on GitHub"
                   >
-                    <Github className="w-4 h-4 mr-2" />
+                    <Github className="w-4 h-4 mr-2" aria-hidden="true" />
                     View Code
                   </Button>
                   {primaryProjects[selectedProject].demo !== '#' && (
                     <Button
-                      onClick={() => window.open(primaryProjects[selectedProject].demo, '_blank')}
+                      onClick={() => window.open(primaryProjects[selectedProject].demo, '_blank', 'noopener,noreferrer')}
                       className="flex-1 bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-black"
+                      aria-label="View live demo"
                     >
-                      <ExternalLink className="w-4 h-4 mr-2" />
+                      <ExternalLink className="w-4 h-4 mr-2" aria-hidden="true" />
                       Live Demo
                     </Button>
                   )}

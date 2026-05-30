@@ -1,21 +1,44 @@
-import { useState, useEffect } from 'react';
-import { ArrowDown, Download } from 'lucide-react';
-import Hero from '../components/Hero';
-import About from '../components/About';
-import Projects from '../components/Projects';
-import Services from '../components/Services';
-import Leadership from '../components/Leadership';
-import ResearchPublications from '../components/ResearchPublications';
-import Hackathons from '../components/Hackathons';
-import SystemThinking from '../components/SystemThinking';
-import Contact from '../components/Contact';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import Navigation from '../components/Navigation';
+import Hero from '../components/Hero';
+import { useSEO } from '../hooks/useSEO';
+
+// Lazy load heavy sections for improved initial load performance
+const About = lazy(() => import('../components/About'));
+const Projects = lazy(() => import('../components/Projects'));
+const Services = lazy(() => import('../components/Services'));
+const Leadership = lazy(() => import('../components/Leadership'));
+const ResearchPublications = lazy(() => import('../components/ResearchPublications'));
+const Hackathons = lazy(() => import('../components/Hackathons'));
+const SystemThinking = lazy(() => import('../components/SystemThinking'));
+const Contact = lazy(() => import('../components/Contact'));
+
+// Throttling function to limit scroll event frequency
+const throttle = (func: Function, limit: number) => {
+  let inThrottle: boolean;
+  return function(this: any, ...args: any[]) {
+    if (!inThrottle) {
+      func.apply(this, args);
+      inThrottle = true;
+      setTimeout(() => (inThrottle = false), limit);
+    }
+  };
+};
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('home');
 
+  useSEO({
+    title: 'Devansh Datta | AI Developer & Full-Stack Innovator',
+    description:
+      'Portfolio of Devansh Datta — AI/ML engineer, full-stack developer, published author, and startup founder. Tech Lead at SkillSync, CEO of Torq. B.Tech CSE (AIML) at IILM University.',
+    keywords:
+      'Devansh Datta, AI Developer, Machine Learning, Full-Stack, LLM, Python, React, SkillSync, Torq, IILM',
+    canonical: 'https://devansh-datta.vercel.app/',
+  });
+
   useEffect(() => {
-    const handleScroll = () => {
+    const handleScroll = throttle(() => {
       const sections = ['home', 'about', 'projects', 'services', 'leadership', 'research', 'hackathons', 'vision', 'contact'];
       const scrollPosition = window.scrollY + 100;
 
@@ -31,7 +54,7 @@ const Index = () => {
           }
         }
       }
-    };
+    }, 100);
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -48,44 +71,54 @@ const Index = () => {
           backgroundPosition: 'top left',
           backgroundSize: '56px 56px, 56px 56px'
         }}
+        aria-hidden="true"
       />
+      
       <Navigation activeSection={activeSection} />
 
-      <section id="home" className="min-h-screen">
-        <Hero />
-      </section>
+      <main>
+        <section id="home" className="min-h-screen" aria-label="Hero — Introduction">
+          <Hero />
+        </section>
 
-      <section id="about" className="min-h-screen">
-        <About />
-      </section>
+        <Suspense fallback={
+          <div className="min-h-screen flex items-center justify-center" aria-busy="true" aria-label="Loading content">
+            <div className="w-8 h-8 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin" role="status" aria-label="Loading" />
+          </div>
+        }>
+          <section id="about" className="min-h-screen" aria-label="About Devansh Datta">
+            <About />
+          </section>
 
-      <section id="projects" className="min-h-screen">
-        <Projects />
-      </section>
+          <section id="projects" className="min-h-screen" aria-label="Projects Portfolio">
+            <Projects />
+          </section>
 
-      <section id="services" className="min-h-screen">
-        <Services />
-      </section>
+          <section id="services" className="min-h-screen" aria-label="Services Offered">
+            <Services />
+          </section>
 
-      <section id="leadership" className="min-h-screen">
-        <Leadership />
-      </section>
+          <section id="leadership" className="min-h-screen" aria-label="Leadership Experience">
+            <Leadership />
+          </section>
 
-      <section id="research">
-        <ResearchPublications />
-      </section>
+          <section id="research" aria-label="Research & Publications">
+            <ResearchPublications />
+          </section>
 
-      <section id="hackathons">
-        <Hackathons />
-      </section>
+          <section id="hackathons" aria-label="Hackathon Achievements">
+            <Hackathons />
+          </section>
 
-      <section id="vision">
-        <SystemThinking />
-      </section>
+          <section id="vision" aria-label="Vision & System Thinking">
+            <SystemThinking />
+          </section>
 
-      <section id="contact" className="min-h-screen">
-        <Contact />
-      </section>
+          <section id="contact" className="min-h-screen" aria-label="Contact Devansh Datta">
+            <Contact />
+          </section>
+        </Suspense>
+      </main>
     </div>
   );
 };
