@@ -39,22 +39,19 @@ const Hero = () => {
       >
         <motion.div className="mb-6 pointer-events-auto" variants={itemVariants}>
           <div className="relative inline-block mb-4">
-            {/* Rotating gradient ring */}
-            <motion.div
-              aria-hidden
-              className="absolute -inset-1 rounded-2xl"
-              style={{
-                background:
-                  'conic-gradient(from 0deg, rgba(255,255,255,0.35), rgba(255,255,255,0.05), rgba(255,255,255,0.35))'
-              }}
-              animate={{ rotate: 360 }}
-              transition={{ duration: 12, repeat: Infinity, ease: 'linear' }}
-            />
-            {/* Inner border and glow */}
-            <div className="relative rounded-2xl p-[3px] bg-white/10">
-              <div className="absolute inset-0 rounded-2xl blur-lg bg-white/10" aria-hidden />
-              <Avatar className="w-28 h-28 lg:w-32 lg:h-32 rounded-xl border border-white/15">
-                <AvatarImage src="https://i.postimg.cc/prctTy04/10aab1b0-d493-47cd-b02d-d5533b986e5d.png" alt="Devansh Datta" />
+            {/* Rotating Diamond Glow Backdrop */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <motion.div
+                className="w-32 h-32 md:w-36 md:h-36 bg-white/10 rounded-3xl rotate-45 border border-white/20 backdrop-blur-sm"
+                animate={{ rotate: [45, 225, 405] }}
+                transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
+              />
+            </div>
+
+            {/* Inner border and avatar */}
+            <div className="relative rounded-2xl p-[3px] bg-black/80 border border-white/20 shadow-2xl z-10 overflow-hidden">
+              <Avatar className="w-28 h-28 lg:w-32 lg:h-32 rounded-xl border border-white/10">
+                <AvatarImage src="https://i.postimg.cc/L5fTYp4s/Whats-App-Image-2026-08-03-at-15-25-30.png" alt="Devansh Datta" className="object-cover" />
                 <AvatarFallback className="bg-neutral-900 text-white rounded-xl">DD</AvatarFallback>
               </Avatar>
             </div>
@@ -100,7 +97,7 @@ const Hero = () => {
               </Button>
               <Button
                 size="lg"
-                className="bg-gradient-to-r from-indigo-500 to-cyan-500 hover:from-indigo-600 hover:to-cyan-600 text-white font-semibold px-8 h-12 gap-2"
+                className="bg-white/10 hover:bg-white text-white hover:text-black border border-white/30 font-semibold px-8 h-12 gap-2 backdrop-blur-sm transition-all"
                 onClick={() => navigate('/world')}
               >
                 <Globe className="w-5 h-5" />

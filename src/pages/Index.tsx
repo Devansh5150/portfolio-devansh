@@ -5,6 +5,7 @@ import { useSEO } from '../hooks/useSEO';
 
 // Lazy load heavy sections for improved initial load performance
 const About = lazy(() => import('../components/About'));
+const ExperienceSection = lazy(() => import('../components/Experience'));
 const Projects = lazy(() => import('../components/Projects'));
 const Services = lazy(() => import('../components/Services'));
 const Leadership = lazy(() => import('../components/Leadership'));
@@ -39,7 +40,7 @@ const Index = () => {
 
   useEffect(() => {
     const handleScroll = throttle(() => {
-      const sections = ['home', 'about', 'projects', 'services', 'leadership', 'research', 'hackathons', 'vision', 'contact'];
+      const sections = ['home', 'about', 'experience', 'projects', 'services', 'leadership', 'research', 'hackathons', 'vision', 'contact'];
       const scrollPosition = window.scrollY + 100;
 
       for (const section of sections) {
@@ -66,10 +67,12 @@ const Index = () => {
       <div
         className="fixed inset-0 -z-10 pointer-events-none"
         style={{
-          backgroundImage:
-            "repeating-linear-gradient(0deg, rgba(255,255,255,0.2) 0, rgba(255,255,255,0.2) 2px, transparent 2px, transparent 56px), repeating-linear-gradient(90deg, rgba(255,255,255,0.2) 0, rgba(255,255,255,0.2) 2px, transparent 2px, transparent 56px)",
+          backgroundImage: `
+            linear-gradient(to right, rgba(120, 120, 120, 0.2) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(120, 120, 120, 0.2) 1px, transparent 1px)
+          `,
           backgroundPosition: 'top left',
-          backgroundSize: '56px 56px, 56px 56px'
+          backgroundSize: '56px 56px',
         }}
         aria-hidden="true"
       />
@@ -88,6 +91,10 @@ const Index = () => {
         }>
           <section id="about" className="min-h-screen" aria-label="About Devansh Datta">
             <About />
+          </section>
+
+          <section id="experience" className="min-h-screen" aria-label="Work Experience">
+            <ExperienceSection />
           </section>
 
           <section id="projects" className="min-h-screen" aria-label="Projects Portfolio">

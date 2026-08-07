@@ -49,7 +49,7 @@ const Leadership = () => {
           {leadershipRoles.map((role, index) => (
             <div
               key={index}
-              className="p-6 md:p-8 bg-black/60 rounded-xl border border-white/15 hover:border-white/30 transition-all duration-300 hover:transform hover:scale-105 animate-slide-up"
+              className="p-6 md:p-8 bg-black/60 rounded-xl border border-white/15 hover:border-red-500/80 hover:shadow-[0_0_25px_rgba(239,68,68,0.4)] transition-all duration-300 hover:transform hover:scale-105 animate-slide-up"
               style={{ animationDelay: `${index * 200}ms` }}
             >
               <div className="flex items-center gap-4 mb-4">
@@ -65,7 +65,7 @@ const Leadership = () => {
               <ul className="space-y-2">
                 {role.achievements.map((achievement, aIndex) => (
                   <li key={aIndex} className="flex items-start text-gray-400 text-sm">
-                    <span className="w-2 h-2 bg-blue-400 rounded-full mr-3 mt-1.5 flex-shrink-0"></span>
+                    <span className="w-1.5 h-1.5 bg-white/70 rounded-full mr-3 mt-2 flex-shrink-0"></span>
                     {achievement}
                   </li>
                 ))}

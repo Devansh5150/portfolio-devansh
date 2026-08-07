@@ -9,6 +9,7 @@ import Lenis from "lenis";
 import Index from "./pages/Index";
 import Achievements from "./pages/Achievements";
 import CreativeWorld from "./pages/CreativeWorld";
+import Experience from "./pages/Experience";
 import EndWorld from "./pages/EndWorld";
 import NotFound from "./pages/NotFound";
 
@@ -48,6 +49,7 @@ const App = () => {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/experience" element={<Experience />} />
             <Route path="/achievements" element={<Achievements />} />
             <Route path="/world" element={<CreativeWorld />} />
             <Route path="/end" element={<EndWorld />} />

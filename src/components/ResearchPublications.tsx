@@ -13,7 +13,7 @@ const ResearchPublications = () => {
                 </div>
 
                 <motion.div
-                    className="p-6 md:p-8 bg-black/60 rounded-xl border border-white/15 hover:border-white/30 transition-all duration-300 max-w-3xl mx-auto"
+                    className="p-6 md:p-8 bg-black/60 rounded-xl border border-white/15 hover:border-red-500/80 hover:shadow-[0_0_25px_rgba(239,68,68,0.4)] transition-all duration-300 max-w-3xl mx-auto"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 }}
@@ -24,8 +24,8 @@ const ResearchPublications = () => {
                         </div>
                         <div>
                             <div className="flex items-center gap-2 mb-1">
-                                <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wide">Book Chapter</span>
-                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-cyan-500/30 text-cyan-400 text-xs font-medium">
+                                <span className="text-gray-300 text-sm font-semibold uppercase tracking-wide">Book Chapter</span>
+                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-white/20 text-white text-xs font-medium">
                                     <BookOpen className="w-3 h-3" />
                                     Published
                                 </span>
@@ -41,7 +41,7 @@ const ResearchPublications = () => {
 
                     <div className="mb-6">
                         <h4 className="text-white font-semibold text-sm mb-3 flex items-center gap-2">
-                            <Lightbulb className="w-4 h-4 text-yellow-400" />
+                            <Lightbulb className="w-4 h-4 text-white" />
                             Key Highlights
                         </h4>
                         <div className="space-y-2">
@@ -51,7 +51,7 @@ const ResearchPublications = () => {
                                 'Proposes a framework for understanding AI\'s role in augmenting - not replacing - human expression'
                             ].map((highlight, index) => (
                                 <div key={index} className="flex items-start gap-2 text-gray-400 text-sm">
-                                    <span className="w-2 h-2 bg-cyan-400 rounded-full mt-1.5 flex-shrink-0"></span>
+                                    <span className="w-1.5 h-1.5 bg-white/70 rounded-full mt-2 flex-shrink-0"></span>
                                     {highlight}
                                 </div>
                             ))}

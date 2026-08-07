@@ -13,10 +13,8 @@ const Navigation = ({ activeSection }: NavigationProps) => {
   const navItems = [
     { id: 'home', label: 'Home' },
     { id: 'about', label: 'About' },
+    { id: 'experience', label: 'Experience' },
     { id: 'projects', label: 'Projects' },
-    { id: 'services', label: 'Services' },
-    { id: 'leadership', label: 'Leadership' },
-    { id: 'research', label: 'Research' },
     { id: 'hackathons', label: 'Achievements' },
     { id: 'contact', label: 'Contact' },
   ];
@@ -41,11 +39,13 @@ const Navigation = ({ activeSection }: NavigationProps) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
           <motion.div
-            className="text-2xl font-bold text-white"
+            className="text-xl md:text-2xl font-bold text-white flex items-center gap-3 cursor-pointer"
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.2 }}
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           >
-            Devansh Datta
+            <img src="https://i.postimg.cc/L5fTYp4s/Whats-App-Image-2026-08-03-at-15-25-30.png" alt="Devansh Datta Logo" className="w-9 h-9 rounded-xl border border-white/20 object-cover shadow-md" />
+            <span>Devansh Datta</span>
           </motion.div>
 
           {/* Desktop Navigation */}

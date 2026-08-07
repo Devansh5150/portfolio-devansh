@@ -13,13 +13,31 @@ const About = () => {
         <div className="mb-20">
           <div className="flex flex-col md:flex-row items-center gap-12">
             <motion.div
-              className="w-48 h-48 md:w-64 md:h-64 rounded-full bg-gradient-to-br from-cyan-500/20 to-purple-500/20 border border-white/20 flex items-center justify-center relative overflow-hidden"
+              className="w-52 h-52 md:w-64 md:h-64 rounded-full border border-white/20 flex items-center justify-center relative shadow-[0_0_60px_rgba(255,255,255,0.15)] backdrop-blur-sm overflow-hidden"
+              style={{
+                background: 'radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.15) 0%, rgba(25, 25, 25, 0.8) 60%, rgba(0, 0, 0, 0.95) 100%)',
+              }}
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
             >
-              <div className="text-6xl" aria-hidden="true">👨‍💻</div>
-              <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/10 via-transparent to-purple-500/10 animate-pulse"></div>
+              {/* Internal grid overlay inside avatar orb */}
+              <div
+                className="absolute inset-0 pointer-events-none opacity-40"
+                style={{
+                  backgroundImage: `
+                    linear-gradient(to right, rgba(255, 255, 255, 0.15) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(255, 255, 255, 0.15) 1px, transparent 1px)
+                  `,
+                  backgroundSize: '28px 28px',
+                  backgroundPosition: 'center',
+                }}
+                aria-hidden="true"
+              />
+              <div className="text-7xl md:text-8xl select-none z-10 filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.7)]" aria-hidden="true">
+                👨‍💻
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-transparent to-white/5 animate-pulse pointer-events-none" />
             </motion.div>
 
             <div className="flex-1 text-center md:text-left">
@@ -29,7 +47,7 @@ const About = () => {
                 viewport={{ once: true }}
               >
                 <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-                  Driving Innovation through <span className="text-cyan-400">AI & Engineering</span>
+                  Driving Innovation through <span className="text-white underline underline-offset-4 decoration-white/30">AI & Engineering</span>
                 </h2>
                 <div className="space-y-4 text-gray-300 text-lg leading-relaxed">
                   <p>
@@ -38,15 +56,15 @@ const About = () => {
                     I focus on the intersection of scalability and human-centric design.
                   </p>
                   <p>
-                    With deep expertise in <span className="text-purple-400 font-semibold">LLMs</span>, 
-                    <span className="text-cyan-400 font-semibold">Mobile Systems</span>, and 
-                    <span className="text-green-400 font-semibold">Machine Learning</span>, I turn conceptual 
+                    With deep expertise in <span className="text-white font-semibold">LLMs</span>, 
+                    <span className="text-white font-semibold"> Mobile Systems</span>, and 
+                    <span className="text-white font-semibold"> Machine Learning</span>, I turn conceptual 
                     complexities into robust digital products. Check out my 
                     <a
                       href="https://linktr.ee/devansh.datta"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-cyan-400 hover:text-cyan-300 transition-colors underline underline-offset-2 ml-1"
+                      className="text-white hover:text-gray-300 transition-colors underline underline-offset-4 ml-1 font-medium"
                       aria-label="Visit Writing Portfolio on Linktree"
                     >
                       Writing Portfolio →
@@ -72,15 +90,15 @@ const About = () => {
               return (
                 <motion.div
                   key={category.name}
-                  className="p-8 rounded-2xl bg-black/40 border border-white/10 hover:border-white/30 transition-all duration-300 group relative"
+                  className="p-8 rounded-2xl bg-black/60 border border-white/15 hover:border-red-500/80 hover:shadow-[0_0_25px_rgba(239,68,68,0.4)] transition-all duration-300 group relative"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
                 >
                   <div className="flex items-center gap-4 mb-6">
-                    <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <Icon className={`w-6 h-6 ${category.color}`} aria-hidden="true" />
+                    <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <Icon className="w-6 h-6 text-white" aria-hidden="true" />
                     </div>
                     <h4 className="text-xl font-bold text-white tracking-tight">{category.name}</h4>
                   </div>

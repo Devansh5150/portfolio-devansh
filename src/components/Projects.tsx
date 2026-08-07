@@ -10,25 +10,8 @@ const Projects = () => {
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
   const [showArchitecture, setShowArchitecture] = useState(false);
 
-  const getCategoryColor = (category: string) => {
-    const colors: Record<string, string> = {
-      'AI/Computer Vision': 'text-pink-300',
-      'Mobile App': 'text-blue-300',
-      'Web Platform': 'text-green-300',
-      'AI Platform': 'text-cyan-300'
-    };
-    return colors[category] || 'text-gray-300';
-  };
-
-  const getCategoryHoverColor = (category: string) => {
-    const colors: Record<string, string> = {
-      'AI/Computer Vision': 'group-hover:text-pink-300',
-      'Mobile App': 'group-hover:text-blue-300',
-      'Web Platform': 'group-hover:text-green-300',
-      'AI Platform': 'group-hover:text-cyan-300'
-    };
-    return colors[category] || 'group-hover:text-gray-300';
-  };
+  const getCategoryColor = () => 'text-gray-400';
+  const getCategoryHoverColor = () => 'group-hover:text-gray-200';
 
   return (
     <div className="min-h-screen py-24 px-4">
@@ -46,7 +29,7 @@ const Projects = () => {
           {primaryProjects.map((project, index) => (
             <motion.div
               key={index}
-              className="group bg-black/60 rounded-xl border border-white/15 hover:border-white/30 transition-all duration-300 overflow-hidden cursor-pointer"
+              className="group bg-black/60 rounded-xl border border-white/15 hover:border-red-500/80 hover:shadow-[0_0_25px_rgba(239,68,68,0.4)] transition-all duration-300 overflow-hidden cursor-pointer"
               whileHover={{ scale: 1.02, y: -5 }}
               onClick={() => { setSelectedProject(index); setShowArchitecture(false); }}
               initial={{ opacity: 0, y: 20 }}
@@ -56,16 +39,16 @@ const Projects = () => {
               <div className="p-6 md:p-8">
                 <div className="flex items-center justify-between mb-4">
                   <div className="text-4xl" aria-hidden="true">{project.image}</div>
-                  <Badge variant="outline" className="text-xs">
+                  <Badge variant="outline" className="text-xs border-white/20 text-gray-300">
                     {project.timeline}
                   </Badge>
                 </div>
 
                 <div className="mb-4">
-                  <span className={`text-xs font-medium uppercase tracking-wide ${getCategoryColor(project.category)}`}>
+                  <span className="text-xs font-medium uppercase tracking-wide text-gray-400">
                     {project.category}
                   </span>
-                  <h3 className={`text-xl font-bold text-white mt-1 mb-3 transition-colors ${getCategoryHoverColor(project.category)}`}>
+                  <h3 className="text-xl font-bold text-white mt-1 mb-3 transition-colors group-hover:text-gray-200">
                     {project.title}
                   </h3>
                   <p className="text-gray-400 text-sm leading-relaxed mb-4">
@@ -76,15 +59,15 @@ const Projects = () => {
                 {/* Problem / Role / Impact bullets */}
                 <div className="space-y-2 mb-6 text-sm">
                   <div className="flex items-start gap-2 text-gray-300">
-                    <span className="text-red-400 font-semibold text-xs mt-0.5 flex-shrink-0 w-14">Problem</span>
+                    <span className="text-white font-semibold text-xs mt-0.5 flex-shrink-0 w-16 uppercase tracking-wider opacity-70">Problem</span>
                     <span>{project.bullets.problem}</span>
                   </div>
                   <div className="flex items-start gap-2 text-gray-300">
-                    <span className="text-cyan-400 font-semibold text-xs mt-0.5 flex-shrink-0 w-14">My role</span>
+                    <span className="text-white font-semibold text-xs mt-0.5 flex-shrink-0 w-16 uppercase tracking-wider opacity-70">My role</span>
                     <span>{project.bullets.role}</span>
                   </div>
                   <div className="flex items-start gap-2 text-gray-300">
-                    <span className="text-green-400 font-semibold text-xs mt-0.5 flex-shrink-0 w-14">Impact</span>
+                    <span className="text-white font-semibold text-xs mt-0.5 flex-shrink-0 w-16 uppercase tracking-wider opacity-70">Impact</span>
                     <span>{project.bullets.impact}</span>
                   </div>
                 </div>

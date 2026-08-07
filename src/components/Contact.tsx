@@ -35,7 +35,7 @@ const Contact = () => {
               href={info.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-4 p-4 bg-black/60 rounded-lg border border-white/15 hover:border-white/40 transition-all duration-300 group"
+              className="flex items-center gap-4 p-4 bg-black/60 rounded-lg border border-white/15 hover:border-red-500/80 hover:shadow-[0_0_25px_rgba(239,68,68,0.4)] transition-all duration-300 group"
             >
               <div className="w-11 h-11 bg-white/10 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                 <info.icon className="w-5 h-5 text-white" />

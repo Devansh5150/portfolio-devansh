@@ -61,7 +61,7 @@ const Services = () => {
           {services.map((service, index) => (
             <div
               key={index}
-              className="group p-6 md:p-8 bg-black/60 rounded-xl border border-white/15 hover:border-white/30 transition-all duration-300 hover:transform hover:scale-105"
+              className="group p-6 md:p-8 bg-black/60 rounded-xl border border-white/15 hover:border-red-500/80 hover:shadow-[0_0_25px_rgba(239,68,68,0.4)] transition-all duration-300 hover:transform hover:scale-105"
             >
               <div className="w-14 h-14 md:w-16 md:h-16 bg-white/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                 <span className="text-3xl">{service.icon}</span>
@@ -71,7 +71,7 @@ const Services = () => {
                 {service.title}
               </h3>
 
-              <p className="text-cyan-400 text-sm font-medium mb-4 italic">
+              <p className="text-gray-400 text-sm font-medium mb-4 italic">
                 {service.tagline}
               </p>
 
@@ -84,10 +84,7 @@ const Services = () => {
                 <ul className="space-y-2">
                   {service.deliverables.map((deliverable, dIndex) => (
                     <li key={dIndex} className="flex items-start text-gray-400 text-sm">
-                      <span className={`w-2 h-2 rounded-full mr-3 mt-1.5 flex-shrink-0 ${service.color === 'cyan' ? 'bg-cyan-400' :
-                        service.color === 'blue' ? 'bg-blue-400' :
-                          'bg-green-400'
-                        }`}></span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-white/70 mr-3 mt-2 flex-shrink-0"></span>
                       {deliverable}
                     </li>
                   ))}

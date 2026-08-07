@@ -21,11 +21,8 @@ const Hackathons = () => {
         }
     ];
 
-    const getTextColor = (color: string) =>
-        color === 'yellow' ? 'text-yellow-400' : 'text-cyan-400';
-
-    const getBorderColor = (color: string) =>
-        color === 'yellow' ? 'border-yellow-500/30' : 'border-cyan-500/30';
+    const getTextColor = () => 'text-gray-300';
+    const getBorderColor = () => 'border-white/20';
 
     return (
         <div className="py-24 px-4 relative overflow-hidden">
@@ -41,7 +38,7 @@ const Hackathons = () => {
                     {achievements.map((item, index) => (
                         <motion.div
                             key={index}
-                            className="p-6 md:p-8 bg-black/60 rounded-xl border border-white/15 hover:border-white/30 transition-all duration-300 hover:transform hover:scale-105"
+                            className="p-6 md:p-8 bg-black/60 rounded-xl border border-white/15 hover:border-red-500/80 hover:shadow-[0_0_25px_rgba(239,68,68,0.4)] transition-all duration-300 hover:transform hover:scale-105"
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: index * 0.2 }}
