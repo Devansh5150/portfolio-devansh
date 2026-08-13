@@ -199,15 +199,15 @@ const Hero = () => {
                         <div className="flex items-start gap-4">
                           <span className="text-neutral-400 font-bold w-10">2026</span>
                           <div>
-                            <span className="text-sky-300 font-medium block">Tech Lead</span>
-                            <span className="text-neutral-400 text-[10px]">SkillSync</span>
+                            <span className="text-white font-medium block">Founder</span>
+                            <span className="text-neutral-400 text-[10px]">Tatvam</span>
                           </div>
                         </div>
                         <div className="flex items-start gap-4">
                           <span className="text-neutral-400 font-bold w-10">2026</span>
                           <div>
-                            <span className="text-white font-medium block">Founder</span>
-                            <span className="text-neutral-400 text-[10px]">Tatvam</span>
+                            <span className="text-sky-300 font-medium block">Tech Lead</span>
+                            <span className="text-neutral-400 text-[10px]">SkillSync</span>
                           </div>
                         </div>
                         <div className="flex items-start gap-4">
@@ -233,8 +233,8 @@ const Hero = () => {
 
                     <div className="space-y-2 pl-1">
                       {[
-                        { name: 'NED', isLive: true },
                         { name: 'Tatvam', isLive: true },
+                        { name: 'NED', isLive: true },
                         { name: 'SkillSync', isLive: true },
                         { name: 'TORQ', isLive: false },
                       ].map((p) => (
